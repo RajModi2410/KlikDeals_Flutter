@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:klik_deals/home.dart';
+
+import 'mywidgets/details.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyDetailList(),
     );
   }
 }
@@ -119,12 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                          )),
+                        padding: const EdgeInsets.all(24.0),
+                        child: Text(
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      )),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextFormField(
@@ -133,7 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                               hintText: 'Enter your email',
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(32)),
+
+                                  //  borderRadius: BorderRadius.circular(32)
+                                  ),
                               fillColor: Colors.black),
                           validator: (value) {
                             if (value.isEmpty) {
@@ -145,13 +150,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
+                        //  elevation: 20.0,
                         child: TextFormField(
                           decoration: InputDecoration(
                             contentPadding:
                                 EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                             hintText: 'Enter your email',
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(32)),
+                                // borderRadius: BorderRadius.circular(32)
+                                ),
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
@@ -167,9 +174,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             shape: RoundedRectangleBorder(
                                 // borderRadius: new BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.white)),
-                           elevation: 5.0,
+                            elevation: 5.0,
                             color: Color(0xff01A0C7),
-                            // onPressed: ()
+                            // onPressed: (){
+                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()),
+                            //   );
+                            // },
                             child: Text("Forget Password?",
                                 style: TextStyle(
                                     fontFamily: 'Montserrat', fontSize: 14.0)),
@@ -182,23 +192,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            // color: Color(0xff01A0C7),
                             child: FloatingActionButton(
-                    
-                              onPressed: (){ 
-                              if (_formKey.currentState.validate()) {
-                                // Process data.
-                              }
-                            },
+                              // color: Color(0xff01A0C7),
+
+                              onPressed: () {
+                                if (_formKey.currentState.validate()) {
+                                  // Process data.
+                                }
+                              },
                               tooltip: 'Increment',
                               child: Icon(Icons.add),
                             ),
                           ),
                         ],
                       ),
-
-
-                      
                     ],
                   ))
             ],
