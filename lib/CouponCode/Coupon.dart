@@ -40,28 +40,21 @@ class _CouponAdd extends State<Coupon> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Material(
-                  elevation: 5.0,
+                elevation: 5.0,
                   shadowColor: Colors.lightGreen,
-                  child: Card(
-                    
-                    child: Container(
-                      // height: 200,
+                  child: Container(
+                    color: Colors.white,
+                    child: TextFormField(
+                      // maxLines: 8,
+                      // minLines: 6,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
 
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-
-                            hintText: 'Description',
-                            // border: OutlineInputBorder(
-                            //     borderRadius: BorderRadius.circular(8.0)),
-                          ),
-                        ),
+                        hintText: 'Description',
+                        // border: OutlineInputBorder(
+                        //     borderRadius: BorderRadius.circular(8.0)),
                       ),
-                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -185,25 +178,21 @@ class _CouponAdd extends State<Coupon> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Material(
-// elevation: 5.0,
-                  shadowColor: Colors.redAccent,
-                  child: Card(
-                    child: Container(
-                      // height: 200,
+                elevation: 5.0,
+                  shadowColor: Colors.lightGreen,
+                  child: Container(
+                    color: Colors.white,
+                    child: TextFormField(
+                      maxLines: 8,
+                      minLines: 6,
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
 
-                      child: TextFormField(
-                        maxLines: 8,
-                        minLines: 6,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-
-                          hintText: 'Description',
-                          // border: OutlineInputBorder(
-                          //     borderRadius: BorderRadius.circular(8.0)),
-                        ),
+                        hintText: 'Description',
+                        // border: OutlineInputBorder(
+                        //     borderRadius: BorderRadius.circular(8.0)),
                       ),
-                      color: Colors.white,
                     ),
                   ),
                 ),

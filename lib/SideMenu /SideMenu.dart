@@ -52,7 +52,7 @@ class _SideMenu extends State<SideMenu>{
       _menuOptionWidgets.add(
         new Container(
           decoration: new BoxDecoration(
-            color: menuItem
+            // color: menuItem
           ),
         )
       )
