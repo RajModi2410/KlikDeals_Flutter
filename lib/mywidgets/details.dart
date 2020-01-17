@@ -19,6 +19,7 @@ class _MyDetailsList extends State<MyDetailList> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Appbar with tabs"),
+          
           bottom: TabBar(
             tabs: <Widget>[
               // CouponList(),

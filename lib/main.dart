@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:klik_deals/home.dart';
 
 import 'mywidgets/details.dart';
-
+import 'CouponCode/Coupon.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -24,7 +24,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyDetailList(),
+      // home: MyDetailList(),
+        home: Coupon(),
+    
     );
   }
 }
