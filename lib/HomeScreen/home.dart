@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CouponList extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = "ListView List ";

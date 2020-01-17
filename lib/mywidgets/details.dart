@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../home.dart';
+import '../HomeScreen/home.dart';
 
 class MyDetailList extends StatefulWidget {
   MyDetailList({Key key, this.title}) : super(key: key);
@@ -34,8 +34,8 @@ class _MyDetailsList extends State<MyDetailList> {
             // AndroidAction(),
             // Text("Active coupons select"),
             // Text("History select"),
-              CouponList(),
-                CouponList(),
+            HomeScreen(),
+            HomeScreen(),
           ],
         ),
       ),
