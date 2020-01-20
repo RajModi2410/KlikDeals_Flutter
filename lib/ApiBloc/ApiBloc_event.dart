@@ -18,3 +18,14 @@ class RestaurantSearchEvent extends ApiBlocEvent {
   // TODO: implement props
   List<Object> get props => [this.query, this.numberOfRecord];
 }
+
+class LoginEvent extends ApiBlocEvent {
+  final String email;
+  final String pass;
+
+  LoginEvent(this.email, this.pass);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [this.email, this.pass];
+}

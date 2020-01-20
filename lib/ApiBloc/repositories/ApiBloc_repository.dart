@@ -26,6 +26,14 @@ class ApiBlocRepository {
     return parseResponse(response);
   }
 
+  Future<SearchResponse> login(String email, String pass) async {
+    final response = await http.get(
+      //TODO need to change as per API
+        baseUrl + " Need to change",
+        headers: getCommonHeaders());
+    return parseResponse(response);
+  }
+
   Map<String, String> getCommonHeaders() =>
       {"user-key": key, HttpHeaders.acceptEncodingHeader: "application/json"};
 

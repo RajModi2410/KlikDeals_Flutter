@@ -9,6 +9,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  bool isEmail(String em) {
+    String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value.isEmpty) {
                               return 'Please enter valid email';
                             }
+
+                            if (!isEmail(value)) {
+                              return 'Please enter valid email';
+                            }
                             return null;
                           },
                         ),
@@ -86,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please entern valid password';
+                              return 'Please enter valid password';
                             }
                           },
                         ),

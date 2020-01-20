@@ -34,6 +34,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     // try {
     if (event is RestaurantSearchEvent) {
       yield* mapSearchResponseEvents(event);
+    } else if (event is LoginEvent) {
+      yield* mapLoginEventResponseEvents(event);
     }
     // }
     //  catch (_, stackTrace) {
@@ -41,6 +43,30 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     //       name: 'ApiBlocBloc', error: _, stackTrace: stackTrace);
     //   yield* ApiErrorState();
     // }
+  }
+
+  Stream<ApiBlocState> mapLoginEventResponseEvents(LoginEvent event) async* {
+    if (event.email.isEmpty || event.pass.isEmpty) {
+      yield ApiUninitializedState();
+    } else {
+      yield ApiFetchingState();
+
+      try {
+        final response = await playerRepository.login(
+            event.email, event.pass);
+        if (response.restaurants != null) {
+          if (response.restaurants.length == 0) {
+            yield ApiEmptyState();
+          } else {
+            yield ApiFetchedState(searchResult: response);
+          }
+        } else {
+          yield ApiEmptyState();
+        }
+      } catch (e) {
+        yield ApiErrorState();
+      }
+    }
   }
 
   Stream<ApiBlocState> mapSearchResponseEvents(
@@ -67,4 +93,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       }
     }
   }
+
+
 }
+
