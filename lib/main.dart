@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:klik_deals/home.dart';
 
+import 'ProfileScreen/profile.dart';
 import 'mywidgets/details.dart';
 import 'CouponCode/Coupon.dart';
 void main() => runApp(MyApp());
@@ -25,8 +26,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: MyDetailList(),
-        home: Coupon(),
-    
+        home: Profile(),
+    // home: MyHomePage(),
     );
   }
 }
@@ -130,45 +131,108 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(fontSize: 16.0),
                         ),
                       )),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: InputDecoration(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 5.0,
+                        shadowColor: Colors.lightGreen,
+                        child: Container(
+                          color: Colors.white,
+                          child: TextFormField(
+                            // maxLines: 8,
+                            // minLines: 6,
+                            decoration: InputDecoration(
                               contentPadding:
                                   EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                              hintText: 'Enter your email',
-                              border: OutlineInputBorder(
-
-                                  //  borderRadius: BorderRadius.circular(32)
-                                  ),
-                              fillColor: Colors.black),
-                          validator: (value) {
+                              hintText: 'Email Address',
+                              // border: OutlineInputBorder(
+                              //     borderRadius: BorderRadius.circular(8.0)),
+                           
+                            ),
+                             validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter valid email';
                             }
                             return null;
                           },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        //  elevation: 20.0,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                            hintText: 'Enter your email',
-                            border: OutlineInputBorder(
-                                // borderRadius: BorderRadius.circular(32)
-                                ),
+
                           ),
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please entern valid password';
-                            }
-                          },
                         ),
                       ),
+                    ),
+
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   child: TextFormField(
+                      //     decoration: InputDecoration(
+                      //         contentPadding:
+                      //             EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                      //         hintText: 'Enter your email',
+                      //         border: OutlineInputBorder(
+
+                      //             //  borderRadius: BorderRadius.circular(32)
+                      //             ),
+                      //         fillColor: Colors.black),
+                      //     validator: (value) {
+                      //       if (value.isEmpty) {
+                      //         return 'Please enter valid email';
+                      //       }
+                      //       return null;
+                      //     },
+                      //   ),
+                      // ),
+
+                      Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        elevation: 5.0,
+                        shadowColor: Colors.lightGreen,
+                        child: Container(
+                          color: Colors.white,
+                          child: TextFormField(
+                            // maxLines: 8,
+                            // minLines: 6,
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                              hintText: 'Password',
+                              // border: OutlineInputBorder(
+                              //     borderRadius: BorderRadius.circular(8.0)),
+                           
+                            ),
+                             validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter valid password';
+                            }
+                            return null;
+                          },
+
+                          ),
+                        ),
+                      ),
+                    ),  
+
+
+
+                      // Padding(
+                      //   padding: const EdgeInsets.all(8.0),
+                      //   //  elevation: 20.0,
+                      //   child: TextFormField(
+                      //     decoration: InputDecoration(
+                      //       contentPadding:
+                      //           EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                      //       hintText: 'Enter your email',
+                      //       border: OutlineInputBorder(
+                      //           // borderRadius: BorderRadius.circular(32)
+                      //           ),
+                      //     ),
+                      //     validator: (value) {
+                      //       if (value.isEmpty) {
+                      //         return 'Please entern valid password';
+                      //       }
+                      //     },
+                      //   ),
+                      // ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(right: 200.0),
@@ -177,11 +241,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 // borderRadius: new BorderRadius.circular(18.0),
                                 side: BorderSide(color: Colors.white)),
                             elevation: 5.0,
-                            color: Color(0xff01A0C7),
+                            // color: Colors.white,
                             // onPressed: (){
                             //   Navigator.push(context, MaterialPageRoute(builder: (context) => Homepage()),
                             //   );
                             // },
+                            disabledColor: Colors.white,
                             child: Text("Forget Password?",
                                 style: TextStyle(
                                     fontFamily: 'Montserrat', fontSize: 14.0)),
