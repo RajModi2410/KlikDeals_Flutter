@@ -12,8 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomePage extends State<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return new ListView(
@@ -30,6 +28,7 @@ class _HomePage extends State<HomeScreen> {
 
   @override
   void initState() {
+    super.initState();
     getToken();
   }
 
