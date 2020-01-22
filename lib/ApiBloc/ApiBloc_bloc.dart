@@ -52,16 +52,11 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield ApiFetchingState();
 
       try {
-        final response = await playerRepository.login(
-            event.email, event.pass);
-        if (response.restaurants != null) {
-          if (response.restaurants.length == 0) {
-            yield ApiEmptyState();
-          } else {
-            yield ApiFetchedState(searchResult: response);
-          }
+        final response = await playerRepository.login(event.toMap());
+        if (response.status) {
+          yield LoginApiFetchedState(response);
         } else {
-          yield ApiEmptyState();
+          yield ApiErrorState();
         }
       } catch (e) {
         yield ApiErrorState();

@@ -1,14 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/HomeScreen/home.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
-import 'LoginForm.dart';
+ProgressDialog pr;
 
-class LoginPage extends StatefulWidget {
-//  LoginPage({this.auth});
-
+class LoginForm extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _LoginPage();
+  State<LoginForm> createState() => _LoginFormState();
 }
-/*
 
 String emailValidator(String value) {
   Pattern pattern =
@@ -29,61 +33,72 @@ String passwordValidator(String value) {
     return null;
   }
 }
-*/
 
-class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
-//  final _formKey = GlobalKey<FormState>();
-//  TextEditingController emailInputController;
-//  TextEditingController pwdInputController;
-//  bool _isLoading;
-//  String _email;
-//  String _password;
-//  String _errorMessage;
-//  ApiBlocBloc auth;
-//
-//  @override
-//  void initState() {
-//    emailInputController = new TextEditingController();
-//    pwdInputController = new TextEditingController();
-//    _isLoading = false;
-//    _errorMessage = "";
-//    super.initState();
-//  }
+class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController emailInputController;
+  TextEditingController pwdInputController;
+  bool _isLoading;
+  String _email;
+  String _password;
+  String _errorMessage;
+  ApiBlocBloc auth;
+
+  @override
+  void initState() {
+    emailInputController = new TextEditingController();
+    pwdInputController = new TextEditingController();
+    _isLoading = false;
+    _errorMessage = "";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-//    auth = BlocProvider.of<ApiBlocBloc>(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: LoginForm(),
+    pr = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+    pr.style(
+      message: 'Please wait...',
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progress: 0.0,
+      maxProgress: 100.0,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
-//    return BlocBuilder<ApiBlocBloc, ApiBlocState>(
-//        bloc: auth,
-//        builder: (
-//          BuildContext context,
-//          ApiBlocState currentState,
-//        ) {
-//          if (currentState is LoginApiFetchedState) {
-//            print("Login successfully ${currentState.loginResponse.token.toString()}");
-//          }else {
-//            _onWidgetDidBuild(() {
-//              Scaffold.of(context).showSnackBar(
-//                SnackBar(
-//                  content: Text('Please check email and password.'),
-//                  backgroundColor: Colors.red,
-//                ),
-//              );
-//            });
-//          }
-//
-//          return Scaffold(body: _showForm());
-//
-//        });
+
+    auth = BlocProvider.of<ApiBlocBloc>(context);
+    return BlocBuilder<ApiBlocBloc, ApiBlocState>(
+        bloc: auth,
+        builder: (BuildContext context,
+            ApiBlocState currentState,) {
+          if (currentState is LoginApiFetchedState) {
+            pr.hide();
+            print(
+                "Login successfully ${currentState.loginResponse.token
+                    .toString()}");
+          } else if (currentState is ApiFetchingState) {
+            pr.show();
+          } else if (currentState is ApiErrorState) {
+            pr.hide();
+            _onWidgetDidBuild(() {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please check email and password.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
+          }
+          return Scaffold(body: _showForm());
+        });
   }
 
-/*  Widget _showForm() {
+  Widget _showForm() {
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -105,7 +120,7 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
                     _showPasswordTextField(),
                     _showDivider(),
                     _showLoginButton(auth),
-                    */ /*BlocBuilder<ApiBlocBloc, ApiBlocState>(
+                    /*BlocBuilder<ApiBlocBloc, ApiBlocState>(
                         bloc: auth,
                         builder: (BuildContext context,
                             ApiBlocState currentState,) {
@@ -118,15 +133,15 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
                             return  _showLoginButton();
                           }
                         }
-                    ),*/ /*
+                    ),*/
 //                child: _showLoginButton()),
                     _showErrorMessage(),
                     _showCircularProgress()
                   ],
                 ))));
-  }*/
+  }
 
-  /* Widget _showCircularProgress() {
+  Widget _showCircularProgress() {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
@@ -134,8 +149,8 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
       height: 0.0,
       width: 0.0,
     );
-  }*/
-/*
+  }
+
   Widget _showLogo() {
     return Container(
       padding: EdgeInsets.all(120.0),
@@ -143,7 +158,10 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
         child: new Image(
           image: new AssetImage('assets/images/wds-logo.png'),
           height: 50,
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
         ),
       ),
     );
@@ -171,7 +189,10 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
 
   Widget _showEmailTextField() {
     return new Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       margin: const EdgeInsets.only(left: 40.0, right: 40.0),
       alignment: Alignment.center,
       decoration: new BoxDecoration(
@@ -188,27 +209,27 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
         children: <Widget>[
           Expanded(
               child: Column(
-            children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autofocus: false,
-                initialValue: "testing.webdesksolution@gmail.com",
-                validator: emailValidator,
-                onSaved: (value) => _email = value.trim(),
-                obscureText: false,
-                textAlign: TextAlign.left,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.alternate_email,
-                    color: Colors.grey,
+                children: <Widget>[
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    autofocus: false,
+                    initialValue: "testing.webdesksolution@gmail.com",
+                    validator: emailValidator,
+                    onSaved: (value) => _email = value.trim(),
+                    obscureText: false,
+                    textAlign: TextAlign.left,
+                    decoration: InputDecoration(
+                      icon: Icon(
+                        Icons.alternate_email,
+                        color: Colors.grey,
+                      ),
+                      border: InputBorder.none,
+                      hintText: "youremail@abc.com",
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
                   ),
-                  border: InputBorder.none,
-                  hintText: "youremail@abc.com",
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          )),
+                ],
+              )),
         ],
       ),
     );
@@ -235,9 +256,12 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _showPasswordTextField() {
+  Widget _showPasswordTextField() /**/ {
     return new Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
       alignment: Alignment.center,
       decoration: BoxDecoration(
@@ -281,8 +305,8 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
         ],
       ),
     );
-  }*/
-/*
+  }
+
   // Initially password is obscure
   bool _obscureText = true;
 
@@ -291,11 +315,20 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
     setState(() {
       _obscureText = !_obscureText;
     });
-  }*/
+  }
 
-/*  Widget _showLoginButton(ApiBlocBloc auth) {
+  Widget _showDivider() {
+    return Divider(
+      height: 24.0,
+    );
+  }
+
+  Widget _showLoginButton(ApiBlocBloc auth) {
     return new Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
       alignment: Alignment.center,
       child: new Row(
@@ -306,7 +339,10 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
                 borderRadius: BorderRadius.circular(30.0),
               ),
               color: Color.fromRGBO(74, 172, 215, 1),
-              onPressed: validateAndSubmit,
+              onPressed: () {
+                pr.show();
+                validateAndSubmit();
+              },
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -350,15 +386,9 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
         height: 0.0,
       );
     }
-  }*/
-/*
-  Widget _showDivider() {
-    return Divider(
-      height: 24.0,
-    );
-  }*/
+  }
 
-  /* bool validateAndSave() {
+  bool validateAndSave() {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
@@ -366,7 +396,7 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
     }
     return false;
   }
-*/ /*
+
   void validateAndSubmit() async {
     if (validateAndSave()) {
       setState(() {
@@ -391,26 +421,17 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
       }
     }
   }
-*/
-  bool _handleScrollNotification(ScrollNotification notification) {
-    // if (notification is ScrollEndNotification &&
-    //     _scrollController.position.extentAfter == 0) {
-    //   _searchBloc.fetchNextResultPage();
-    // }
-    return false;
-  }
 
-/* void goToHomePage() {
+  void goToHomePage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
     );
-  }*/
+  }
 
-/*void _onWidgetDidBuild(Function callback) {
+  void _onWidgetDidBuild(Function callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       callback();
     });
-  }*/
+  }
 }
-

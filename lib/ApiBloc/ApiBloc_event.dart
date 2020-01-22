@@ -23,6 +23,14 @@ class LoginEvent extends ApiBlocEvent {
   final String email;
   final String pass;
 
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["email"] = email;
+    map["password"] = pass;
+
+    return map;
+  }
+
   LoginEvent(this.email, this.pass);
 
   @override
