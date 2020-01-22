@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
+
+var token = "";
+SharedPreferences sharedPreferences;
+
+class HomeScreen extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => new _HomePage();
+}
+
+class _HomePage extends State<HomeScreen> {
+
+
   @override
   Widget build(BuildContext context) {
-    final title = "ListView List ";
     return new ListView(
         shrinkWrap: true,
         padding: const EdgeInsets.all(20.0),
@@ -15,8 +27,18 @@ class HomeScreen extends StatelessWidget {
     // TODO: implement build
     // return null;
   }
-}
 
+  @override
+  void initState() {
+    getToken();
+  }
+
+  getToken() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    token = sharedPreferences.getString("token");
+    print("Home Page :: We got Token $token");
+  }
+}
 class Choice {
   const Choice({this.title, this.icon});
 
@@ -36,9 +58,6 @@ const choices = [
 ];
 
 class listDetails extends StatelessWidget {
-  // const listDetails(
-
-  // )
 
   final Choice choice;
   final VoidCallback onTap;

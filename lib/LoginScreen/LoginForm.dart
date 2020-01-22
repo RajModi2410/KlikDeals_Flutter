@@ -6,8 +6,11 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/home.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 ProgressDialog pr;
+var token = "";
+SharedPreferences sharedPreferences;
 
 class LoginForm extends StatefulWidget {
   @override
@@ -78,9 +81,11 @@ class _LoginFormState extends State<LoginForm> {
             ApiBlocState currentState,) {
           if (currentState is LoginApiFetchedState) {
             pr.hide();
-            print(
-                "Login successfully ${currentState.loginResponse.token
+            print("Login successfully ${currentState.loginResponse.token
                     .toString()}");
+            token = currentState.loginResponse.token.toString();
+            _onSetOnShredPrefe(token);
+            _goToHomePage();
           } else if (currentState is ApiFetchingState) {
             pr.show();
           } else if (currentState is ApiErrorState) {
@@ -120,25 +125,9 @@ class _LoginFormState extends State<LoginForm> {
                     _showPasswordTextField(),
                     _showDivider(),
                     _showLoginButton(auth),
-                    /*BlocBuilder<ApiBlocBloc, ApiBlocState>(
-                        bloc: auth,
-                        builder: (BuildContext context,
-                            ApiBlocState currentState,) {
-                          if (currentState is ApiUninitializedState) {
-                            return _showLoginButton();
-                          } else if (currentState is LoginApiFetchedState) {
-                            goToHomePage();
-                            return _showLoginButton();
-                          } else {
-                            return  _showLoginButton();
-                          }
-                        }
-                    ),*/
-//                child: _showLoginButton()),
                     _showErrorMessage(),
                     _showCircularProgress()
-                  ],
-                ))));
+                  ],))));
   }
 
   Widget _showCircularProgress() {
@@ -229,7 +218,8 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                   ),
                 ],
-              )),
+              )
+          ),
         ],
       ),
     );
@@ -301,7 +291,8 @@ class _LoginFormState extends State<LoginForm> {
               child: new Icon(
                 _obscureText ? Icons.visibility : Icons.visibility_off,
                 color: Color.fromRGBO(74, 172, 215, 1),
-              ))
+              )
+          )
         ],
       ),
     );
@@ -367,20 +358,10 @@ class _LoginFormState extends State<LoginForm> {
         content: Text(_errorMessage),
         action: SnackBarAction(
           label: 'Undo',
-          onPressed: () {
-            // Some code to undo the change.
-          },
+          onPressed: () {},
         ),
       );
 
-//      return new Text(
-//        _errorMessage,
-//        style: TextStyle(
-//            fontSize: 13.0,
-//            color: Colors.red,
-//            height: 1.0,
-//            fontWeight: FontWeight.w300),
-//      );
     } else {
       return new Container(
         height: 0.0,
@@ -399,30 +380,19 @@ class _LoginFormState extends State<LoginForm> {
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
-      setState(() {
-        _errorMessage = "";
-        _isLoading = true;
-      });
-      String userId = "";
       try {
         auth.add(LoginEvent(_email, _password));
-        print('Signed in: $userId');
 
         setState(() {
           _isLoading = false;
         });
       } catch (e) {
         print('Error: $e');
-        setState(() {
-          _isLoading = false;
-          _errorMessage = e.message;
-          _formKey.currentState.reset();
-        });
       }
     }
   }
 
-  void goToHomePage() {
+  void _goToHomePage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -432,6 +402,14 @@ class _LoginFormState extends State<LoginForm> {
   void _onWidgetDidBuild(Function callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       callback();
+    });
+  }
+
+  void _onSetOnShredPrefe(String token) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      sharedPreferences.setString("token", token);
+      sharedPreferences.commit();
     });
   }
 }

@@ -19,6 +19,16 @@ class RestaurantSearchEvent extends ApiBlocEvent {
   List<Object> get props => [this.query, this.numberOfRecord];
 }
 
+class TokenGenerateEvent extends ApiBlocEvent {
+  final String token;
+
+  TokenGenerateEvent(this.token);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [token];
+}
+
 class LoginEvent extends ApiBlocEvent {
   final String email;
   final String pass;

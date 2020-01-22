@@ -36,6 +36,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* mapSearchResponseEvents(event);
     } else if (event is LoginEvent) {
       yield* mapLoginEventResponseEvents(event);
+    } else if (event is TokenGenerateEvent) {
+      playerRepository.token = event.token;
+      yield ApiUninitializedState();
     }
     // }
     //  catch (_, stackTrace) {
@@ -46,11 +49,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   }
 
   Stream<ApiBlocState> mapLoginEventResponseEvents(LoginEvent event) async* {
-    if (event.email.isEmpty || event.pass.isEmpty) {
-      yield ApiUninitializedState();
-    } else {
-      yield ApiFetchingState();
-
+    yield ApiFetchingState();
       try {
         final response = await playerRepository.login(event.toMap());
         if (response.status) {
@@ -60,7 +59,6 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
         }
       } catch (e) {
         yield ApiErrorState();
-      }
     }
   }
 
