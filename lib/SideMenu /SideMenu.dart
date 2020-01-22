@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'AboutPage.dart';
 import 'Model/menu_item.dart';
 
-
-
 class SideMenu extends StatefulWidget{
 @override
   _SideMenu createState() {
     return _SideMenu();
   }}
-
 
 class _SideMenu extends State<SideMenu>{
       Widget _appBarTitle;
@@ -18,7 +15,6 @@ class _SideMenu extends State<SideMenu>{
     List<MenuItem> _menuItems;
     List<Widget> _menuOptionWidgets = [];
 
- 
  initState() {
     super.initState();
 

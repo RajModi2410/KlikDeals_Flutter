@@ -10,6 +10,6 @@ void main() {
   runApp(BlocProvider<ApiBlocBloc>(
       builder: (context) => ApiBlocBloc(ApiBlocRepository()),
       child: MaterialApp(home: SplashScreen(), routes: <String, WidgetBuilder>{
-        '/HomeScreen': (BuildContext context) => new LoginScreen(),
+        '/HomeScreen': (BuildContext context) => new LoginPage(),
       })));
 }
