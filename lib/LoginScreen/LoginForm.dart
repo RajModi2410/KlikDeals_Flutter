@@ -15,6 +15,7 @@ SharedPreferences sharedPreferences;
 class LoginForm extends StatefulWidget {
   @override
   State<LoginForm> createState() => _LoginFormState();
+  
 }
 
 String emailValidator(String value) {
@@ -75,21 +76,36 @@ class _LoginFormState extends State<LoginForm> {
     );
 
     auth = BlocProvider.of<ApiBlocBloc>(context);
-    return BlocBuilder<ApiBlocBloc, ApiBlocState>(
+    return BlocListener<ApiBlocBloc, ApiBlocState>(
+      listener: (context, state) {
+        if (state is ApiErrorState) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('error occurred'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }else if(state is LoginApiFetchedState){
+          token = state.loginResponse.token.toString();
+            _onSetOnShredPrefe(token);
+           _goToHomePage();
+        }
+      },
+      child:  BlocBuilder<ApiBlocBloc, ApiBlocState>(
         bloc: auth,
         builder: (BuildContext context,
             ApiBlocState currentState,) {
           if (currentState is LoginApiFetchedState) {
-            pr.hide();
+            // pr.hide();
             print("Login successfully ${currentState.loginResponse.token
                     .toString()}");
-            token = currentState.loginResponse.token.toString();
-            _onSetOnShredPrefe(token);
-            _goToHomePage();
+            // token = currentState.loginResponse.token.toString();
+            // _onSetOnShredPrefe(token);
+            // _goToHomePage();
           } else if (currentState is ApiFetchingState) {
-            pr.show();
+            // pr.show();
           } else if (currentState is ApiErrorState) {
-            pr.hide();
+            // pr.hide();
             _onWidgetDidBuild(() {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
@@ -100,8 +116,10 @@ class _LoginFormState extends State<LoginForm> {
             });
           }
           return Scaffold(body: _showForm());
-        });
+        })
+    );
   }
+
 
   Widget _showForm() {
     return Container(
@@ -131,13 +149,14 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _showCircularProgress() {
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-    return Container(
-      height: 0.0,
-      width: 0.0,
-    );
+    // if (_isLoading) {
+    //   return Center(child: CircularProgressIndicator());
+    // }
+    // return Container(
+    //   height: 0.0,
+    //   width: 0.0,
+    // );
+    return Container();
   }
 
   Widget _showLogo() {
@@ -378,11 +397,11 @@ class _LoginFormState extends State<LoginForm> {
     return false;
   }
 
-  void validateAndSubmit() async {
+  void validateAndSubmit() {
+    print("validateAndSubmit");
     if (validateAndSave()) {
       try {
         auth.add(LoginEvent(_email, _password));
-
         setState(() {
           _isLoading = false;
         });

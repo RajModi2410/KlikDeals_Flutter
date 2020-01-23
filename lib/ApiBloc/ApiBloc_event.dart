@@ -47,3 +47,22 @@ class LoginEvent extends ApiBlocEvent {
   // TODO: implement props
   List<Object> get props => [this.email, this.pass];
 }
+
+class CouponListEvent extends ApiBlocEvent{
+
+  final int perPage;
+
+  CouponListEvent(this.perPage);
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map ["perPage"] =  perPage;
+
+    return map;
+  }
+  @override
+  // TODO: implement props
+  List<Object> get props => [ this.perPage];
+
+  
+  }

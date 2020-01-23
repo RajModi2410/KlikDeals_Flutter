@@ -62,6 +62,24 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     }
   }
 
+  Stream<ApiBlocState> mapCouponListResponseEvents(CouponListEvent event)async*{
+
+      yield ApiFetchingState();
+      try {
+        final response = await playerRepository.coupon(event.toMap());
+        if (response.status){
+          yield CouponListFetchedState(response);
+
+        }else{
+          yield ApiErrorState();
+        }
+      } catch (e) {
+                yield ApiErrorState();
+
+      }
+      
+
+}
   Stream<ApiBlocState> mapSearchResponseEvents(
       RestaurantSearchEvent event) async* {
     if (event.query.isEmpty) {

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 
 import 'models/SearchResponse.dart';
@@ -34,6 +35,19 @@ class LoginApiFetchedState extends ApiBlocState {
   // TODO: implement props
   List<Object> get props => [loginResponse];
 }
+
+
+class CouponListFetchedState extends ApiBlocState{
+  final CouponListResponse couponlist;
+
+
+  CouponListFetchedState(this.couponlist);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [couponlist];
+}
+
 
 class ApiErrorState extends ApiBlocState {
   @override

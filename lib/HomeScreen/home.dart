@@ -1,4 +1,8 @@
+import 'dart:wasm';
+
 import 'package:flutter/material.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -12,7 +16,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomePage extends State<HomeScreen> {
-
+  
+  bool _isLoading;
+  ApiBlocBloc auth;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +74,7 @@ class listDetails extends StatelessWidget {
       {Key key, this.choice, this.onTap, this.item, this.selected = false})
       : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.display1;
@@ -94,4 +101,34 @@ class listDetails extends StatelessWidget {
           )
     );
   }
+
+//  @override
+//   void initState() {
+    
+//     super.initState();
+//   }
+    // Void couponList(){
+    //   try {
+    //     auth.add(CouponListEvent(_perpage));
+    //     setState((){
+    //       _is
+    //     })
+    //   } catch (e) {
+    //   }
+    // }
+
+  // void validateAndSubmit() {
+  //   print("validateAndSubmit");
+  //   if (validateAndSave()) {
+  //     try {
+  //       auth.add(LoginEvent(_email, _password));
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     } catch (e) {
+  //       print('Error: $e');
+  //     }
+  //   }
+  // }
 }
+
