@@ -18,7 +18,7 @@ class _SideMenu extends State<SideMenu>{
  initState() {
     super.initState();
 
-    _menuItems = createMenuItems();
+    // _menuItems = createMenuItems();
     _selectedMenuItem = _menuItems.first;
     _appBarTitle = new Text(_menuItems.first.title);
     _appBarBackgroundColor = _menuItems.first.color;
@@ -48,10 +48,10 @@ class _SideMenu extends State<SideMenu>{
       _menuOptionWidgets.add(
         new Container(
           decoration: new BoxDecoration(
-            color: menuItem
+            color: Colors.blue
           ),
         )
-      )
+      );
     }
     // TODO: implement build
     // return null;

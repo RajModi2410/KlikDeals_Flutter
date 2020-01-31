@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'LoginForm.dart';
+import 'Login_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,10 +13,7 @@ class _LoginPage extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: LoginForm(),
+      body: LoginFormV1(),
     );
   }
 }

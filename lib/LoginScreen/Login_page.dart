@@ -13,9 +13,9 @@ ProgressDialog pr;
 var token = "";
 SharedPreferences sharedPreferences;
 
-class LoginForm extends StatefulWidget {
+class LoginFormV1 extends StatefulWidget {
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<LoginFormV1> createState() => _LoginFormV1State();
 }
 
 String emailValidator(String value) {
@@ -38,7 +38,7 @@ String passwordValidator(String value) {
   }
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormV1State extends State<LoginFormV1> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
@@ -129,31 +129,38 @@ class _LoginFormState extends State<LoginForm> {
                 image: AssetImage('assets/images/splash_bg.png'),
                 fit: BoxFit.cover)),
       ),
-      SingleChildScrollView(
-          child: new Form(
-              key: _formKey,
-              child: new Column(
+      new Form(
+          key: _formKey,
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _showLogo(),
+              Column(
                 children: <Widget>[
-                  _showLogo(),
-                  Expanded(
-                                      child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        _showEmailLabel(),
-                        _showEmailTextField(),
-                        _showDivider(),
-                        _showPasswordLabel(),
-                        _showPasswordTextField(),
-                        _showDivider(),
-                        _showLoginButton(auth),
-                      ],
-                    ),
+                  _showEmailLabel(),
+                  _showEmailTextField(),
+                  _showDivider(),
+                  _showPasswordLabel(),
+                  _showPasswordTextField(),
+                  _showDivider(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 100.0),
+                    child: _showLoginButton(auth),
                   ),
-                  _showErrorMessage(),
-                  _showCircularProgress()
                 ],
-              )))
+              ),
+             
+            ],
+          )),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              children: <Widget>[
+                 _showErrorMessage(),
+              _showCircularProgress()
+              ],
+            )
+          )
     ]);
   }
 
@@ -338,7 +345,7 @@ class _LoginFormState extends State<LoginForm> {
       alignment: Alignment.center,
       child: new Row(
         children: <Widget>[
-          new Expanded(
+          Expanded(
             child: new FlatButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),

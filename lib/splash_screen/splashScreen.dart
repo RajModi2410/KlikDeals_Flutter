@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,8 +27,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+      BackgroundWidget(),
+      logoBuilder(),
+      ],
+    );
+  }
+
+  Center logoBuilder() {
     return new Center(
       child: Container(
+        color: Colors.transparent,
         child: Column(
           children: <Widget>[
             Expanded(
