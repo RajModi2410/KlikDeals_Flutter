@@ -30,8 +30,6 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   Stream<ApiBlocState> mapEventToState(
     ApiBlocEvent event,
   ) async* {
-    // yield ApiFetchingState();
-    // try {
     if (event is RestaurantSearchEvent) {
       yield* mapSearchResponseEvents(event);
     } else if (event is LoginEvent) {
@@ -39,47 +37,42 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     } else if (event is TokenGenerateEvent) {
       playerRepository.token = event.token;
       yield ApiUninitializedState();
+    } else if (event is CouponListEvent) {
+      yield* mapCouponListResponseEvents(event);
     }
-    // }
-    //  catch (_, stackTrace) {
-    //   developer.log('$_',
-    //       name: 'ApiBlocBloc', error: _, stackTrace: stackTrace);
-    //   yield* ApiErrorState();
-    // }
   }
 
   Stream<ApiBlocState> mapLoginEventResponseEvents(LoginEvent event) async* {
     yield ApiFetchingState();
-      try {
-        final response = await playerRepository.login(event.toMap());
-        if (response.status) {
-          yield LoginApiFetchedState(response);
-        } else {
-          yield ApiErrorState();
-        }
-      } catch (e) {
+    try {
+      final response = await playerRepository.login(event.toMap());
+      if (response.status) {
+        yield LoginApiFetchedState(response);
+      } else {
         yield ApiErrorState();
+      }
+    } catch (e) {
+      yield ApiErrorState();
     }
   }
 
-  Stream<ApiBlocState> mapCouponListResponseEvents(CouponListEvent event)async*{
-
-      yield ApiFetchingState();
-      try {
-        final response = await playerRepository.coupon(event.toMap());
-        if (response.status){
-          yield CouponListFetchedState(response);
-
-        }else{
-          yield ApiErrorState();
-        }
-      } catch (e) {
-                yield ApiErrorState();
-
+  Stream<ApiBlocState> mapCouponListResponseEvents(
+      CouponListEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.coupon(event.toMap());
+      if (response.status) {
+        yield CouponListFetchedState(response);
+      } else {
+        yield couponApiErrorState(response);
       }
-      
+    } catch (e) {
+      print("We got error :: ${e.toString()}");
+      e.printStackTrace();
+      yield ApiErrorState();
+    }
+  }
 
-}
   Stream<ApiBlocState> mapSearchResponseEvents(
       RestaurantSearchEvent event) async* {
     if (event.query.isEmpty) {
@@ -104,7 +97,4 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       }
     }
   }
-
-
 }
-

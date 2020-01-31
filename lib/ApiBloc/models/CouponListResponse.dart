@@ -1,14 +1,30 @@
 class CouponListResponse {
   bool status;
   String message;
-  Data response;
+  Response response;
+  ErrorMessage errorMessage;
 
-  CouponListResponse({this.status, this.message, this.response});
+  CouponListResponse(
+      {this.status, this.message, this.response, this.errorMessage});
 
-  CouponListResponse.fromJson(Map<String, dynamic> json) {
+  CouponListResponse.fromJson(Map<String, dynamic> json, bool parseError) {
     status = json['status'];
     message = json['message'];
-    response = json['data'] != null ? new Data.fromJson(json['data']) : null;
+
+    if (!parseError) {
+      response = json['response'] != null
+          ? new Response.fromJson(json['response'])
+          : null;
+    } else {
+      response = null;
+    }
+    if (parseError) {
+      errorMessage = json['error_message'] != null
+          ? new ErrorMessage.fromJson(json['error_message'])
+          : null;
+    } else {
+      errorMessage = null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -16,23 +32,31 @@ class CouponListResponse {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.response != null) {
-      data['data'] = this.response.toJson();
+      data['response'] = this.response.toJson();
+    }
+    if (this.errorMessage != null) {
+      data['error_message'] = this.errorMessage.toJson();
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'CouponListResponse{status: $status, message: $message, response: $response, errorMessage: $errorMessage}';
+  }
 }
 
-class Coupon {
+class Response {
   int currentPage;
-  List<Coupon> data;
+  List<Data> data;
   int from;
   String nextPageUrl;
   String path;
   String perPage;
-  Null prevPageUrl;
+  String prevPageUrl;
   int to;
 
-  Coupon(
+  Response(
       {this.currentPage,
       this.data,
       this.from,
@@ -42,12 +66,12 @@ class Coupon {
       this.prevPageUrl,
       this.to});
 
-  Coupon.fromJson(Map<String, dynamic> json) {
+  Response.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     if (json['data'] != null) {
-      data = new List<Coupon>();
+      data = new List<Data>();
       json['data'].forEach((v) {
-        data.add(new Coupon.fromJson(v));
+        data.add(new Data.fromJson(v));
       });
     }
     from = json['from'];
@@ -77,45 +101,30 @@ class Coupon {
 class Data {
   int id;
   String vendorId;
-  Null reddemBy;
   String couponCode;
   String description;
   String status;
-  Null grabDate;
-  Null approvedBy;
-  Null approvedDate;
-  Null approvedLatLong;
-  Null displayCount;
+  String grabDate;
   String startDate;
   String endDate;
 
   Data(
       {this.id,
       this.vendorId,
-      this.reddemBy,
       this.couponCode,
       this.description,
       this.status,
       this.grabDate,
-      this.approvedBy,
-      this.approvedDate,
-      this.approvedLatLong,
-      this.displayCount,
       this.startDate,
       this.endDate});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendorId = json['vendor_id'];
-    reddemBy = json['reddem_by'];
     couponCode = json['coupon_code'];
     description = json['description'];
     status = json['status'];
     grabDate = json['grab_date'];
-    approvedBy = json['approved_by'];
-    approvedDate = json['approved_date'];
-    approvedLatLong = json['approved_lat_long'];
-    displayCount = json['display_count'];
     startDate = json['start_date'];
     endDate = json['end_date'];
   }
@@ -124,17 +133,38 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['vendor_id'] = this.vendorId;
-    data['reddem_by'] = this.reddemBy;
     data['coupon_code'] = this.couponCode;
     data['description'] = this.description;
     data['status'] = this.status;
     data['grab_date'] = this.grabDate;
-    data['approved_by'] = this.approvedBy;
-    data['approved_date'] = this.approvedDate;
-    data['approved_lat_long'] = this.approvedLatLong;
-    data['display_count'] = this.displayCount;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'Data{id: $id, vendorId: $vendorId, couponCode: $couponCode, description: $description, status: $status, grabDate: $grabDate, startDate: $startDate, endDate: $endDate}';
+  }
+}
+
+class ErrorMessage {
+  List<String> error;
+
+  ErrorMessage({this.error});
+
+  ErrorMessage.fromJson(Map<String, dynamic> json) {
+    error = json['error'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'ErrorMessage{error: $error}';
   }
 }

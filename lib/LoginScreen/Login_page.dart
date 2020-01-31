@@ -5,7 +5,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/home.dart';
-import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,22 +58,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
-    pr.style(
-      message: 'Please wait...',
-      borderRadius: 10.0,
-      backgroundColor: Colors.white,
-      elevation: 10.0,
-      insetAnimCurve: Curves.easeInOut,
-      progress: 0.0,
-      maxProgress: 100.0,
-      progressTextStyle: TextStyle(
-          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-      messageTextStyle: TextStyle(
-          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
-    );
-
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return BlocListener<ApiBlocBloc, ApiBlocState>(
         listener: (context, state) {
@@ -87,6 +70,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
             );
           } else if (state is LoginApiFetchedState) {
             token = state.loginResponse.token.toString();
+            auth.add(TokenGenerateEvent(token));
             _onSetOnShredPrefe(token);
             _goToHomePage();
           }
@@ -98,23 +82,16 @@ class _LoginFormV1State extends State<LoginFormV1> {
               ApiBlocState currentState,
             ) {
               if (currentState is LoginApiFetchedState) {
-                pr.hide();
                 print(
                     "Login successfully ${currentState.loginResponse.token.toString()}");
-                // token = currentState.loginResponse.token.toString();
-                // _onSetOnShredPrefe(token);
-                // _goToHomePage();
-              } else if (currentState is ApiFetchingState) {
-                // pr.show();
-              } else if (currentState is ApiErrorState) {
-                pr.hide();
+              } else if (currentState is ApiFetchingState) {}
+              else if (currentState is ApiErrorState) {
                 _onWidgetDidBuild(() {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Please check email and password.'),
                       backgroundColor: Colors.red,
-                    ),
-                  );
+                    ),);
                 });
               }
               return _showForm();
@@ -145,34 +122,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
                   _showDivider(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 100.0),
-                    child: _showLoginButton(auth),
-                  ),
-                ],
-              ),
-             
-            ],
-          )),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              children: <Widget>[
-                 _showErrorMessage(),
-              _showCircularProgress()
-              ],
-            )
-          )
+                    child: _showLoginButton(auth),),
+                ],),
+            ],)),
+      Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            children: <Widget>[_showErrorMessage()],
+          ))
     ]);
-  }
-
-  Widget _showCircularProgress() {
-    // if (_isLoading) {
-    //   return Center(child: CircularProgressIndicator());
-    // }
-    // return Container(
-    //   height: 0.0,
-    //   width: 0.0,
-    // );
-    return Container();
   }
 
   Widget _showLogo() {
@@ -231,7 +189,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 autofocus: false,
-                initialValue: "testing.webdesksolution@gmail.com",
+                initialValue: "testing8@webdesksolution.com",
                 validator: emailValidator,
                 onSaved: (value) => _email = value.trim(),
                 obscureText: false,
@@ -295,7 +253,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
           new Expanded(
             child: TextFormField(
               validator: passwordValidator,
-              initialValue: "testing@321",
+              initialValue: "admin@321",
               onSaved: (value) => _password = value.trim(),
               autofocus: false,
               obscureText: _obscureText,
@@ -352,7 +310,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
               ),
               color: Color.fromRGBO(74, 172, 215, 1),
               onPressed: () {
-                pr.show();
                 validateAndSubmit();
               },
               child: new Row(
@@ -427,9 +384,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   void _onSetOnShredPrefe(String token) async {
     sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      sharedPreferences.setString("token", token);
-      sharedPreferences.commit();
-    });
+    sharedPreferences.setString("token", token);
   }
 }

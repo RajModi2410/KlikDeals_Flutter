@@ -56,7 +56,7 @@ class CouponListEvent extends ApiBlocEvent{
 
   Map toMap() {
     var map = new Map<String, dynamic>();
-    map ["perPage"] =  perPage;
+    map ["per_page"] = perPage;
 
     return map;
   }

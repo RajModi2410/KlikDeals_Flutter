@@ -49,10 +49,19 @@ class CouponListFetchedState extends ApiBlocState{
 }
 
 
+
 class ApiErrorState extends ApiBlocState {
   @override
-  // TODO: implement props
   List<Object> get props => [];
+}
+
+class couponApiErrorState extends ApiBlocState {
+  final CouponListResponse couponlist;
+
+  couponApiErrorState(this.couponlist);
+
+  @override
+  List<Object> get props => [couponlist];
 }
 
 class ApiEmptyState extends ApiBlocState {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
@@ -32,33 +31,20 @@ class ApiBlocRepository {
 
   Future<LoginResponse> login(Map map) async {
     print(baseUrl + "vendorlogin" + map.toString());
-    final response = await http.post(
-        baseUrl + "vendorlogin",
-        body: map
-    );
+    final response = await http.post(baseUrl + "vendorlogin", body: map);
     return parseLoginResponse(response);
   }
 
-Future<CouponListResponse> coupon(Map map) async {
-    print(baseUrl + "listcouponbyvendor?" + map.toString());
+  Future<CouponListResponse> coupon(Map map) async {
+    print(baseUrl + "listcouponbyvendor" + map.toString());
     final response = await http.post(
-        baseUrl + "listcouponbyvendor?" + "per_page",
-        headers: getCommonHeaders(),
-        body: map
-    );
-return parseCouponResponse(response); 
- }
+        baseUrl + "listcouponbyvendor",
+        headers: getCommonHeaders());
+    return parseCouponResponse(response);
+  }
 
-  // Future<CouponListResponse> coupon(Map map)async{
-  //   print(baseUrl + "listcoupon" + map.toString());
-  //   final response = await http.get(
-  //     baseUrl + "listcoupon",
-  //       body: map
-  //   );
-  //   return parseCouponResponse(response);
-  // }
   Map<String, String> getCommonHeaders() =>
-      {"token": key, HttpHeaders.acceptEncodingHeader: "application/json"};
+      {"token": token};
 
   SearchResponse parseResponse(http.Response response) {
     final responseString = jsonDecode(response.body);
@@ -70,7 +56,6 @@ return parseCouponResponse(response);
     }
   }
 
-
   LoginResponse parseLoginResponse(http.Response response) {
     final responseString = jsonDecode(response.body);
 
@@ -81,17 +66,14 @@ return parseCouponResponse(response);
     }
   }
 
-    CouponListResponse parseCouponResponse(http.Response response){
-      final responseString = jsonDecode(response.body);
-      
-      if (response.statusCode == successCode){
-        return CouponListResponse.fromJson(responseString);
+  CouponListResponse parseCouponResponse(http.Response response) {
+    print("Coupon Response :: ${response.body}");
+    final responseString = jsonDecode(response.body);
 
-      }else{
-        throw Exception('failed to load players');
-      }
+    if (response.statusCode == successCode) {
+      return CouponListResponse.fromJson(responseString, false);
+    } else {
+      return CouponListResponse.fromJson(responseString, true);
     }
-
-
-
+  }
 }
