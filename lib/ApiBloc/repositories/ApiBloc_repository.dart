@@ -31,9 +31,18 @@ class ApiBlocRepository {
   }
 
   Future<LoginResponse> login(Map map) async {
-    print(baseUrl + "vendorlogin" + map.toString());
-    final response = await http.post(baseUrl + "vendorlogin", body: map);
-    return parseLoginResponse(response);
+    try {
+      print(baseUrl + "vendorlogin" + map.toString());
+      Dio.FormData formData = new Dio.FormData.fromMap(map);
+      Dio.Response response =
+          await dio.post(baseUrl + "vendorlogin", data: formData);
+      return parseLoginResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseLoginResponse(response);
+      }
+    }
   }
 
   Future<CouponListResponse> coupon(Map map) async {
@@ -66,8 +75,9 @@ class ApiBlocRepository {
     }
   }
 
-  LoginResponse parseLoginResponse(http.Response response) {
-    final responseString = jsonDecode(response.body);
+  LoginResponse parseLoginResponse(Dio.Response response) {
+     print("LoginResponse :: ${response.data}");
+    final responseString = (response.data);
 
     if (response.statusCode == successCode) {
       return LoginResponse.fromJson(responseString);

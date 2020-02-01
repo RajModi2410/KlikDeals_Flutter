@@ -7,10 +7,8 @@ class RoundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-          child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 100.0, color: Colors.pink),
-        ),
-    );
+    return Center(
+        child: Loading(indicator: BallSpinFadeLoaderIndicator(), size: 100.0, color: Colors.black),
+      );
   }
 }

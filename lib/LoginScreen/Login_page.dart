@@ -5,9 +5,12 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/home.dart';
+import 'package:klik_deals/LoginScreen/LoginBloc.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'ErrorGen.dart';
 
 ProgressDialog pr;
 var token = "";
@@ -50,343 +53,359 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   @override
   void initState() {
-    emailInputController = new TextEditingController();
-    pwdInputController = new TextEditingController();
-    _isLoading = false;
-    _errorMessage = "";
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    auth = BlocProvider.of<ApiBlocBloc>(context);
-    return BlocListener<ApiBlocBloc, ApiBlocState>(
-        listener: (context, state) {
-          if (state is ApiErrorState) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text('error occurred'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          } else if (state is LoginApiFetchedState) {
-            token = state.loginResponse.token.toString();
-            auth.add(TokenGenerateEvent(token));
-            _onSetOnShredPrefe(token);
-            _goToHomePage();
-          }
-        },
-        child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-            bloc: auth,
-            builder: (
-              BuildContext context,
-              ApiBlocState currentState,
-            ) {
-              if (currentState is LoginApiFetchedState) {
-                print(
-                    "Login successfully ${currentState.loginResponse.token.toString()}");
-              } else if (currentState is ApiFetchingState) {
-                return RoundWidget();
-              }
-              // else if (currentState is ApiErrorState) {
-              //   _onWidgetDidBuild(() {
-              //     Scaffold.of(context).showSnackBar(
-              //       SnackBar(
-              //         content: Text('Please check email and password.'),
-              //         backgroundColor: Colors.red,
-              //       ),);
-              //   });
-              // }
-              return _showForm();
-            }));
-  }
-
-  Widget _showForm() {
-    return Stack(children: <Widget>[
-      Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
-                fit: BoxFit.cover)),
-      ),
-      new Form(
-          key: _formKey,
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _showLogo(),
-              Column(
+    emailInputController = new TextEditingController(text: "testing9@webdesk.com");
+    pwdInputController = new TextEditingController(text: "admin@321");
+    emailInputController.addListener(_printEmailValue);
+    pwdInputController.addListener(_printPasswordValue);
+        _isLoading = false;
+        _errorMessage = "";
+        super.initState();
+      }
+    
+      @override
+      Widget build(BuildContext context) {
+        auth = BlocProvider.of<ApiBlocBloc>(context);
+        return Stack(children: <Widget>[
+          _showForm(),
+          BlocListener<ApiBlocBloc, ApiBlocState>(
+              listener: (context, state) {
+                if (state is ApiErrorState) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('error occurred'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else if (state is LoginApiFetchedState) {
+                  token = state.loginResponse.token.toString();
+                  auth.add(TokenGenerateEvent(token));
+                  _onSetOnShredPrefe(token);
+                  _goToHomePage();
+                }
+              },
+              child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+                  bloc: auth,
+                  builder: (
+                    BuildContext context,
+                    ApiBlocState currentState,
+                  ) {
+                    if (currentState is ApiFetchingState) {
+                      return RoundWidget();
+                    }else{
+                      return Container();
+                    }
+                  }))
+        ]);
+      }
+    
+      Widget _showForm() {
+        return Stack(children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('assets/images/splash_bg.png'),
+                    fit: BoxFit.cover)),
+          ),
+          new Form(
+              key: _formKey,
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _showEmailLabel(),
-                  _showEmailTextField(),
-                  _showDivider(),
-                  _showPasswordLabel(),
-                  _showPasswordTextField(),
-                  _showDivider(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 100.0),
-                    child: _showLoginButton(auth),),
-                ],),
-            ],)),
-      Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            children: <Widget>[_showErrorMessage()],
-          ))
-    ]);
-  }
-
-  Widget _showLogo() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
-      child: Center(
-        child: new Image(
-          image: new AssetImage('assets/images/logo.png'),
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-        ),
-      ),
-    );
-  }
-
-  Widget _showEmailLabel() {
-    return new Row(
-      children: <Widget>[
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0),
-            child: new Text(
-              "EMAIL",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(74, 172, 215, 1),
-                fontSize: 15.0,
-              ),
+                  _showLogo(),
+                  Column(
+                    children: <Widget>[
+                      _showEmailLabel(),
+                      _showEmailTextField(),
+                      _showDivider(),
+                      _showPasswordLabel(),
+                      _showPasswordTextField(),
+                      _showDivider(),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 100.0),
+                        child: _showLoginButton(auth),
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: <Widget>[_showErrorMessage()],
+              ))
+        ]);
+      }
+    
+      Widget _showLogo() {
+        return Container(
+          padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
+          child: Center(
+            child: new Image(
+              image: new AssetImage('assets/images/logo.png'),
+              height: 50,
+              width: MediaQuery.of(context).size.width,
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _showEmailTextField() {
-    return new Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-      alignment: Alignment.center,
-      decoration: new BoxDecoration(
-        border: Border(
-            bottom: BorderSide(
-                color: Color.fromRGBO(74, 172, 215, 1),
-                width: 0.5,
-                style: BorderStyle.solid)),
-      ),
-      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-              child: Column(
-            children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autofocus: false,
-                initialValue: "testing8@webdesksolution.com",
-                validator: emailValidator,
-                onSaved: (value) => _email = value.trim(),
-                obscureText: false,
-                textAlign: TextAlign.left,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.alternate_email,
-                    color: Colors.grey,
+        );
+      }
+    
+      Widget _showEmailLabel() {
+        return new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new Padding(
+                padding: const EdgeInsets.only(left: 40.0),
+                child: new Text(
+                  "EMAIL",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(74, 172, 215, 1),
+                    fontSize: 15.0,
                   ),
-                  border: InputBorder.none,
-                  hintText: "youremail@abc.com",
-                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    
+      Widget _showEmailTextField() {
+        final loginBloc = LoginBloc();
+        return new Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(left: 40.0, right: 40.0),
+          alignment: Alignment.center,
+          decoration: new BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    color: Color.fromRGBO(74, 172, 215, 1),
+                    width: 0.5,
+                    style: BorderStyle.solid)),
+          ),
+          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                  child: Column(
+                children: <Widget>[
+                  StreamBuilder<String>(
+                      stream: loginBloc.email,
+                      builder: (context, snapshot) {
+                        return TextFormField(
+                          // onChanged: (value) => loginBloc
+                          //     .emailChanged(ErroGen(isError: false, value: value)),
+                          keyboardType: TextInputType.emailAddress,
+                          autofocus: false,
+                          // initialValue: "testing9@webdesksolution.com",
+                          validator: emailValidator,
+                          onSaved: (value) => _email = value.trim(),
+                          obscureText: false,
+                          textAlign: TextAlign.left,
+                          controller: emailInputController,
+                          decoration: InputDecoration(
+                              icon: Icon(
+                                Icons.alternate_email,
+                                color: Colors.grey,
+                              ),
+                              border: InputBorder.none,
+                              hintText: "youremail@abc.com",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              errorText: snapshot.error,
+                              errorMaxLines: 1,
+                              errorStyle: TextStyle(color: Colors.red)),
+                        );
+                      }),
+                ],
+              )),
+            ],
+          ),
+        );
+      }
+    
+      Widget _showPasswordLabel() {
+        return new Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            new Expanded(
+              child: new Padding(
+                padding: const EdgeInsets.only(left: 40.0),
+                child: new Text(
+                  "PASSWORD",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromRGBO(74, 172, 215, 1),
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+    
+      Widget _showPasswordTextField() /**/ {
+        return new Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                  color: Color.fromRGBO(74, 172, 215, 1),
+                  width: 0.5,
+                  style: BorderStyle.solid),
+            ),
+          ),
+          padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              new Expanded(
+                child: TextFormField(
+                  validator: passwordValidator,
+                  // initialValue: "admin@321",
+                  onSaved: (value) => _password = value.trim(),
+                  autofocus: false,
+                  obscureText: _obscureText,
+                  textAlign: TextAlign.left,
+                  controller: pwdInputController,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.lock,
+                      color: Colors.grey,
+                    ),
+                    border: InputBorder.none,
+                    hintText: '*********',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+              new FlatButton(
+                  onPressed: _toggle,
+                  child: new Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Color.fromRGBO(74, 172, 215, 1),
+                  ))
+            ],
+          ),
+        );
+      }
+    
+      // Initially password is obscure
+      bool _obscureText = true;
+    
+      // Toggles the password show status
+      void _toggle() {
+        setState(() {
+          _obscureText = !_obscureText;
+        });
+      }
+    
+      Widget _showDivider() {
+        return Divider(
+          height: 24.0,
+        );
+      }
+    
+      Widget _showLoginButton(ApiBlocBloc auth) {
+        return new Container(
+          width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
+          alignment: Alignment.center,
+          child: new Row(
+            children: <Widget>[
+              Expanded(
+                child: new FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  color: Color.fromRGBO(74, 172, 215, 1),
+                  onPressed: () {
+                    validateAndSubmit();
+                  },
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Padding(
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                        child: Text("LOGIN",
+                            style: TextStyle(
+                                color: Colors.white, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
-          )),
-        ],
-      ),
-    );
-  }
-
-  Widget _showPasswordLabel() {
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0),
-            child: new Text(
-              "PASSWORD",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(74, 172, 215, 1),
-                fontSize: 15.0,
-              ),
-            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _showPasswordTextField() /**/ {
-    return new Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-              color: Color.fromRGBO(74, 172, 215, 1),
-              width: 0.5,
-              style: BorderStyle.solid),
-        ),
-      ),
-      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-      child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          new Expanded(
-            child: TextFormField(
-              validator: passwordValidator,
-              initialValue: "admin@321",
-              onSaved: (value) => _password = value.trim(),
-              autofocus: false,
-              obscureText: _obscureText,
-              textAlign: TextAlign.left,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.lock,
-                  color: Colors.grey,
-                ),
-                border: InputBorder.none,
-                hintText: '*********',
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          new FlatButton(
-              onPressed: _toggle,
-              child: new Icon(
-                _obscureText ? Icons.visibility : Icons.visibility_off,
-                color: Color.fromRGBO(74, 172, 215, 1),
-              ))
-        ],
-      ),
-    );
-  }
-
-  // Initially password is obscure
-  bool _obscureText = true;
-
-  // Toggles the password show status
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
-
-  Widget _showDivider() {
-    return Divider(
-      height: 24.0,
-    );
-  }
-
-  Widget _showLoginButton(ApiBlocBloc auth) {
-    return new Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
-      alignment: Alignment.center,
-      child: new Row(
-        children: <Widget>[
-          Expanded(
-            child: new FlatButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              color: Color.fromRGBO(74, 172, 215, 1),
-              onPressed: () {
-                validateAndSubmit();
-              },
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: Text("LOGIN",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _showErrorMessage() {
-    if (_errorMessage != null && _errorMessage.length > 0) {
-      return SnackBar(
-        content: Text(_errorMessage),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {},
-        ),
-      );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
-  bool validateAndSave() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  void validateAndSubmit() {
-    print("validateAndSubmit");
-    if (validateAndSave()) {
-      try {
-        auth.add(LoginEvent(_email, _password));
-        setState(() {
-          _isLoading = false;
-        });
-      } catch (e) {
-        print('Error: $e');
+        );
       }
-    }
+    
+      Widget _showErrorMessage() {
+        if (_errorMessage != null && _errorMessage.length > 0) {
+          return SnackBar(
+            content: Text(_errorMessage),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {},
+            ),
+          );
+        } else {
+          return new Container(
+            height: 0.0,
+          );
+        }
+      }
+    
+      bool validateAndSave() {
+        final form = _formKey.currentState;
+        if (form.validate()) {
+          form.save();
+          return true;
+        }
+        return false;
+      }
+    
+      void validateAndSubmit() {
+        print("validateAndSubmit");
+        if (validateAndSave()) {
+          try {
+            auth.add(LoginEvent(_email, _password));
+            setState(() {
+              _isLoading = false;
+            });
+          } catch (e) {
+            print('Error: $e');
+          }
+        }
+      }
+    
+      void _goToHomePage() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
+    
+      void _onWidgetDidBuild(Function callback) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          callback();
+        });
+      }
+    
+      void _onSetOnShredPrefe(String token) async {
+        sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString("token", token);
+      }
+    
+      void _printEmailValue() {
+        print("Email text field: ${emailInputController.text}");
   }
 
-  void _goToHomePage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
-    );
-  }
-
-  void _onWidgetDidBuild(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
-  }
-
-  void _onSetOnShredPrefe(String token) async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString("token", token);
+  void _printPasswordValue(){
+    print("Password text field: ${pwdInputController.text}");
   }
 }
