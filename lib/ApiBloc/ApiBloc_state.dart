@@ -8,12 +8,12 @@ abstract class ApiBlocState extends Equatable {}
 
 class ApiUninitializedState extends ApiBlocState {
   @override
-  // TODO: implement props
+  
   List<Object> get props => [];
 }
 
 class ApiFetchingState extends ApiBlocState {
-  @override // TODO: implement props
+  @override 
   List<Object> get props => [];
 }
 
@@ -26,29 +26,15 @@ class ApiFetchedState extends ApiBlocState {
   List<Object> get props => [searchResult];
 }
 
-class LoginApiFetchedState extends ApiBlocState {
-  final LoginResponse loginResponse;
-
-  LoginApiFetchedState(this.loginResponse);
-
-  @override
-  // TODO: implement props
-  List<Object> get props => [loginResponse];
-}
-
-
 class CouponListFetchedState extends ApiBlocState{
   final CouponListResponse couponlist;
-
 
   CouponListFetchedState(this.couponlist);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [couponlist];
 }
-
-
 
 class ApiErrorState extends ApiBlocState {
   @override
@@ -66,6 +52,6 @@ class couponApiErrorState extends ApiBlocState {
 
 class ApiEmptyState extends ApiBlocState {
   @override
-  // TODO: implement props
+  
   List<Object> get props => [];
 }

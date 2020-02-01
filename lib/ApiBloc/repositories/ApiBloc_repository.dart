@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart' as Dio;
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
@@ -11,7 +12,10 @@ import '../ApiBloc_provider.dart';
 class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
   var dio = Dio.Dio();
-  ApiBlocRepository();
+
+  ApiBlocRepository() {
+    dio.interceptors.add(LogInterceptor(responseBody: false));
+  }
 
   void test(bool isError) {
     this._apiBlocProvider.test(isError);
@@ -76,14 +80,9 @@ class ApiBlocRepository {
   }
 
   LoginResponse parseLoginResponse(Dio.Response response) {
-     print("LoginResponse :: ${response.data}");
+    print("LoginResponse :: ${response.data}");
     final responseString = (response.data);
-
-    if (response.statusCode == successCode) {
-      return LoginResponse.fromJson(responseString);
-    } else {
-      throw Exception('failed to load players');
-    }
+    return LoginResponse.fromJson(responseString,response.statusCode != successCode);
   }
 
   CouponListResponse parseCouponResponse(Dio.Response response) {
