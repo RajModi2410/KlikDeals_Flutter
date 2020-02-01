@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart' as Dio;
 import 'package:http/http.dart' as http;
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
@@ -9,7 +10,7 @@ import '../ApiBloc_provider.dart';
 
 class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
-
+  var dio = Dio.Dio();
   ApiBlocRepository();
 
   void test(bool isError) {
@@ -37,14 +38,23 @@ class ApiBlocRepository {
 
   Future<CouponListResponse> coupon(Map map) async {
     print(baseUrl + "listcouponbyvendor" + map.toString());
-    final response = await http.post(
-        baseUrl + "listcouponbyvendor",
-        headers: getCommonHeaders());
-    return parseCouponResponse(response);
+    Dio.FormData formData = new Dio.FormData.fromMap(map);
+    try {
+      Dio.Response response = await dio.post(baseUrl + "listcouponbyvendor",
+          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      // final response = await http.post(
+      //     baseUrl + "listcouponbyvendor",
+      //     headers: getCommonHeaders());
+      return parseCouponResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseCouponResponse(response);
+      }
+    }
   }
 
-  Map<String, String> getCommonHeaders() =>
-      {"token": token};
+  Map<String, String> getCommonHeaders() => {"token": token};
 
   SearchResponse parseResponse(http.Response response) {
     final responseString = jsonDecode(response.body);
@@ -66,9 +76,9 @@ class ApiBlocRepository {
     }
   }
 
-  CouponListResponse parseCouponResponse(http.Response response) {
-    print("Coupon Response :: ${response.body}");
-    final responseString = jsonDecode(response.body);
+  CouponListResponse parseCouponResponse(Dio.Response response) {
+    print("Coupon Response :: ${response.data}");
+    final responseString = (response.data);
 
     if (response.statusCode == successCode) {
       return CouponListResponse.fromJson(responseString, false);

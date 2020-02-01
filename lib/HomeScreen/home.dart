@@ -6,6 +6,10 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
+import 'package:klik_deals/mywidgets/CouponItem.dart';
+import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
+import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var token = "";
@@ -26,6 +30,7 @@ class _HomePage extends State<HomeScreen> {
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Scaffold(
+      appBar: AppBar(title: Center(child: Text("Coupons"))),
       body: BlocListener<ApiBlocBloc, ApiBlocState>(
         listener: (context, state) {
           if (state is ApiErrorState) {
@@ -35,23 +40,29 @@ class _HomePage extends State<HomeScreen> {
                 backgroundColor: Colors.red,
               ),
             );
-          } else if (state is CouponListFetchedState) {}
+          }
         },
         child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
             bloc: auth,
-            builder: (BuildContext context,
-                ApiBlocState currentState,) {
+            builder: (
+              BuildContext context,
+              ApiBlocState currentState,
+            ) {
               if (currentState is ApiFetchingState) {
-                print("Home Page :: We are in frtching state.....");
+                print("Home Page :: We are in fetching state.....");
+                return RoundWidget();
               } else if (currentState is couponApiErrorState) {
-                print("Home Page :: We got error.....${currentState.couponlist
-                    .errorMessage.error[0]}");
+                print(
+                    "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                return CouponErrorWidget(state: currentState);
               } else if (currentState is CouponListFetchedState) {
-                _couponList(currentState.couponlist.response.data);
+                return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
+                return EmptyListWidget(emptyMessage: "No coupon Data found");
+              }else{
+                return EmptyListWidget(emptyMessage: "No coupon Data found");
               }
-              return Container();
             }),
       ),
     );
@@ -63,10 +74,8 @@ class _HomePage extends State<HomeScreen> {
         shrinkWrap: true,
         padding: const EdgeInsets.all(20.0),
         children: List.generate(data.length, (index) {
-          return Center(
-              child: listDetails(data[index]));
-        })
-    );
+          return Center(child: listDetails(data[index]));
+        }));
   }
 
   @override
@@ -90,49 +99,5 @@ class _HomePage extends State<HomeScreen> {
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }
-  }
-}
-
-// ignore: camel_case_types
-class listDetails extends StatelessWidget {
-  Data data;
-
-  listDetails(this.data);
-
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle textStyle = Theme
-        .of(context)
-        .textTheme
-        .display1;
-    /* if (selected)
-      textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);*/
-    return Card(
-        color: Colors.white,
-        child: Row(
-          children: <Widget>[
-            new Container(
-                padding: const EdgeInsets.all(8.0),
-                alignment: Alignment.topLeft,
-                child: Icon(
-                  data.,
-                  size: 80.0,
-                  color: textStyle.color,
-                )),
-            new Expanded(
-                child: new Container(
-                  padding: const EdgeInsets.all(10.0),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    data.title,
-                    style: null,
-                    textAlign: TextAlign.left,
-                    maxLines: 5,
-                  ),
-                )),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ));
   }
 }

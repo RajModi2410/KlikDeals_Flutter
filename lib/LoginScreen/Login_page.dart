@@ -5,6 +5,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/home.dart';
+import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -84,16 +85,18 @@ class _LoginFormV1State extends State<LoginFormV1> {
               if (currentState is LoginApiFetchedState) {
                 print(
                     "Login successfully ${currentState.loginResponse.token.toString()}");
-              } else if (currentState is ApiFetchingState) {}
-              else if (currentState is ApiErrorState) {
-                _onWidgetDidBuild(() {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please check email and password.'),
-                      backgroundColor: Colors.red,
-                    ),);
-                });
+              } else if (currentState is ApiFetchingState) {
+                return RoundWidget();
               }
+              // else if (currentState is ApiErrorState) {
+              //   _onWidgetDidBuild(() {
+              //     Scaffold.of(context).showSnackBar(
+              //       SnackBar(
+              //         content: Text('Please check email and password.'),
+              //         backgroundColor: Colors.red,
+              //       ),);
+              //   });
+              // }
               return _showForm();
             }));
   }
