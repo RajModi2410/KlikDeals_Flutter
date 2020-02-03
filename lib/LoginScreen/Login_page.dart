@@ -51,8 +51,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
   String _password;
   String _errorMessage;
   ApiBlocBloc auth;
-  final loginBloc = LoginBloc();
-
+  var loginBloc = LoginBloc();
+RoundWidget round;
   @override
   void initState() {
     emailInputController =
@@ -66,6 +66,14 @@ class _LoginFormV1State extends State<LoginFormV1> {
   }
 
   @override
+  void dispose() {
+    emailInputController?.dispose();
+    pwdInputController?.dispose();
+    loginBloc = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Stack(children: <Widget>[
@@ -76,9 +84,13 @@ class _LoginFormV1State extends State<LoginFormV1> {
               String error = "";
               if (state.loginResponse.errorMessage.general_error.length > 0) {
                 error = state.loginResponse.errorMessage.general_error.first;
-              } else if (state
-                  .loginResponse.errorMessage.user_error.length > 0) {
-                error = state.loginResponse.errorMessage.user_error.first;
+              } else if (state.loginResponse.errorMessage.user_error.length >
+                  0) {
+                // error = state.loginResponse.errorMessage.user_error.first;
+                this
+                    .loginBloc
+                    .emailChanged(ErroGen(isError: true, value: state.loginResponse.errorMessage.user_error.first));
+                error = null;
               }
               if (error != null) {
                 Scaffold.of(context).showSnackBar(
@@ -102,7 +114,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 ApiBlocState currentState,
               ) {
                 if (currentState is ApiFetchingState) {
-                  return RoundWidget();
+                  round = RoundWidget();
+                  return round;
                 } else {
                   return Container();
                 }
@@ -120,24 +133,16 @@ class _LoginFormV1State extends State<LoginFormV1> {
       ),
       new Form(
           key: _formKey,
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: new ListView(
             children: <Widget>[
               _showLogo(),
-              Column(
-                children: <Widget>[
-                  _showEmailLabel(),
-                  _showEmailTextField(),
-                  _showDivider(),
-                  _showPasswordLabel(),
-                  _showPasswordTextField(),
-                  _showDivider(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 100.0),
-                    child: _showLoginButton(auth),
-                  ),
-                ],
-              ),
+              _showEmailLabel(),
+              _showEmailTextField(),
+              _showDivider(),
+              _showPasswordLabel(),
+              _showPasswordTextField(),
+              _showDivider(),
+              _showLoginButton(auth),
             ],
           )),
       Align(
@@ -166,7 +171,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       children: <Widget>[
         new Expanded(
           child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0),
+            padding: const EdgeInsets.only(left: 40.0, top: 100.0),
             child: new Text(
               "EMAIL",
               style: TextStyle(
