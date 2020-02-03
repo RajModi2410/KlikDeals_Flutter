@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/HomeScreen/home.dart';
+import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -375,7 +375,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
   void _goToHomePage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (context) => HomeMainTab()),
     );
   }
 

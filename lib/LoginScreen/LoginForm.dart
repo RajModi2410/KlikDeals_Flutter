@@ -5,7 +5,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/home.dart';
-import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -224,7 +223,7 @@ class _LoginFormState extends State<LoginForm> {
               TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 autofocus: false,
-                initialValue: "testing.webdesksolution@gmail.com",
+                initialValue: "testing2.webdesksolution@gmail.com",
                 validator: emailValidator,
                 onSaved: (value) => _email = value.trim(),
                 obscureText: false,
@@ -408,7 +407,7 @@ class _LoginFormState extends State<LoginForm> {
   void _goToHomePage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (context) => HomeScreen(false)),
     );
   }
 

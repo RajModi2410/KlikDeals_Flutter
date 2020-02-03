@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart' as Dio;
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
@@ -11,7 +12,10 @@ import '../ApiBloc_provider.dart';
 class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
   var dio = Dio.Dio();
-  ApiBlocRepository();
+
+  ApiBlocRepository() {
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+  }
 
   void test(bool isError) {
     this._apiBlocProvider.test(isError);
@@ -37,11 +41,11 @@ class ApiBlocRepository {
   }
 
   Future<CouponListResponse> coupon(Map map) async {
-    print(baseUrl + "listcouponbyvendor" + map.toString());
+    print(baseUrl + "listcouponbyvendor:" + map.toString());
     Dio.FormData formData = new Dio.FormData.fromMap(map);
     try {
       Dio.Response response = await dio.post(baseUrl + "listcouponbyvendor",
-          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+          data: map, options: Dio.Options(headers: getCommonHeaders()));
       // final response = await http.post(
       //     baseUrl + "listcouponbyvendor",
       //     headers: getCommonHeaders());

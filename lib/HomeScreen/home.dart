@@ -1,5 +1,3 @@
-import 'dart:wasm';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
@@ -16,8 +14,12 @@ var token = "";
 SharedPreferences sharedPreferences;
 
 class HomeScreen extends StatefulWidget {
+  bool isForHistory;
+
+  HomeScreen(this.isForHistory);
+
   @override
-  State<StatefulWidget> createState() => new _HomePage();
+  State<StatefulWidget> createState() => new _HomePage(isForHistory);
 }
 
 class _HomePage extends State<HomeScreen> {
@@ -25,12 +27,14 @@ class _HomePage extends State<HomeScreen> {
   ApiBlocBloc auth;
   int _perpage = 10;
   var choices;
+  bool isForHistory;
+
+  _HomePage(this.isForHistory);
 
   @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text("Coupons"))),
       body: BlocListener<ApiBlocBloc, ApiBlocState>(
         listener: (context, state) {
           if (state is ApiErrorState) {
@@ -40,7 +44,7 @@ class _HomePage extends State<HomeScreen> {
                 backgroundColor: Colors.red,
               ),
             );
-          }
+          } else if (state is CouponListFetchedState) {}
         },
         child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
             bloc: auth,
@@ -60,7 +64,7 @@ class _HomePage extends State<HomeScreen> {
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
                 return EmptyListWidget(emptyMessage: "No coupon Data found");
-              }else{
+              } else {
                 return EmptyListWidget(emptyMessage: "No coupon Data found");
               }
             }),
@@ -70,12 +74,31 @@ class _HomePage extends State<HomeScreen> {
   }
 
   Widget _couponList(List<Data> data) {
-    return new ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(20.0),
-        children: List.generate(data.length, (index) {
-          return Center(child: listDetails(data[index]));
-        }));
+    return Stack(children: <Widget>[
+      Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/splash_bg.png'),
+                fit: BoxFit.cover)),
+      ),
+      _gridView(data),
+    ]);
+  }
+
+  Widget _gridView(List<Data> data) {
+    return GridView.count(
+      crossAxisCount: 2,
+      padding: EdgeInsets.all(4.0),
+      childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+      children: data
+          .map(
+            (listData) {
+          listData.isFromHistory = isForHistory;
+          return listDetails(data: listData);
+        },
+      )
+          .toList(),
+    );
   }
 
   @override
@@ -95,7 +118,11 @@ class _HomePage extends State<HomeScreen> {
 
   void getCouponList() {
     try {
-      auth.add(CouponListEvent(_perpage));
+      if (!isForHistory) {
+        auth.add(CouponListEvent(_perpage, null));
+      } else {
+        auth.add(CouponListEvent(_perpage, "history"));
+      }
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }

@@ -39,11 +39,6 @@ class CouponListResponse {
     }
     return data;
   }
-
-  @override
-  String toString() {
-    return 'CouponListResponse{status: $status, message: $message, response: $response, errorMessage: $errorMessage}';
-  }
 }
 
 class Response {
@@ -52,19 +47,19 @@ class Response {
   int from;
   String nextPageUrl;
   String path;
-  String perPage;
+  int perPage;
   String prevPageUrl;
   int to;
 
   Response(
       {this.currentPage,
-      this.data,
-      this.from,
-      this.nextPageUrl,
-      this.path,
-      this.perPage,
-      this.prevPageUrl,
-      this.to});
+        this.data,
+        this.from,
+        this.nextPageUrl,
+        this.path,
+        this.perPage,
+        this.prevPageUrl,
+        this.to});
 
   Response.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
@@ -103,30 +98,43 @@ class Data {
   String vendorId;
   String couponCode;
   String description;
-  String status;
   String grabDate;
   String startDate;
   String endDate;
+  String approvedBy;
+  String approvedDate;
+  String approvedLatLong;
+  String statusName;
+  bool isFromHistory = false;
+  String status;
 
   Data(
       {this.id,
-      this.vendorId,
-      this.couponCode,
-      this.description,
-      this.status,
-      this.grabDate,
-      this.startDate,
-      this.endDate});
+        this.vendorId,
+        this.couponCode,
+        this.description,
+        this.grabDate,
+        this.startDate,
+        this.endDate,
+        this.approvedBy,
+        this.approvedDate,
+        this.approvedLatLong,
+        this.statusName,
+        this.isFromHistory,
+        this.status});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     vendorId = json['vendor_id'];
     couponCode = json['coupon_code'];
     description = json['description'];
-    status = json['status'];
     grabDate = json['grab_date'];
     startDate = json['start_date'];
     endDate = json['end_date'];
+    approvedBy = json['approved_by'];
+    approvedDate = json['approved_date'];
+    approvedLatLong = json['approved_lat_long'];
+    statusName = json['status_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -135,16 +143,14 @@ class Data {
     data['vendor_id'] = this.vendorId;
     data['coupon_code'] = this.couponCode;
     data['description'] = this.description;
-    data['status'] = this.status;
     data['grab_date'] = this.grabDate;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
+    data['approved_by'] = this.approvedBy;
+    data['approved_date'] = this.approvedDate;
+    data['approved_lat_long'] = this.approvedLatLong;
+    data['status_name'] = this.statusName;
     return data;
-  }
-
-  @override
-  String toString() {
-    return 'Data{id: $id, vendorId: $vendorId, couponCode: $couponCode, description: $description, status: $status, grabDate: $grabDate, startDate: $startDate, endDate: $endDate}';
   }
 }
 
@@ -161,10 +167,5 @@ class ErrorMessage {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
     return data;
-  }
-
-  @override
-  String toString() {
-    return 'ErrorMessage{error: $error}';
   }
 }

@@ -66,9 +66,10 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield couponApiErrorState(response);
       }
-    } catch (e) {
-      print("We got error :: ${e.toString()}");
-      e.printStackTrace();
+    } catch (e, s) {
+      print("We got error 1:: ${e.toString()}");
+      print(s);
+//      e.printStackTrace();
       yield ApiErrorState();
     }
   }

@@ -51,18 +51,18 @@ class LoginEvent extends ApiBlocEvent {
 class CouponListEvent extends ApiBlocEvent{
 
   final int perPage;
+  final String action;
 
-  CouponListEvent(this.perPage);
+  CouponListEvent(this.perPage, this.action);
 
   Map toMap() {
     var map = new Map<String, dynamic>();
     map ["per_page"] = perPage;
-
+    if (action != null && action.isNotEmpty) {
+      map["action"] = action;
+    }
     return map;
   }
-  @override
   // TODO: implement props
-  List<Object> get props => [ this.perPage];
-
-  
-  }
+  List<Object> get props => [ this.perPage, this.action];
+}
