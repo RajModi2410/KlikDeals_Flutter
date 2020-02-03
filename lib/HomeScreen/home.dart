@@ -110,7 +110,7 @@ class _HomePage extends State<HomeScreen> {
   getToken() async {
     sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token");
-    if (token.isNotEmpty) {
+    if (token!=null && token.isNotEmpty) {
       getCouponList();
     } else {}
     print("Home Page :: We got Token $token");

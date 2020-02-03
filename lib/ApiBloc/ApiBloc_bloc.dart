@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:klik_deals/LoginScreen/LoginStates.dart';
 
 import 'ApiBloc_event.dart';
 import 'ApiBloc_state.dart';
@@ -49,9 +50,11 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       if (response.status) {
         yield LoginApiFetchedState(response);
       } else {
-        yield ApiErrorState();
+        yield LoginApiErrorState(response);
       }
-    } catch (e) {
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
       yield ApiErrorState();
     }
   }

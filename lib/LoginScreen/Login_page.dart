@@ -5,9 +5,13 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/mywidgets/HomeMainTab.dart';
+import 'package:klik_deals/LoginScreen/LoginBloc.dart';
+import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'ErrorGen.dart';
 
 ProgressDialog pr;
 var token = "";
@@ -47,58 +51,76 @@ class _LoginFormV1State extends State<LoginFormV1> {
   String _password;
   String _errorMessage;
   ApiBlocBloc auth;
-
+  var loginBloc = LoginBloc();
+RoundWidget round;
   @override
   void initState() {
-    emailInputController = new TextEditingController();
-    pwdInputController = new TextEditingController();
+    emailInputController =
+        new TextEditingController(text: "testing9@webdesksolution.com");
+    pwdInputController = new TextEditingController(text: "12345678");
+    emailInputController.addListener(_printEmailValue);
+    pwdInputController.addListener(_printPasswordValue);
     _isLoading = false;
     _errorMessage = "";
     super.initState();
   }
 
   @override
+  void dispose() {
+    emailInputController?.dispose();
+    pwdInputController?.dispose();
+    loginBloc = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
-    return BlocListener<ApiBlocBloc, ApiBlocState>(
-        listener: (context, state) {
-          if (state is ApiErrorState) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text('error occurred'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          } else if (state is LoginApiFetchedState) {
-            token = state.loginResponse.token.toString();
-            auth.add(TokenGenerateEvent(token));
-            _onSetOnShredPrefe(token);
-            _goToHomePage();
-          }
-        },
-        child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-            bloc: auth,
-            builder: (
-              BuildContext context,
-              ApiBlocState currentState,
-            ) {
-              if (currentState is LoginApiFetchedState) {
-                print(
-                    "Login successfully ${currentState.loginResponse.token.toString()}");
-              } else if (currentState is ApiFetchingState) {
-                return RoundWidget();
+    return Stack(children: <Widget>[
+      _showForm(),
+      BlocListener<ApiBlocBloc, ApiBlocState>(
+          listener: (context, state) {
+            if (state is LoginApiErrorState) {
+              String error = "";
+              if (state.loginResponse.errorMessage.general_error.length > 0) {
+                error = state.loginResponse.errorMessage.general_error.first;
+              } else if (state.loginResponse.errorMessage.user_error.length >
+                  0) {
+                // error = state.loginResponse.errorMessage.user_error.first;
+                this
+                    .loginBloc
+                    .emailChanged(ErroGen(isError: true, value: state.loginResponse.errorMessage.user_error.first));
+                error = null;
               }
-              // else if (currentState is ApiErrorState) {
-              //   _onWidgetDidBuild(() {
-              //     Scaffold.of(context).showSnackBar(
-              //       SnackBar(
-              //         content: Text('Please check email and password.'),
-              //         backgroundColor: Colors.red,
-              //       ),);
-              //   });
-              // }
-              return _showForm();
-            }));
+              if (error != null) {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(error),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            } else if (state is LoginApiFetchedState) {
+              token = state.loginResponse.token.toString();
+              auth.add(TokenGenerateEvent(token));
+              _onSetOnShredPrefe(token);
+              _goToHomePage();
+            }
+          },
+          child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+              bloc: auth,
+              builder: (
+                BuildContext context,
+                ApiBlocState currentState,
+              ) {
+                if (currentState is ApiFetchingState) {
+                  round = RoundWidget();
+                  return round;
+                } else {
+                  return Container();
+                }
+              }))
+    ]);
   }
 
   Widget _showForm() {
@@ -111,23 +133,18 @@ class _LoginFormV1State extends State<LoginFormV1> {
       ),
       new Form(
           key: _formKey,
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: new ListView(
             children: <Widget>[
               _showLogo(),
-              Column(
-                children: <Widget>[
-                  _showEmailLabel(),
-                  _showEmailTextField(),
-                  _showDivider(),
-                  _showPasswordLabel(),
-                  _showPasswordTextField(),
-                  _showDivider(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 100.0),
-                    child: _showLoginButton(auth),),
-                ],),
-            ],)),
+              _showEmailLabel(),
+              _showEmailTextField(),
+              _showDivider(),
+              _showPasswordLabel(),
+              _showPasswordTextField(),
+              _showDivider(),
+              _showLoginButton(auth),
+            ],
+          )),
       Align(
           alignment: Alignment.bottomCenter,
           child: Column(
@@ -154,7 +171,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       children: <Widget>[
         new Expanded(
           child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0),
+            padding: const EdgeInsets.only(left: 40.0, top: 100.0),
             child: new Text(
               "EMAIL",
               style: TextStyle(
@@ -189,24 +206,33 @@ class _LoginFormV1State extends State<LoginFormV1> {
           Expanded(
               child: Column(
             children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autofocus: false,
-                initialValue: "testing8@webdesksolution.com",
-                validator: emailValidator,
-                onSaved: (value) => _email = value.trim(),
-                obscureText: false,
-                textAlign: TextAlign.left,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.alternate_email,
-                    color: Colors.grey,
-                  ),
-                  border: InputBorder.none,
-                  hintText: "youremail@abc.com",
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-              ),
+              StreamBuilder<String>(
+                  stream: loginBloc.email,
+                  builder: (context, snapshot) {
+                    return TextFormField(
+                      // onChanged: (value) => loginBloc
+                      //     .emailChanged(ErroGen(isError: false, value: value)),
+                      keyboardType: TextInputType.emailAddress,
+                      autofocus: false,
+                      // initialValue: "testing9@webdesksolution.com",
+                      validator: emailValidator,
+                      onSaved: (value) => _email = value.trim(),
+                      obscureText: false,
+                      textAlign: TextAlign.left,
+                      controller: emailInputController,
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.alternate_email,
+                            color: Colors.grey,
+                          ),
+                          border: InputBorder.none,
+                          hintText: "youremail@abc.com",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          errorText: snapshot.error,
+                          errorMaxLines: 1,
+                          errorStyle: TextStyle(color: Colors.red)),
+                    );
+                  }),
             ],
           )),
         ],
@@ -256,11 +282,12 @@ class _LoginFormV1State extends State<LoginFormV1> {
           new Expanded(
             child: TextFormField(
               validator: passwordValidator,
-              initialValue: "admin@321",
+              // initialValue: "admin@321",
               onSaved: (value) => _password = value.trim(),
               autofocus: false,
               obscureText: _obscureText,
               textAlign: TextAlign.left,
+              controller: pwdInputController,
               decoration: InputDecoration(
                 icon: Icon(
                   Icons.lock,
@@ -388,5 +415,25 @@ class _LoginFormV1State extends State<LoginFormV1> {
   void _onSetOnShredPrefe(String token) async {
     sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString("token", token);
+  }
+
+  void _printEmailValue() {
+    print("Email text field: ${emailInputController.text}");
+    loginBloc.emailChanged(
+        ErroGen(isError: false, value: emailInputController.text));
+  }
+
+  void _printPasswordValue() {
+    print("Password text field: ${pwdInputController.text}");
+    loginBloc.passwordChanged(
+        ErroGen(isError: false, value: pwdInputController.text));
+  }
+
+  void displayErrorInEmailValue(String value) {
+    loginBloc.emailChanged(ErroGen(isError: true, value: value));
+  }
+
+  void displayErrorInPasswordValue(String value) {
+    loginBloc.passwordChanged(ErroGen(isError: true, value: value));
   }
 }
