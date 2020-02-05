@@ -37,18 +37,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Center logoBuilder() {
     return new Center(
-      child: Container(
-        color: Colors.transparent,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: new Image.asset('assets/images/logo.png'),
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: new Image.asset('assets/images/logo.png'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -136,12 +136,8 @@ RoundWidget round;
           child: new ListView(
             children: <Widget>[
               _showLogo(),
-              _showEmailLabel(),
               _showEmailTextField(),
-              _showDivider(),
-              _showPasswordLabel(),
               _showPasswordTextField(),
-              _showDivider(),
               _showLoginButton(auth),
             ],
           )),
@@ -166,42 +162,9 @@ RoundWidget round;
     );
   }
 
-  Widget _showEmailLabel() {
-    return new Row(
-      children: <Widget>[
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0, top: 100.0),
-            child: new Text(
-              "EMAIL",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(74, 172, 215, 1),
-                fontSize: 15.0,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _showEmailTextField() {
     return new Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-      alignment: Alignment.center,
-      decoration: new BoxDecoration(
-        border: Border(
-            bottom: BorderSide(
-                color: Color.fromRGBO(74, 172, 215, 1),
-                width: 0.5,
-                style: BorderStyle.solid)),
-      ),
-      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
               child: Column(
@@ -209,30 +172,41 @@ RoundWidget round;
               StreamBuilder<String>(
                   stream: loginBloc.email,
                   builder: (context, snapshot) {
-                    return TextFormField(
-                      onChanged: (value) =>
-                          loginBloc
-                              .emailChanged(
-                              ErroGen(isError: false, value: value)),
-                      keyboardType: TextInputType.emailAddress,
-                      autofocus: false,
-                      // initialValue: "testing9@webdesksolution.com",
-                      validator: emailValidator,
-                      onSaved: (value) => _email = value.trim(),
-                      obscureText: false,
-                      textAlign: TextAlign.left,
-                      controller: emailInputController,
-                      decoration: InputDecoration(
-                          icon: Icon(
-                            Icons.alternate_email,
-                            color: Colors.grey,
-                          ),
-                          border: InputBorder.none,
-                          hintText: "youremail@abc.com",
-                          hintStyle: TextStyle(color: Colors.grey),
-                          errorText: snapshot.error,
-                          errorMaxLines: 1,
-                          errorStyle: TextStyle(color: Colors.red)),
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: TextFormField(
+                        style: TextStyle(color: Colors.redAccent),
+                        onChanged: (value) =>
+                            loginBloc
+                                .emailChanged(
+                                ErroGen(isError: false, value: value)),
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: false,
+                        // initialValue: "testing9@webdesksolution.com",
+                        validator: emailValidator,
+                        onSaved: (value) => _email = value.trim(),
+                        obscureText: false,
+                        textAlign: TextAlign.left,
+                        controller: emailInputController,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                              Icons.mail_outline, color: Colors.redAccent),
+                          fillColor: Color(0xB3FFFFFF),
+                          filled: true,
+                          hintStyle: TextStyle(color: Colors.redAccent),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(30.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(30.0)),
+                          labelStyle: TextStyle(color: Colors.redAccent),
+                          contentPadding: EdgeInsets.fromLTRB(
+                              20.0, 20.0, 10.0, 10.0),
+                          hintText: "Email",
+                        ),
+                      ),
                     );
                   }),
             ],
@@ -242,89 +216,41 @@ RoundWidget round;
     );
   }
 
-  Widget _showPasswordLabel() {
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        new Expanded(
-          child: new Padding(
-            padding: const EdgeInsets.only(left: 40.0),
-            child: new Text(
-              "PASSWORD",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(74, 172, 215, 1),
-                fontSize: 15.0,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _showPasswordTextField() /**/ {
     return new Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-              color: Color.fromRGBO(74, 172, 215, 1),
-              width: 0.5,
-              style: BorderStyle.solid),
-        ),
-      ),
-      padding: const EdgeInsets.only(left: 0.0, right: 10.0),
       child: new Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new Expanded(
-            child: TextFormField(
-              validator: passwordValidator,
-              // initialValue: "admin@321",
-              onSaved: (value) => _password = value.trim(),
-              autofocus: false,
-              obscureText: _obscureText,
-              textAlign: TextAlign.left,
-              controller: pwdInputController,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.lock,
-                  color: Colors.grey,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 24.0, right: 24.0, top: 24.0),
+              child: TextFormField(
+                style: TextStyle(color: Colors.redAccent),
+                validator: passwordValidator,
+                onSaved: (value) => _password = value.trim(),
+                autofocus: false,
+                textAlign: TextAlign.left,
+                controller: pwdInputController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.lock_outline, color: Colors.redAccent),
+                  fillColor: Color(0xB3FFFFFF),
+                  filled: true,
+                  hintStyle: TextStyle(color: Colors.redAccent),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      borderSide: BorderSide(color: Colors.grey)),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(30.0)),
+                  labelStyle: TextStyle(color: Colors.redAccent),
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
+                  hintText: "Password",
                 ),
-                border: InputBorder.none,
-                hintText: '*********',
-                hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
           ),
-          new FlatButton(
-              onPressed: _toggle,
-              child: new Icon(
-                _obscureText ? Icons.visibility : Icons.visibility_off,
-                color: Color.fromRGBO(74, 172, 215, 1),
-              ))
         ],
       ),
-    );
-  }
-
-  // Initially password is obscure
-  bool _obscureText = true;
-
-  // Toggles the password show status
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
-
-  Widget _showDivider() {
-    return Divider(
-      height: 24.0,
     );
   }
 
@@ -340,7 +266,7 @@ RoundWidget round;
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: Color.fromRGBO(74, 172, 215, 1),
+              color: Colors.redAccent,
               onPressed: () {
                 validateAndSubmit();
               },

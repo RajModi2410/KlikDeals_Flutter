@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 
 class Coupon extends StatefulWidget {
   Coupon({Key key, this.title}) : super(key: key);
@@ -9,9 +12,13 @@ class Coupon extends StatefulWidget {
   _CouponAdd createState() => _CouponAdd();
 }
 
-class _CouponAdd extends State<Coupon> {
+class _CouponAdd extends State<Coupon>
+    with TickerProviderStateMixin, ImagePickerListener {
   DateTime _Startdate;
   String _Expirydate = "Expiry Date";
+  AnimationController _controller;
+  ImagePickerHandler imagePicker;
+  File _imageBanner;
 
   TextEditingController _startDateController =
   TextEditingController(text: 'Satrt Date');
@@ -21,6 +28,13 @@ class _CouponAdd extends State<Coupon> {
   @override
   void initState() {
     super.initState();
+    _controller = new AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    imagePicker = new ImagePickerHandler(this, _controller);
+    imagePicker.init();
   }
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -125,15 +139,44 @@ class _CouponAdd extends State<Coupon> {
                                   icon: new Icon(Icons.attach_file),
                                   iconSize: 20,
                                   color: Colors.redAccent,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    imagePicker.showDialog(context);
+                                  },
                                 )
                               ],
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
-                              child: Image.asset(
-                                'assets/images/kfc.png',
-                                fit: BoxFit.cover,
+                              child: _imageBanner == null
+                                  ? new Stack(
+                                children: <Widget>[
+                                  new Center(
+                                    child: new CircleAvatar(
+                                        radius: 00.0,
+                                        backgroundColor: Colors.white),
+                                  ),
+                                  new Center(
+                                    child: new Image.asset(
+                                        "images/color samples-01.png"),
+                                  ),
+                                ],
+                              )
+                                  : new Container(
+                                height: 160.0,
+                                width: 360.0,
+                                decoration: new BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: new DecorationImage(
+                                    image: new ExactAssetImage(
+                                        _imageBanner.path),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  border: Border.all(
+                                      color: Colors.white, width: 0.5),
+                                  // borderRadius:
+                                  //     new BorderRadius.all(const Radius.circular(80.0)
+                                  //     ),
+                                ),
                               ),
                             ),
                           ],
@@ -282,5 +325,12 @@ class _CouponAdd extends State<Coupon> {
     } else {
       print("Some error found");
     }
+  }
+
+  @override
+  userImage(File _image) {
+    setState(() {
+      this._imageBanner = _image;
+    });
   }
 }

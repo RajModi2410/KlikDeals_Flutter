@@ -45,7 +45,7 @@ class listDetails extends StatelessWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
-                        ), Icon(Icons.edit, size: 20,),
+                        ), Spacer(), Icon(Icons.edit, size: 20,),
                         Icon(Icons.delete, size: 20,)
                       ],
                     ),

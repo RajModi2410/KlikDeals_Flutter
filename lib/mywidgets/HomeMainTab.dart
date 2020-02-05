@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:klik_deals/CouponCode/Coupon.dart';
+import 'package:klik_deals/ProfileScreen/Profile.dart';
 
 import '../HomeScreen/home.dart';
 
@@ -119,7 +120,12 @@ class _MyDetailsList extends State<HomeMainTab> {
 
   void _goToHome() {}
 
-  void _goToProfile() {}
+  void _goToProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Profile()),
+    );
+  }
 
   void _goToAddCoupon() {
     Navigator.push(
