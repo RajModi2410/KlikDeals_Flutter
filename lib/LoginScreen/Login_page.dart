@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:klik_deals/LoginScreen/LoginBloc.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
+import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +56,7 @@ RoundWidget round;
   @override
   void initState() {
     emailInputController =
-        new TextEditingController(text: "testing9@webdesksolution.com");
+    new TextEditingController(text: "testing8@webdesksolution.com");
     pwdInputController = new TextEditingController(text: "12345678");
     emailInputController.addListener(_printEmailValue);
     pwdInputController.addListener(_printPasswordValue);
@@ -210,8 +210,10 @@ RoundWidget round;
                   stream: loginBloc.email,
                   builder: (context, snapshot) {
                     return TextFormField(
-                      // onChanged: (value) => loginBloc
-                      //     .emailChanged(ErroGen(isError: false, value: value)),
+                      onChanged: (value) =>
+                          loginBloc
+                              .emailChanged(
+                              ErroGen(isError: false, value: value)),
                       keyboardType: TextInputType.emailAddress,
                       autofocus: false,
                       // initialValue: "testing9@webdesksolution.com",

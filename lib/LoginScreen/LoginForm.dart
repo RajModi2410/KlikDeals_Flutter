@@ -58,6 +58,13 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
+  void dispose() {
+    emailInputController?.dispose();
+    pwdInputController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
