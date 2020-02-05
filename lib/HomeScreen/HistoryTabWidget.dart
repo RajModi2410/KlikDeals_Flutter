@@ -1,41 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'HomeState.dart';
+
 var token = "";
 SharedPreferences sharedPreferences;
 
-class HomeScreen extends StatefulWidget {
+class HistoryTabWidget extends StatefulWidget {
   bool isForHistory;
 
-  HomeScreen(this.isForHistory);
+  HistoryTabWidget(this.isForHistory);
 
   @override
-  State<StatefulWidget> createState() => new _HomePage(isForHistory);
+  State<StatefulWidget> createState() => new _HistoryTabState(isForHistory);
 }
 
-class _HomePage extends State<HomeScreen> {
+class _HistoryTabState extends State<HistoryTabWidget>{// with AutomaticKeepAliveClientMixin<HistoryTabWidget>{
   bool _isLoading;
-  ApiBlocBloc auth;
+  HistoryBloc auth;
   int _perpage = 10;
   var choices;
   bool isForHistory;
 
-  _HomePage(this.isForHistory);
+  _HistoryTabState(this.isForHistory);
+
+@override
+void initState() { 
+  super.initState();
+  print("we are initstate _HistoryTabState");
+  getToken();
+}
 
   @override
   Widget build(BuildContext context) {
-    auth = BlocProvider.of<ApiBlocBloc>(context);
+    print("we are build _HistoryTabState");
+    auth = BlocProvider.of<HistoryBloc>(context);
     return Scaffold(
-      body: BlocListener<ApiBlocBloc, ApiBlocState>(
+      body: BlocListener<HistoryBloc, ApiBlocState>(
         listener: (context, state) {
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
@@ -46,7 +56,7 @@ class _HomePage extends State<HomeScreen> {
             );
           } else if (state is CouponListFetchedState) {}
         },
-        child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+        child: BlocBuilder<HistoryBloc, ApiBlocState>(
             bloc: auth,
             builder: (
               BuildContext context,
@@ -55,11 +65,11 @@ class _HomePage extends State<HomeScreen> {
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
                 return RoundWidget();
-              } else if (currentState is couponApiErrorState) {
+              } else if (currentState is CouponHistoryErroState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                return CouponErrorWidget(state: currentState);
-              } else if (currentState is CouponListFetchedState) {
+                return CouponErrorWidget(errorMessage: currentState.couponlist.errorMessage.error.first);
+              } else if (currentState is CouponHistoryListFetchedState) {
                 return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
@@ -101,12 +111,6 @@ class _HomePage extends State<HomeScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getToken();
-  }
-
   getToken() async {
     sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token");
@@ -118,13 +122,12 @@ class _HomePage extends State<HomeScreen> {
 
   void getCouponList() {
     try {
-      if (!isForHistory) {
-        auth.add(CouponListEvent(_perpage, null));
-      } else {
         auth.add(CouponListEvent(_perpage, "history"));
-      }
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }
   }
+
+  // @override
+  // bool get wantKeepAlive => true;
 }

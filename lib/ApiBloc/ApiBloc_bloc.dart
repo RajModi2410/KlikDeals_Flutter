@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 
 import 'ApiBloc_event.dart';
@@ -32,18 +33,18 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     ApiBlocEvent event,
   ) async* {
     if (event is RestaurantSearchEvent) {
-      yield* mapSearchResponseEvents(event);
+      yield* _mapSearchResponseEvents(event);
     } else if (event is LoginEvent) {
-      yield* mapLoginEventResponseEvents(event);
+      yield* _mapLoginEventResponseEvents(event);
     } else if (event is TokenGenerateEvent) {
       playerRepository.token = event.token;
       yield ApiUninitializedState();
     } else if (event is CouponListEvent) {
-      yield* mapCouponListResponseEvents(event);
+      yield* _mapCouponListResponseEvents(event);
     }
   }
 
-  Stream<ApiBlocState> mapLoginEventResponseEvents(LoginEvent event) async* {
+  Stream<ApiBlocState> _mapLoginEventResponseEvents(LoginEvent event) async* {
     yield ApiFetchingState();
     try {
       final response = await playerRepository.login(event.toMap());
@@ -59,15 +60,15 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     }
   }
 
-  Stream<ApiBlocState> mapCouponListResponseEvents(
+  Stream<ApiBlocState> _mapCouponListResponseEvents(
       CouponListEvent event) async* {
     yield ApiFetchingState();
     try {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status) {
-        yield CouponListFetchedState(response);
+          yield CouponListFetchedState(response);
       } else {
-        yield couponApiErrorState(response);
+          yield couponApiErrorState(response);
       }
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
@@ -77,7 +78,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     }
   }
 
-  Stream<ApiBlocState> mapSearchResponseEvents(
+  Stream<ApiBlocState> _mapSearchResponseEvents(
       RestaurantSearchEvent event) async* {
     if (event.query.isEmpty) {
       yield ApiUninitializedState();

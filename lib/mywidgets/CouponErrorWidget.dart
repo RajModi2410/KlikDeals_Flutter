@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/ApiBloc/index.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:meta/meta.dart';
 
 class CouponErrorWidget extends StatelessWidget {
-  couponApiErrorState state;
+  String errorMessage;
 
-  CouponErrorWidget({Key key, @required this.state}) : super(key: key);
+  CouponErrorWidget({Key key, @required this.errorMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class CouponErrorWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          child: Center(child: Text("${this.state.couponlist.errorMessage.error[0]}")),
+          child: Center(child: Text("${errorMessage}")),
         ),
       ],
     );

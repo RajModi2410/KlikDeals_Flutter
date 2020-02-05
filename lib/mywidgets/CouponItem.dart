@@ -19,12 +19,12 @@ class listDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18.0 / 12.0,
-              child: Image.asset(
-                'assets/images/kfc.png',
-                fit: BoxFit.cover,
-
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+              child: AspectRatio(
+                aspectRatio: 18.0 / 12.0,
+                child: getImage(),
               ),
             ),
             new Padding(
@@ -45,8 +45,15 @@ class listDetails extends StatelessWidget {
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
-                        ), Icon(Icons.edit, size: 20,),
-                        Icon(Icons.delete, size: 20,)
+                        ),
+                        Icon(
+                          Icons.edit,
+                          size: 20,
+                        ),
+                        Icon(
+                          Icons.delete,
+                          size: 20,
+                        )
                       ],
                     ),
                   ),
@@ -59,7 +66,8 @@ class listDetails extends StatelessWidget {
                         fontSize: 12.0,
                       ),
                     ),
-                  ), Padding(
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                     child: Text(
                       "Food",
@@ -80,6 +88,20 @@ class listDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Image getImage() {
+    if (data != null && data.couponImage != null) {
+      return Image.network(
+        data.couponImage,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/kfc.png',
+        fit: BoxFit.cover,
+      );
+    }
   }
 
   Widget _staus() {

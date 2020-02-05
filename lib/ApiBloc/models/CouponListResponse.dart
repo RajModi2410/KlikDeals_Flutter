@@ -97,6 +97,7 @@ class Data {
   int id;
   String vendorId;
   String couponCode;
+  String couponImage;
   String description;
   String grabDate;
   String startDate;
@@ -112,6 +113,7 @@ class Data {
       {this.id,
         this.vendorId,
         this.couponCode,
+           this.couponImage,
         this.description,
         this.grabDate,
         this.startDate,
@@ -127,6 +129,7 @@ class Data {
     id = json['id'];
     vendorId = json['vendor_id'];
     couponCode = json['coupon_code'];
+     couponImage = json['coupon_image'];
     description = json['description'];
     grabDate = json['grab_date'];
     startDate = json['start_date'];
@@ -142,6 +145,7 @@ class Data {
     data['id'] = this.id;
     data['vendor_id'] = this.vendorId;
     data['coupon_code'] = this.couponCode;
+     data['coupon_image'] = this.couponImage;
     data['description'] = this.description;
     data['grab_date'] = this.grabDate;
     data['start_date'] = this.startDate;
