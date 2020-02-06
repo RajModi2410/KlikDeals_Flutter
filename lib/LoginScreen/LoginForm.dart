@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/HomeScreen/home.dart';
+import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
+import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -415,7 +416,7 @@ class _LoginFormState extends State<LoginForm> {
   void _goToHomePage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(false)),
+      MaterialPageRoute(builder: (context) => ActiveCouponTabWidget(false)),
     );
   }
 

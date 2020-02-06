@@ -19,12 +19,12 @@ class listDetails extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18.0 / 12.0,
-              child: Image.asset(
-                'assets/images/kfc.png',
-                fit: BoxFit.cover,
-
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+              child: AspectRatio(
+                aspectRatio: 18.0 / 12.0,
+                child: getImage(),
               ),
             ),
             new Padding(
@@ -80,6 +80,20 @@ class listDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Image getImage() {
+    if (data != null && data.couponImage != null) {
+      return Image.network(
+        data.couponImage,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/kfc.png',
+        fit: BoxFit.cover,
+      );
+    }
   }
 
   Widget _staus() {

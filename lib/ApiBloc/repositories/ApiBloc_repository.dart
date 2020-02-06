@@ -13,7 +13,12 @@ class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
   var dio = Dio.Dio();
 
-  ApiBlocRepository() {
+  static final ApiBlocRepository _instance = ApiBlocRepository._internal();
+
+  factory ApiBlocRepository() {
+    return _instance;
+  }
+  ApiBlocRepository._internal() {
     dio.interceptors.add(LogInterceptor(responseBody: true));
   }
 
@@ -82,17 +87,13 @@ class ApiBlocRepository {
   LoginResponse parseLoginResponse(Dio.Response response) {
     print("LoginResponse :: ${response.data}");
     final responseString = (response.data);
-    return LoginResponse.fromJson(responseString,response.statusCode != successCode);
+    return LoginResponse.fromJson(
+        responseString, response.statusCode != successCode);
   }
 
   CouponListResponse parseCouponResponse(Dio.Response response) {
-    print("Coupon Response :: ${response.data}");
     final responseString = (response.data);
-
-    if (response.statusCode == successCode) {
-      return CouponListResponse.fromJson(responseString, false);
-    } else {
-      return CouponListResponse.fromJson(responseString, true);
-    }
+    return CouponListResponse.fromJson(
+        responseString, response.statusCode != successCode);
   }
 }
