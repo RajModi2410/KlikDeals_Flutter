@@ -229,6 +229,7 @@ RoundWidget round;
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
                 autofocus: false,
+                obscureText: false,
                 textAlign: TextAlign.left,
                 controller: pwdInputController,
                 decoration: InputDecoration(

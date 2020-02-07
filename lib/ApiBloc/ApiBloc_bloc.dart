@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:klik_deals/CouponCode/CouponStates.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
+import 'package:klik_deals/ProfileScreen/ProfileStates.dart';
 
 import 'ApiBloc_event.dart';
 import 'ApiBloc_state.dart';
@@ -41,6 +43,12 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield ApiUninitializedState();
     } else if (event is CouponListEvent) {
       yield* _mapCouponListResponseEvents(event);
+    } else if (event is AddCouponEvent) {
+      yield* _mapAddCouponEventResponseEvents(event);
+    } else if (event is CouponDeleteEvent) {
+      yield* _mapDeleteCouponEventResponseEvents(event);
+    } else if (event is GetProfileEvent) {
+      yield* _mapGetProfileEventResponseEvents(event);
     }
   }
 
@@ -60,6 +68,23 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     }
   }
 
+  Stream<ApiBlocState> _mapAddCouponEventResponseEvents(
+      AddCouponEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.addCoupon(event.toMap());
+      if (response.status) {
+        yield CouponApiFetchedState(response);
+      } else {
+        yield CouponApiErrorState(response);
+      }
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
+      yield ApiErrorState();
+    }
+  }
+
   Stream<ApiBlocState> _mapCouponListResponseEvents(
       CouponListEvent event) async* {
     yield ApiFetchingState();
@@ -69,6 +94,42 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
           yield CouponListFetchedState(response);
       } else {
           yield couponApiErrorState(response);
+      }
+    } catch (e, s) {
+      print("We got error 1:: ${e.toString()}");
+      print(s);
+//      e.printStackTrace();
+      yield ApiErrorState();
+    }
+  }
+
+  Stream<ApiBlocState> _mapDeleteCouponEventResponseEvents(
+      CouponDeleteEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.deleteCoupon(event.toMap());
+      if (response.status) {
+        yield CouponDeleteFetchedState(response);
+      } else {
+        yield CouponDeleteErrorState(response);
+      }
+    } catch (e, s) {
+      print("We got error 1:: ${e.toString()}");
+      print(s);
+//      e.printStackTrace();
+      yield ApiErrorState();
+    }
+  }
+
+  Stream<ApiBlocState> _mapGetProfileEventResponseEvents(
+      GetProfileEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.getProfile();
+      if (response.status) {
+        yield GetProfileApiFetchedState(response);
+      } else {
+        yield GetProfileApiErrorState(response);
       }
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -63,6 +65,62 @@ class CouponListEvent extends ApiBlocEvent{
     }
     return map;
   }
+
   // TODO: implement props
   List<Object> get props => [ this.perPage, this.action];
+}
+
+class CouponDeleteEvent extends ApiBlocEvent {
+
+  final String couponId;
+
+  CouponDeleteEvent(this.couponId);
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map ["id"] = couponId;
+    return map;
+  }
+
+  List<Object> get props => [this.couponId];
+}
+
+class GetProfileEvent extends ApiBlocEvent {
+
+  GetProfileEvent();
+
+  List<Object> get props => [null];
+}
+
+class AddCouponEvent extends ApiBlocEvent {
+  String couponCodeValue;
+  String startDateValue;
+  String endDateValue;
+  String descValue;
+  File image;
+
+  AddCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
+      this.descValue, this.image);
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map ["coupon_code"] = couponCodeValue;
+    map ["start_date"] = startDateValue;
+    map ["end_date"] = endDateValue;
+    map ["description"] = descValue;
+    if (image != null) {
+      map["coupon_image"] = image;
+    }
+    return map;
+  }
+
+  // TODO: implement props
+  List<Object> get props =>
+      [
+        this.couponCodeValue,
+        this.startDateValue,
+        this.endDateValue,
+        this.descValue,
+        this.image
+      ];
 }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/CouponCode/Coupon.dart';
+import 'package:klik_deals/CouponCode/AddCoupon.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/HomeScreen/HistoryTabWidget.dart';
 import 'package:klik_deals/MyThemeData.dart';
 import 'package:klik_deals/ProfileScreen/Profile.dart';
-
-import '../HomeScreen/home.dart';
 
 class HomeMainTab extends StatefulWidget {
   HomeMainTab({Key key, this.title}) : super(key: key);
@@ -22,10 +20,6 @@ class _MyDetailsList extends State<HomeMainTab> {
   @override
   void initState() {
     super.initState();
-    // _controller = new TabController(
-    //   length: 2,
-    //   vsync: this,
-    // );
     firstSelected = true;
   }
 
@@ -55,7 +49,7 @@ class _MyDetailsList extends State<HomeMainTab> {
             ),
             bottom: TabBar(
               // controller: _controller,
-              labelColor: Theme.of(context).primaryColor,
+              labelColor: Colors.redAccent,
               unselectedLabelColor: Colors.white,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: BoxDecoration(
@@ -154,7 +148,7 @@ class _MyDetailsList extends State<HomeMainTab> {
   void _goToAddCoupon() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Coupon()),
+      MaterialPageRoute(builder: (context) => AddCoupon(isFromEdit: false,)),
     );
   }
 

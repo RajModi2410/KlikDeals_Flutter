@@ -1,5 +1,6 @@
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/ApiBloc/models/DeleteCouponResponse.dart';
 
 class CouponListFetchedState extends ApiBlocState{
   final CouponListResponse couponlist;
@@ -35,5 +36,24 @@ class CouponHistoryErroState extends ApiBlocState {
 
   @override
   List<Object> get props => [couponlist];
+}
+
+class CouponDeleteFetchedState extends ApiBlocState {
+  final DeleteCouponResponse deleteCouponResponse;
+
+  CouponDeleteFetchedState(this.deleteCouponResponse);
+
+  @override
+  List<Object> get props => [deleteCouponResponse];
+}
+
+
+class CouponDeleteErrorState extends ApiBlocState {
+  final DeleteCouponResponse deleteCouponResponse;
+
+  CouponDeleteErrorState(this.deleteCouponResponse);
+
+  @override
+  List<Object> get props => [deleteCouponResponse];
 }
 

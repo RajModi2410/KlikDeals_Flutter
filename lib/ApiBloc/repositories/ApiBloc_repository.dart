@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:dio/dio.dart' as Dio;
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:klik_deals/ApiBloc/models/AddCouponResponse.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/ApiBloc/models/DeleteCouponResponse.dart';
+import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 import 'package:klik_deals/ApiBloc/models/SearchResponse.dart';
 
@@ -72,6 +75,50 @@ class ApiBlocRepository {
     }
   }
 
+  Future<AddCouponResponse> addCoupon(Map map) async {
+    print(baseUrl + "addcoupon:" + map.toString());
+    Dio.FormData formData = new Dio.FormData.fromMap(map);
+    try {
+      Dio.Response response = await dio.post(baseUrl + "addcoupon",
+          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      return parseAddCouponResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseAddCouponResponse(response);
+      }
+    }
+  }
+
+  Future<DeleteCouponResponse> deleteCoupon(Map map) async {
+    print(baseUrl + "deletecoupon:" + map.toString());
+    Dio.FormData formData = new Dio.FormData.fromMap(map);
+    try {
+      Dio.Response response = await dio.post(baseUrl + "deletecoupon",
+          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      return parseDeleteCouponResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseDeleteCouponResponse(response);
+      }
+    }
+  }
+
+  Future<GetProfileResponse> getProfile() async {
+    print(baseUrl + "getvendorprofile");
+    try {
+      Dio.Response response = await dio.post(baseUrl + "getvendorprofile",
+          options: Dio.Options(headers: getCommonHeaders()));
+      return parseGetProfileResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseGetProfileResponse(response);
+      }
+    }
+  }
+
   Map<String, String> getCommonHeaders() => {"token": token};
 
   SearchResponse parseResponse(http.Response response) {
@@ -96,4 +143,24 @@ class ApiBlocRepository {
     return CouponListResponse.fromJson(
         responseString, response.statusCode != successCode);
   }
+
+
+  AddCouponResponse parseAddCouponResponse(Dio.Response response) {
+    final responseString = (response.data);
+    return AddCouponResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
+
+  DeleteCouponResponse parseDeleteCouponResponse(Dio.Response response) {
+    final responseString = (response.data);
+    return DeleteCouponResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
+
+  GetProfileResponse parseGetProfileResponse(Dio.Response response) {
+    final responseString = (response.data);
+    return GetProfileResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
 }
+

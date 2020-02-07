@@ -91,7 +91,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
     return GridView.count(
       crossAxisCount: 2,
       padding: EdgeInsets.all(4.0),
-      // childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+      childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
       children: data
           .map(
             (listData) {

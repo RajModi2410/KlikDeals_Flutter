@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/History_bloc.dart';
-import 'package:klik_deals/MyThemeData.dart';
 import 'package:klik_deals/splash_screen/splashScreen.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
@@ -32,7 +31,7 @@ void main() {
             builder: (context) => HistoryBloc(ApiBlocRepository())),
       ],
       child: MaterialApp(
-        theme: myTheme,
+//        theme: myTheme,
         home: SplashScreen(), 
         routes: <String, WidgetBuilder>{
         '/HomeScreen': (BuildContext context) => new LoginPage(),
