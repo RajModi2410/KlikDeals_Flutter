@@ -152,5 +152,37 @@ class _MyDetailsList extends State<HomeMainTab> {
     );
   }
 
-  void _logOut() {}
+  void _logOut() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Warning"),
+          content: new Text("Are you sure want to Logout?"),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('No, Thanks'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text("Yes, I'm"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                clearDataAndRedirectLoginScreen(context);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+}
+
+Future<void> clearDataAndRedirectLoginScreen(BuildContext context) async {
+  /*SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.remove("token");*/
+  Navigator.popUntil(context, ModalRoute.withName("HomeScreen"));
 }

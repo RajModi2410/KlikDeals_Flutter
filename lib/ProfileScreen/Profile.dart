@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
@@ -48,19 +49,22 @@ class _profilePage extends State<Profile>
       duration: const Duration(milliseconds: 500),
     );
     callGetVendorProfile(auth);
-    _nameValue = TextEditingController(text: "VT");
-    _addressValue = TextEditingController(text: "407");
-    _phoneNumber = TextEditingController(text: "7698380093");
-    _emailAddressValue =
-        TextEditingController(text: "testing8.webdesksoluation@gmail.com");
-    _websiteValue = TextEditingController(text: "aaaaaaa");
-    _descValue = TextEditingController(text: "aaaaaaa");
 
     imagePicker = new ImagePickerHandler(this, _controller);
     imagePicker.init();
 
     imagePickerBanner = new ImagePickerHandler(this, _controller);
     imagePickerBanner.init();
+  }
+
+  void setData(Response data) {
+    _nameValue = TextEditingController(text: data.name);
+    _addressValue = TextEditingController(text: data.address);
+    _phoneNumber = TextEditingController(text: data.phoneNumber);
+    _emailAddressValue =
+        TextEditingController(text: data.email);
+    _websiteValue = TextEditingController(text: data.website);
+    _descValue = TextEditingController(text: data.about);
   }
 
   @override
@@ -83,7 +87,8 @@ class _profilePage extends State<Profile>
                 ),
               );
             } else if (state is GetProfileApiFetchedState) {
-
+              var data = state.getProfileResponse.response;
+              setData(data);
             }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
@@ -519,6 +524,7 @@ class _profilePage extends State<Profile>
     return false;
   }
 }
+
 
 void callGetVendorProfile(ApiBlocBloc auth) {
   auth.add(GetProfileEvent());

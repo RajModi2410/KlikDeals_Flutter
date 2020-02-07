@@ -10,17 +10,16 @@ class GetProfileResponse {
   GetProfileResponse.fromJson(Map<String, dynamic> json, bool isError) {
     status = json['status'];
     message = json['message'];
+    response = json['response'] != null
+        ? new Response.fromJson(json['response'])
+        : null;
     if (isError) {
-      response = json['response'] != null
-          ? new Response.fromJson(json['response'])
+      errorMessage = json['error_message'] != null
+          ? new ErrorMessage.fromJson(json['error_message'])
           : null;
     } else {
       errorMessage = null;
     }
-
-    errorMessage = json['error_message'] != null
-        ? new ErrorMessage.fromJson(json['error_message'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
