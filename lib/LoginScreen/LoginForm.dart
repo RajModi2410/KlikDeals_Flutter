@@ -6,7 +6,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
-import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
       borderRadius: 10.0,
       backgroundColor: Colors.white,
       elevation: 10.0,
-      insetAnimCurve: Curves.easeInOut,
+//      insetAnimCurve: Curves.linear,
       progress: 0.0,
       maxProgress: 100.0,
       progressTextStyle: TextStyle(

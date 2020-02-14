@@ -83,7 +83,7 @@ class _MyDetailsList extends State<HomeMainTab> {
                   color: Colors.redAccent,
                   size: 24.0,
                 ),
-                title: new Text('Home'),
+                title: new Text('HOME'),
                 onTap: () {
                   _goToHome();
                 },
@@ -148,7 +148,7 @@ class _MyDetailsList extends State<HomeMainTab> {
   void _goToAddCoupon() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddCoupon(isFromEdit: false,)),
+      MaterialPageRoute(builder: (context) => AddCoupon()),
     );
   }
 
@@ -184,5 +184,5 @@ class _MyDetailsList extends State<HomeMainTab> {
 Future<void> clearDataAndRedirectLoginScreen(BuildContext context) async {
   /*SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.remove("token");*/
-  Navigator.popUntil(context, ModalRoute.withName("HomeScreen"));
+  Navigator.popUntil(context, ModalRoute.withName("/"));
 }

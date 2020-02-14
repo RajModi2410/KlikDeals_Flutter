@@ -4,7 +4,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/index.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/CouponCode/AddCoupon.dart';
+import 'package:klik_deals/CouponCode/EditCoupon.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 
 import 'RoundWidget.dart';
@@ -220,10 +220,10 @@ void RemoveCouponApi(int couponId, ApiBlocBloc auth) {
 }
 
 
-void _goToEditScreen(BuildContext context, Map<String, dynamic> data) {
-  Navigator.push(
+void _goToEditScreen(BuildContext context, Map<String, dynamic> data) async {
+  var result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddCoupon(map: data, isFromEdit: true),
+        builder: (context) => EditCoupon(map: data),
       ));
 }

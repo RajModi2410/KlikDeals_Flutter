@@ -49,6 +49,10 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapDeleteCouponEventResponseEvents(event);
     } else if (event is GetProfileEvent) {
       yield* _mapGetProfileEventResponseEvents(event);
+    } else if (event is EditCouponEvent) {
+      yield* _mapEditCouponEventResponseEvents(event);
+    } else if (event is UpdatePofileEvent) {
+      yield* _mapUpdateProfileEventResponseEvents(event);
     }
   }
 
@@ -72,7 +76,24 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       AddCouponEvent event) async* {
     yield ApiFetchingState();
     try {
-      final response = await playerRepository.addCoupon(event.toMap());
+      final response = await playerRepository.addCoupon(event, event.image);
+      if (response.status) {
+        yield CouponApiFetchedState(response);
+      } else {
+        yield CouponApiErrorState(response);
+      }
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
+      yield ApiErrorState();
+    }
+  }
+
+  Stream<ApiBlocState> _mapEditCouponEventResponseEvents(
+      EditCouponEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.editCoupon(event, event.image);
       if (response.status) {
         yield CouponApiFetchedState(response);
       } else {
@@ -138,6 +159,25 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield ApiErrorState();
     }
   }
+
+  Stream<ApiBlocState> _mapUpdateProfileEventResponseEvents(
+      UpdatePofileEvent event) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.updateProfile(
+          event, event.logo, event.banner);
+      if (response.status) {
+        yield UpdateProfileApiFetchedState(response);
+      } else {
+        yield UpdateProfileApiErrorState(response);
+      }
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
+      yield ApiErrorState();
+    }
+  }
+
 
   Stream<ApiBlocState> _mapSearchResponseEvents(
       RestaurantSearchEvent event) async* {

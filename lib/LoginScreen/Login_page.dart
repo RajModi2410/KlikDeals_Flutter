@@ -24,7 +24,8 @@ class LoginFormV1 extends StatefulWidget {
 
 String emailValidator(String value) {
   Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]'
+      r'{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp exp = new RegExp(pattern);
   if (!exp.hasMatch(value)) {
     return 'Please enter valid email.';
@@ -52,7 +53,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
   String _errorMessage;
   ApiBlocBloc auth;
   var loginBloc = LoginBloc();
-RoundWidget round;
+  RoundWidget round;
+
   @override
   void initState() {
     emailInputController =
@@ -87,9 +89,9 @@ RoundWidget round;
               } else if (state.loginResponse.errorMessage.user_error.length >
                   0) {
                 // error = state.loginResponse.errorMessage.user_error.first;
-                this
-                    .loginBloc
-                    .emailChanged(ErroGen(isError: true, value: state.loginResponse.errorMessage.user_error.first));
+                this.loginBloc.emailChanged(ErroGen(
+                    isError: true,
+                    value: state.loginResponse.errorMessage.user_error.first));
                 error = null;
               }
               if (error != null) {
@@ -177,8 +179,7 @@ RoundWidget round;
                       child: TextFormField(
                         style: TextStyle(color: Colors.redAccent),
                         onChanged: (value) =>
-                            loginBloc
-                                .emailChanged(
+                            loginBloc.emailChanged(
                                 ErroGen(isError: false, value: value)),
                         keyboardType: TextInputType.emailAddress,
                         autofocus: false,
@@ -189,21 +190,21 @@ RoundWidget round;
                         textAlign: TextAlign.left,
                         controller: emailInputController,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(
-                              Icons.mail_outline, color: Colors.redAccent),
+                          prefixIcon:
+                          Icon(Icons.mail_outline, color: Colors.redAccent),
                           fillColor: Color(0xB3FFFFFF),
                           filled: true,
                           hintStyle: TextStyle(color: Colors.redAccent),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(30.0)),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(30.0)),
                               borderSide: BorderSide(color: Colors.grey)),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius: BorderRadius.circular(30.0)),
                           labelStyle: TextStyle(color: Colors.redAccent),
-                          contentPadding: EdgeInsets.fromLTRB(
-                              20.0, 20.0, 10.0, 10.0),
+                          contentPadding:
+                          EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                           hintText: "Email",
                         ),
                       ),
@@ -222,14 +223,14 @@ RoundWidget round;
         children: <Widget>[
           new Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24.0, right: 24.0, top: 24.0),
+              padding:
+              const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
               child: TextFormField(
                 style: TextStyle(color: Colors.redAccent),
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
                 autofocus: false,
-                obscureText: false,
+                obscureText: true,
                 textAlign: TextAlign.left,
                 controller: pwdInputController,
                 decoration: InputDecoration(

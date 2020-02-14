@@ -7,24 +7,31 @@ import 'package:intl/intl.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
 import 'CouponStates.dart';
 
-class AddCoupon extends StatefulWidget {
-  _CouponAdd createState() => _CouponAdd();
+class EditCoupon extends StatefulWidget {
+  final Map<String, dynamic> map;
+
+  EditCoupon({Key key, this.map}) : super(key: key);
+
+  _EditCoupon createState() => _EditCoupon(map);
 }
 
-class _CouponAdd extends State<AddCoupon>
+class _EditCoupon extends State<EditCoupon>
     with TickerProviderStateMixin, ImagePickerListener {
   DateTime _Startdate;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
-  File _imageBanner;
   bool _isLoading;
+  Map<String, dynamic> mapData;
+  File _imageBanner;
   bool isDirty = false;
+  Data data;
   ApiBlocBloc auth;
   RoundWidget round;
   String _couponCodeValue;
@@ -37,20 +44,21 @@ class _CouponAdd extends State<AddCoupon>
       _couponCodeController,
       _descriptionController;
 
-  _CouponAdd();
+  _EditCoupon(this.mapData);
 
   @override
   void initState() {
     super.initState();
+    data = Data.fromJson(mapData);
     _isLoading = false;
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _startDateController = TextEditingController();
-    _endDateController = TextEditingController();
-    _couponCodeController = TextEditingController();
-    _descriptionController = TextEditingController();
+    _startDateController = TextEditingController(text: data.startDate);
+    _endDateController = TextEditingController(text: data.endDate);
+    _couponCodeController = TextEditingController(text: data.couponCode);
+    _descriptionController = TextEditingController(text: data.description);
 
     imagePicker = new ImagePickerHandler(this, _controller);
     imagePicker.init();
@@ -95,7 +103,7 @@ class _CouponAdd extends State<AddCoupon>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Add Coupon"),
+        title: Text("Edit Coupon"),
         backgroundColor: Colors.redAccent,
       ),
       body: Stack(children: <Widget>[
@@ -140,7 +148,7 @@ class _CouponAdd extends State<AddCoupon>
         },
         color: Colors.red,
         textColor: Colors.white,
-        child: Text("ADD COUPON".toUpperCase(), style: TextStyle(fontSize: 14)),
+        child: Text("SAVE".toUpperCase(), style: TextStyle(fontSize: 14)),
       ),
     );
   }
@@ -197,23 +205,24 @@ class _CouponAdd extends State<AddCoupon>
               ),
               Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: isDirty
+                  child: data.couponImage == null
                       ? new Container(
-                    height: 160.0,
-                    width: 360.0,
-                    decoration: new BoxDecoration(
-                      image: _CouponImage(isDirty, _imageBanner),
-                      border: Border.all(color: Colors.white, width: 0.5),
+                          height: 160.0,
+                          width: 360.0,
+                          decoration: new BoxDecoration(
+                            image: _CouponImage(isDirty, _imageBanner, null),
+                            border: Border.all(color: Colors.white, width: 0.5),
                           ),
-                  )
+                        )
                       : new Container(
-                    height: 160.0,
-                    width: 360.0,
-                    decoration: new BoxDecoration(
-                      image: _CouponImage(isDirty, null),
-                      border: Border.all(color: Colors.white, width: 0.5),
-                    ),
-                  )),
+                          height: 160.0,
+                          width: 360.0,
+                          decoration: new BoxDecoration(
+                            image: _CouponImage(
+                                isDirty, _imageBanner, data.couponImage),
+                            border: Border.all(color: Colors.white, width: 0.5),
+                          ),
+                        )),
             ],
           ),
         ),
@@ -393,8 +402,9 @@ class _CouponAdd extends State<AddCoupon>
       print(_descValue);
       print(_imageBanner);
       try {
-        auth.add(AddCouponEvent(_couponCodeValue, _startDateValue,
-            _endDateValue, _descValue, _imageBanner));
+        auth.add(EditCouponEvent(_couponCodeValue, _startDateValue,
+            _endDateValue, _descValue, data.id.toString(), _imageBanner));
+
         setState(() {
           _isLoading = false;
         });
@@ -417,15 +427,19 @@ class _CouponAdd extends State<AddCoupon>
   }
 }
 
-_CouponImage(bool isDirty, File imageBanner) {
+_CouponImage(bool isDirty, File imageBanner, String couponImage) {
   if (isDirty) {
     return new DecorationImage(
       image: new FileImage(imageBanner),
       fit: BoxFit.cover,
     );
+  } else if (couponImage != null) {
+    return new DecorationImage(
+      image: new NetworkImage(couponImage),
+      fit: BoxFit.cover,
+    );
   } else {
     return new DecorationImage(
-
       image: new AssetImage('assets/images/logo.png'),
       fit: BoxFit.cover,
     );

@@ -50,8 +50,7 @@ class LoginEvent extends ApiBlocEvent {
   List<Object> get props => [this.email, this.pass];
 }
 
-class CouponListEvent extends ApiBlocEvent{
-
+class CouponListEvent extends ApiBlocEvent {
   final int perPage;
   final String action;
 
@@ -59,7 +58,7 @@ class CouponListEvent extends ApiBlocEvent{
 
   Map toMap() {
     var map = new Map<String, dynamic>();
-    map ["per_page"] = perPage;
+    map["per_page"] = perPage;
     if (action != null && action.isNotEmpty) {
       map["action"] = action;
     }
@@ -67,18 +66,17 @@ class CouponListEvent extends ApiBlocEvent{
   }
 
   // TODO: implement props
-  List<Object> get props => [ this.perPage, this.action];
+  List<Object> get props => [this.perPage, this.action];
 }
 
 class CouponDeleteEvent extends ApiBlocEvent {
-
   final String couponId;
 
   CouponDeleteEvent(this.couponId);
 
   Map toMap() {
     var map = new Map<String, dynamic>();
-    map ["id"] = couponId;
+    map["id"] = couponId;
     return map;
   }
 
@@ -86,7 +84,6 @@ class CouponDeleteEvent extends ApiBlocEvent {
 }
 
 class GetProfileEvent extends ApiBlocEvent {
-
   GetProfileEvent();
 
   List<Object> get props => [null];
@@ -104,13 +101,11 @@ class AddCouponEvent extends ApiBlocEvent {
 
   Map toMap() {
     var map = new Map<String, dynamic>();
-    map ["coupon_code"] = couponCodeValue;
-    map ["start_date"] = startDateValue;
-    map ["end_date"] = endDateValue;
-    map ["description"] = descValue;
-    if (image != null) {
-      map["coupon_image"] = image;
-    }
+    map["coupon_code"] = couponCodeValue;
+    map["start_date"] = startDateValue;
+    map["end_date"] = endDateValue;
+    map["description"] = descValue;
+
     return map;
   }
 
@@ -122,5 +117,92 @@ class AddCouponEvent extends ApiBlocEvent {
         this.endDateValue,
         this.descValue,
         this.image
+      ];
+}
+
+class EditCouponEvent extends ApiBlocEvent {
+  String couponCodeValue;
+  String startDateValue;
+  String endDateValue;
+  String descValue;
+  String id;
+  File image;
+
+  EditCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
+      this.descValue, this.id, this.image);
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["coupon_code"] = couponCodeValue;
+    map["start_date"] = startDateValue;
+    map["end_date"] = endDateValue;
+    map["description"] = descValue;
+    map["id"] = id;
+
+    return map;
+  }
+
+  // TODO: implement props
+  List<Object> get props =>
+      [
+        this.couponCodeValue,
+        this.startDateValue,
+        this.endDateValue,
+        this.descValue,
+        this.id,
+        this.image
+      ];
+}
+
+class UpdatePofileEvent extends ApiBlocEvent {
+  String name;
+  String address;
+  String map_lat;
+  String map_log;
+  String phone_number;
+  String email;
+  String website;
+  String about;
+  File logo;
+  File banner;
+
+  UpdatePofileEvent(this.name,
+      this.address,
+      this.map_lat,
+      this.map_log,
+      this.phone_number,
+      this.email,
+      this.website,
+      this.about,
+      this.logo,
+      this.banner);
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["name"] = name;
+    map["address"] = address;
+    map["map_lat"] = map_lat;
+    map["map_log"] = map_log;
+    map["phone_number"] = phone_number;
+    map["email"] = email;
+    map["website"] = website;
+    map["about"] = about;
+
+    return map;
+  }
+
+  // TODO: implement props
+  List<Object> get props =>
+      [
+        this.name,
+        this.address,
+        this.map_lat,
+        this.map_log,
+        this.phone_number,
+        this.email,
+        this.website,
+        this.about,
+        this.logo,
+        this.banner
       ];
 }

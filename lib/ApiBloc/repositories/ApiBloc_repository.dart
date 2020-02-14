@@ -1,14 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart' as Dio;
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/models/AddCouponResponse.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/DeleteCouponResponse.dart';
 import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 import 'package:klik_deals/ApiBloc/models/SearchResponse.dart';
+import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
+import 'package:path/path.dart';
 
 import '../ApiBloc_provider.dart';
 
@@ -21,6 +25,7 @@ class ApiBlocRepository {
   factory ApiBlocRepository() {
     return _instance;
   }
+
   ApiBlocRepository._internal() {
     dio.interceptors.add(LogInterceptor(responseBody: true));
   }
@@ -61,11 +66,10 @@ class ApiBlocRepository {
     print(baseUrl + "listcouponbyvendor:" + map.toString());
     Dio.FormData formData = new Dio.FormData.fromMap(map);
     try {
-      Dio.Response response = await dio.post(baseUrl + "listcouponbyvendor",
-          data: map, options: Dio.Options(headers: getCommonHeaders()));
-      // final response = await http.post(
-      //     baseUrl + "listcouponbyvendor",
-      //     headers: getCommonHeaders());
+      Dio.Response response = await dio.get(baseUrl + "listcouponbyvendor",
+          queryParameters: map,
+          options: Dio.Options(headers: getCommonHeaders()));
+
       return parseCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.response != null) {
@@ -75,17 +79,103 @@ class ApiBlocRepository {
     }
   }
 
-  Future<AddCouponResponse> addCoupon(Map map) async {
+  Future<AddCouponResponse> addCoupon(AddCouponEvent map, File image) async {
     print(baseUrl + "addcoupon:" + map.toString());
-    Dio.FormData formData = new Dio.FormData.fromMap(map);
+    String fileName = basename(image.path);
+    print("File base name: $fileName");
+
+    Dio.FormData formData = FormData.fromMap({
+      "coupon_code": map.couponCodeValue,
+      "start_date": map.startDateValue,
+      "end_date": map.endDateValue,
+      "description": map.descValue,
+      "coupon_image":
+      await MultipartFile.fromFile(image.path, filename: fileName)
+    });
+
     try {
       Dio.Response response = await dio.post(baseUrl + "addcoupon",
           data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      print("We got Some message :: ${response.data.toString()}");
       return parseAddCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.response != null) {
         Dio.Response response = e.response;
         return parseAddCouponResponse(response);
+      }
+    }
+  }
+
+  Future<AddCouponResponse> editCoupon(EditCouponEvent map, File image) async {
+    print(baseUrl + "editcoupon:" + map.toString());
+    String fileName;
+    if (image != null) {
+      fileName = basename(image.path);
+      print("File base name: $fileName");
+    }
+    Dio.FormData formData = FormData.fromMap({
+      "coupon_code": map.couponCodeValue,
+      "start_date": map.startDateValue,
+      "end_date": map.endDateValue,
+      "description": map.descValue,
+      "id": map.id,
+      if(image != null)
+        "coupon_image": await MultipartFile.fromFile(
+            image.path, filename: fileName)
+    });
+
+    try {
+      Dio.Response response = await dio.post(baseUrl + "editcoupon",
+          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      print("We got Some message :: ${response.data.toString()}");
+      return parseAddCouponResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseAddCouponResponse(response);
+      }
+    }
+  }
+
+  Future<UpdateProfileResponse> updateProfile(UpdatePofileEvent map, File logo,
+      File banner) async {
+    print(baseUrl + "vendorprofile:" + map.toString());
+    String logoFileName;
+    String bannerFileName;
+    if (logo != null) {
+      logoFileName = basename(logo.path);
+      print("File base name: $logoFileName");
+    }
+    if (banner != null) {
+      bannerFileName = basename(logo.path);
+      print("File base name: $bannerFileName");
+    }
+    Dio.FormData formData = FormData.fromMap({
+      "name": map.name,
+      "address": map.name,
+      "map_lat": map.map_lat,
+      "map_log": map.map_log,
+      "phone_number": map.phone_number,
+      "email": map.email,
+      "website": map.website,
+      "about": map.about,
+      if(logo != null)
+        "logo": await MultipartFile.fromFile(logo.path, filename: logoFileName),
+      if(banner != null)
+        "banner": await MultipartFile.fromFile(
+            banner.path, filename: bannerFileName),
+
+    });
+
+    try {
+      Dio.Response response = await dio.post(baseUrl + "vendorprofile",
+          data: formData, options: Dio.Options(headers: getCommonHeaders()));
+      print("We got Some message :: ${response.data.toString()}");
+      return parseUpdateProfileResponse(response);
+    } on Dio.DioError catch (e) {
+      if (e.response != null) {
+        Dio.Response response = e.response;
+        return parseUpdateProfileResponse(response);
       }
     }
   }
@@ -144,10 +234,15 @@ class ApiBlocRepository {
         responseString, response.statusCode != successCode);
   }
 
-
   AddCouponResponse parseAddCouponResponse(Dio.Response response) {
     final responseString = (response.data);
     return AddCouponResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
+
+  UpdateProfileResponse parseUpdateProfileResponse(Dio.Response response) {
+    final responseString = (response.data);
+    return UpdateProfileResponse.fromJson(
         responseString, response.statusCode != successCode);
   }
 
@@ -163,4 +258,3 @@ class ApiBlocRepository {
         responseString, response.statusCode != successCode);
   }
 }
-

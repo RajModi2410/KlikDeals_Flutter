@@ -25,13 +25,14 @@ class _profilePage extends State<Profile>
   File _image;
   File _imageBanner;
   bool forlogo = false;
-
+  bool isDirty = false;
+  Response data;
   ApiBlocBloc auth;
   RoundWidget round;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   ImagePickerHandler imagePickerBanner;
-  String _name, _addr, _email, _website, _desc, _number;
+  String _name, _addr, _email, _website, _desc, _number, _lat, _long;
 
   TextEditingController _nameValue,
       _addressValue,
@@ -61,10 +62,11 @@ class _profilePage extends State<Profile>
     _nameValue = TextEditingController(text: data.name);
     _addressValue = TextEditingController(text: data.address);
     _phoneNumber = TextEditingController(text: data.phoneNumber);
-    _emailAddressValue =
-        TextEditingController(text: data.email);
+    _emailAddressValue = TextEditingController(text: data.email);
     _websiteValue = TextEditingController(text: data.website);
     _descValue = TextEditingController(text: data.about);
+    _lat = data.latitude;
+    _long = data.longitude;
   }
 
   @override
@@ -87,8 +89,10 @@ class _profilePage extends State<Profile>
                 ),
               );
             } else if (state is GetProfileApiFetchedState) {
-              var data = state.getProfileResponse.response;
-              setData(data);
+              data = state.getProfileResponse.response;
+              setState(() {
+                setData(data);
+              });
             }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
@@ -134,7 +138,7 @@ class _profilePage extends State<Profile>
                       children: <Widget>[
                         _profileName(),
                         _address(),
-                        _selectAddressButton(context),
+                        _selectAddressButton(context, data.toString()),
                         selectLogo(),
                         selectBanner(),
                         phoneNumber(),
@@ -190,6 +194,7 @@ class _profilePage extends State<Profile>
             }
             return null;
           },
+          style: TextStyle(color: Colors.redAccent),
           cursorColor: Colors.redAccent,
           maxLines: 6,
           decoration: _inputType("About Vendor")),
@@ -207,6 +212,7 @@ class _profilePage extends State<Profile>
           }
           return null;
         },
+        style: TextStyle(color: Colors.redAccent),
         controller: _websiteValue,
         decoration: _inputType("Website"),
       ),
@@ -221,6 +227,7 @@ class _profilePage extends State<Profile>
         validator: emailValidator,
         controller: _emailAddressValue,
         decoration: _inputType("Email Address"),
+        style: TextStyle(color: Colors.redAccent),
       ),
     );
   }
@@ -233,9 +240,12 @@ class _profilePage extends State<Profile>
         validator: (value) {
           if (value.isEmpty || value == null) {
             return 'Please enter some text';
+          } else if (value.length != 10) {
+            return 'Please enter valid mobile number';
           }
           return null;
         },
+        style: TextStyle(color: Colors.redAccent),
         controller: _phoneNumber,
         decoration: _inputType("Phone Number"),
       ),
@@ -270,7 +280,10 @@ class _profilePage extends State<Profile>
                       child: Text("Browse",
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                       color: Colors.redAccent,
-                      onPressed: () {},
+                      onPressed: () {
+                        forlogo = false;
+                        imagePicker.showDialog(context);
+                      },
                     ),
                   ),
                 ],
@@ -278,31 +291,20 @@ class _profilePage extends State<Profile>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _imageBanner == null
-                    ? new Stack(
-                  children: <Widget>[
-                    new Center(
-                      child: new CircleAvatar(
-                          radius: 00.0, backgroundColor: Colors.white),
-                    ),
-                    new Center(
-                      child:
-                      new Image.asset("images/color samples-01.png"),
-                    ),
-                  ],
+                    ? new Container(
+                  height: 160.0,
+                  width: 360.0,
+                  decoration: new BoxDecoration(
+                    image: _bannerImage(isDirty,
+                        data != null ? data.banner : null, _imageBanner),
+                  ),
                 )
                     : new Container(
                   height: 160.0,
                   width: 360.0,
                   decoration: new BoxDecoration(
-                    color: const Color(0xff7c94b6),
-                    image: new DecorationImage(
-                      image: new ExactAssetImage(_imageBanner.path),
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(color: Colors.white, width: 0.5),
-                    // borderRadius:
-                    //     new BorderRadius.all(const Radius.circular(80.0)
-                    //     ),
+                    image: _bannerImage(isDirty,
+                        data != null ? data.banner : null, _imageBanner),
                   ),
                 ),
               ),
@@ -345,7 +347,10 @@ class _profilePage extends State<Profile>
                       child: Text("Browse",
                           style: TextStyle(fontSize: 12, color: Colors.white)),
                       color: Colors.redAccent,
-                      onPressed: () {},
+                      onPressed: () {
+                        forlogo = true;
+                        imagePicker.showDialog(context);
+                      },
                     ),
                   ),
                 ],
@@ -353,31 +358,22 @@ class _profilePage extends State<Profile>
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _image == null
-                    ? new Stack(
-                  children: <Widget>[
-                    new Center(
-                      child: new CircleAvatar(
-                          radius: 00.0, backgroundColor: Colors.white),
-                    ),
-                    new Center(
-                      child:
-                      new Image.asset("images/color samples-01.png"),
-                    ),
-                  ],
-                )
+                    ? new Container(
+                    height: 160.0,
+                    width: 360.0,
+                    decoration: new BoxDecoration(
+                      image: _LogoImage(
+                          isDirty, data != null ? data.logo : null, _image),
+//                              image: new NetworkImage(_image.path),
+                    ))
                     : new Container(
                   height: 160.0,
                   width: 360.0,
                   decoration: new BoxDecoration(
-                    color: const Color(0xff7c94b6),
-                    image: new DecorationImage(
-                      image: new ExactAssetImage(_image.path),
-                      fit: BoxFit.cover,
-                    ),
+                    image: _LogoImage(
+                        isDirty, data != null ? data.logo : null, _image),
+//                            image: new NetworkImage(_image.path),
                     border: Border.all(color: Colors.white, width: 0.5),
-                    // borderRadius:
-                    //     new BorderRadius.all(const Radius.circular(80.0)
-                    //     ),
                   ),
                 ),
               ),
@@ -388,7 +384,7 @@ class _profilePage extends State<Profile>
     );
   }
 
-  Padding _selectAddressButton(BuildContext context) {
+  Padding _selectAddressButton(BuildContext context, String profileData) {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: new FlatButton(
@@ -397,7 +393,8 @@ class _profilePage extends State<Profile>
         ),
         color: Colors.redAccent,
         onPressed: () {
-          _goToLocationScreen(context);
+          _goToLocationScreen(
+              context, _lat, _long, data.address);
         },
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -416,15 +413,17 @@ class _profilePage extends State<Profile>
 
   Padding _address() {
     return Padding(
-
       padding: const EdgeInsets.only(top: 24.0),
       child: TextFormField(
         onSaved: (value) => _addr = value.trim(),
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          if (value.trim() == null || value
+              .trim()
+              .isEmpty) {
             return "Please enter Address";
           }
         },
+        style: TextStyle(color: Colors.redAccent),
         controller: _addressValue,
         decoration: _inputType("Address"),
       ),
@@ -435,13 +434,16 @@ class _profilePage extends State<Profile>
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: TextFormField(
+          controller: _nameValue,
           onSaved: (value) => _name = value.trim(),
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value.trim() == null || value
+                .trim()
+                .isEmpty) {
               return "Please enter name";
             }
           },
-          controller: _nameValue,
+          style: TextStyle(color: Colors.redAccent),
           decoration: _inputType(
             "Name",
           )),
@@ -450,13 +452,16 @@ class _profilePage extends State<Profile>
 
   @override
   userImage(File _image) {
-    setState(() {
-      if (forlogo == true) {
-        this._image = _image;
-      } else {
-        this._imageBanner = _image;
-      }
-    });
+    if (_image != null) {
+      setState(() {
+        isDirty = true;
+        if (forlogo == true) {
+          this._image = _image;
+        } else {
+          this._imageBanner = _image;
+        }
+      });
+    }
   }
 
   InputDecoration _inputType(String hintText) {
@@ -481,7 +486,7 @@ class _profilePage extends State<Profile>
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
       RegExp exp = new RegExp(pattern);
-      if (!exp.hasMatch(value)) {
+      if (!exp.hasMatch(value.trim())) {
         return 'Please enter valid email.';
       } else {
         return null;
@@ -500,18 +505,25 @@ class _profilePage extends State<Profile>
       print(_email);
       print(_website);
       print(_desc);
+      print(_lat);
+      print(_long);
       print(_imageBanner);
       print(_image);
-      /*try {
-      auth.add(AddCouponEvent(
-            _couponCodeValue, _startDateValue, _endDateValue, _descValue,
-            _imageBanner));
-        setState(() {
-          _isLoading = false;
-        });
+      try {
+        auth.add(UpdatePofileEvent(
+            _name,
+            _addr,
+            _lat,
+            _long,
+            _number,
+            _email,
+            _website,
+            _desc,
+            _imageBanner,
+            _image));
       } catch (e) {
         print('Error: $e');
-      }*/
+      }
     }
   }
 
@@ -523,16 +535,69 @@ class _profilePage extends State<Profile>
     }
     return false;
   }
+
+  void _goToLocationScreen(BuildContext context, String latitude,
+      String longitude, String address) async {
+    print(
+        "1 latitude :: $latitude longitude :: $longitude address :: $address");
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              SelectAddress(
+                  addressString: address, lat: latitude, long: longitude)),
+    );
+    var data = result.split(",,");
+    _lat = data[0].toString();
+    _long = data[1].toString();
+    _addressValue = TextEditingController(text: data[2].toString());
+
+    print(
+        "We got selected latlong ::: ${data[0].toString()} - ${data[1]
+            .toString()} - ${data[2].toString()}");
+  }
 }
 
+_bannerImage(bool isDirty, String oldBanner, File imageBanner) {
+  print("We got null banner file :: $isDirty :: $oldBanner :: $imageBanner");
+  if (isDirty && imageBanner != null) {
+    return new DecorationImage(
+      image: new FileImage(imageBanner),
+      fit: BoxFit.cover,
+    );
+  } else if (oldBanner != null) {
+    return new DecorationImage(
+      image: new NetworkImage(oldBanner),
+      fit: BoxFit.cover,
+    );
+  } else {
+    return new DecorationImage(
+      image: new AssetImage('assets/images/logo.png'),
+      fit: BoxFit.cover,
+    );
+  }
+}
+
+_LogoImage(bool isDirty, String oldLogo, File imageLogo) {
+  print("We got null banner file :: $isDirty :: $oldLogo :: $imageLogo");
+  if (isDirty && imageLogo != null) {
+    return new DecorationImage(
+      image: new FileImage(imageLogo),
+      fit: BoxFit.cover,
+    );
+  } else if (oldLogo != null) {
+    return new DecorationImage(
+      image: new NetworkImage(oldLogo),
+      fit: BoxFit.cover,
+    );
+  } else {
+    return new DecorationImage(
+      image: new AssetImage('assets/images/logo.png'),
+      fit: BoxFit.cover,
+    );
+  }
+}
 
 void callGetVendorProfile(ApiBlocBloc auth) {
   auth.add(GetProfileEvent());
-}
-
-void _goToLocationScreen(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => SelectAddress()),
-  );
 }

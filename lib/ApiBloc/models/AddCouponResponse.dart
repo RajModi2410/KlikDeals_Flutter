@@ -5,13 +5,17 @@ class AddCouponResponse {
 
   AddCouponResponse({this.status, this.message, this.errorMessage});
 
-  AddCouponResponse.fromJson(Map<String, dynamic> json, bool param1) {
+  AddCouponResponse.fromJson(Map<String, dynamic> json, bool isError) {
     status = json['status'];
     message = json['message'];
 
-    errorMessage = json['error_message'] != null
-        ? new ErrorMessage.fromJson(json['error_message'])
-        : null;
+    if (isError) {
+      errorMessage = json['error_message'] != null
+          ? new ErrorMessage.fromJson(json['error_message'])
+          : null;
+    } else {
+      errorMessage = null;
+    }
   }
 
   Map<String, dynamic> toJson() {

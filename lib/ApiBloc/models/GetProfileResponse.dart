@@ -52,17 +52,17 @@ class Response {
 
   Response(
       {this.name,
-      this.email,
-      this.address,
-      this.phoneNumber,
-      this.website,
-      this.about,
-      this.logo,
-      this.banner,
-      this.latitude,
-      this.longitude,
-      this.countryId,
-      this.stateId});
+        this.email,
+        this.address,
+        this.phoneNumber,
+        this.website,
+        this.about,
+        this.logo,
+        this.banner,
+        this.latitude,
+        this.longitude,
+        this.countryId,
+        this.stateId});
 
   Response.fromJson(Map<String, dynamic> json) {
     name = json['name'];
