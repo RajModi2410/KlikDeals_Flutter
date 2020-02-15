@@ -15,6 +15,7 @@ class HomeMainTab extends StatefulWidget {
 
 class _MyDetailsList extends State<HomeMainTab> {
   bool firstSelected = true;
+  bool isHomeScreen = true;
 
 
   @override
@@ -136,9 +137,12 @@ class _MyDetailsList extends State<HomeMainTab> {
     );
   }
 
-  void _goToHome() {}
+  void _goToHome() {
+    Navigator.pop(context);
+  }
 
   void _goToProfile() {
+    isHomeScreen = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Profile()),
@@ -146,6 +150,7 @@ class _MyDetailsList extends State<HomeMainTab> {
   }
 
   void _goToAddCoupon() {
+    isHomeScreen = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddCoupon()),

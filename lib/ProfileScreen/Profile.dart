@@ -225,6 +225,7 @@ class _profilePage extends State<Profile>
       child: TextFormField(
         onSaved: (value) => _email = value.trim(),
         validator: emailValidator,
+        keyboardType: TextInputType.emailAddress,
         controller: _emailAddressValue,
         decoration: _inputType("Email Address"),
         style: TextStyle(color: Colors.redAccent),
@@ -236,6 +237,7 @@ class _profilePage extends State<Profile>
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: TextFormField(
+
         onSaved: (value) => _number = value.trim(),
         validator: (value) {
           if (value.isEmpty || value == null) {
@@ -245,6 +247,7 @@ class _profilePage extends State<Profile>
           }
           return null;
         },
+        keyboardType: TextInputType.number,
         style: TextStyle(color: Colors.redAccent),
         controller: _phoneNumber,
         decoration: _inputType("Phone Number"),
@@ -547,7 +550,7 @@ class _profilePage extends State<Profile>
               SelectAddress(
                   addressString: address, lat: latitude, long: longitude)),
     );
-    var data = result.split(",,");
+    var data = result.split("*");
     _lat = data[0].toString();
     _long = data[1].toString();
     _addressValue = TextEditingController(text: data[2].toString());
@@ -563,17 +566,17 @@ _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
   if (isDirty && imageBanner != null) {
     return new DecorationImage(
       image: new FileImage(imageBanner),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else if (oldBanner != null) {
     return new DecorationImage(
       image: new NetworkImage(oldBanner),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else {
     return new DecorationImage(
       image: new AssetImage('assets/images/logo.png'),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   }
 }
@@ -583,17 +586,17 @@ _LogoImage(bool isDirty, String oldLogo, File imageLogo) {
   if (isDirty && imageLogo != null) {
     return new DecorationImage(
       image: new FileImage(imageLogo),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else if (oldLogo != null) {
     return new DecorationImage(
       image: new NetworkImage(oldLogo),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else {
     return new DecorationImage(
       image: new AssetImage('assets/images/logo.png'),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   }
 }

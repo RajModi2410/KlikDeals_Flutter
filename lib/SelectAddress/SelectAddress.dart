@@ -101,8 +101,7 @@ class _SelectAddressState extends State<SelectAddress> {
               await _mapController.future;
 
               final latLong = geolocation.coordinates as LatLng;
-              print(
-                  "selected latlong :: ${latLong.latitude} :: ${latLong
+              print("selected latlong :: ${latLong.latitude} :: ${latLong
                       .longitude}");
               selectedLatitude = latLong.latitude.toString();
               selectedLongitude = latLong.longitude.toString();
@@ -135,5 +134,5 @@ class _SelectAddressState extends State<SelectAddress> {
 void _validate(BuildContext context, String selectedLatitude,
     String selectedLongitude, String selectedAddress) {
   Navigator.pop(
-      context, "$selectedLatitude,,$selectedLongitude,,$selectedAddress");
+      context, "$selectedLatitude * $selectedLongitude * $selectedAddress");
 }

@@ -431,17 +431,17 @@ _CouponImage(bool isDirty, File imageBanner, String couponImage) {
   if (isDirty) {
     return new DecorationImage(
       image: new FileImage(imageBanner),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else if (couponImage != null) {
     return new DecorationImage(
       image: new NetworkImage(couponImage),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   } else {
     return new DecorationImage(
       image: new AssetImage('assets/images/logo.png'),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   }
 }

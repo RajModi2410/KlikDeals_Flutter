@@ -11,7 +11,7 @@ import 'RoundWidget.dart';
 
 class listDetails extends StatelessWidget {
   Data data;
-  bool isForHistory;
+  bool isForHistory = false;
   ApiBlocBloc auth;
   RoundWidget round;
 
@@ -19,21 +19,30 @@ class listDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String date;
+    if (isForHistory) {
+      date = dateFormatter("", "", isForHistory, data.grabDate);
+    } else {
+      date = dateFormatter(data.startDate, data.endDate, isForHistory, "");
+    }
+    print("Formatted Date :: $date");
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Stack(children: <Widget>[
-      couponList(context),
+      couponList(context, date),
       BlocListener<ApiBlocBloc, ApiBlocState>(
           listener: (context, state) {
             if (state is CouponDeleteErrorState) {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                      state.deleteCouponResponse.errorMessage.toString()),
+                  content:
+                  Text(state.deleteCouponResponse.errorMessage.toString()),
                   backgroundColor: Colors.red,
-                ),);
+                ),
+              );
             } else if (state is CouponDeleteFetchedState) {
-              print("Delete coupon successfully :: ${state.deleteCouponResponse
-                  .message}");
+              print(
+                  "Delete coupon successfully :: ${state.deleteCouponResponse
+                      .message}");
             }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
@@ -50,7 +59,7 @@ class listDetails extends StatelessWidget {
     ]);
   }
 
-  Widget couponList(BuildContext context) {
+  Widget couponList(BuildContext context, String date) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Card(
@@ -93,23 +102,7 @@ class listDetails extends StatelessWidget {
                         ),
                         Expanded(
                           flex: 4,
-                          child: Row(
-                            children: <Widget>[
-                              GestureDetector(
-                                  onTap: () {
-                                    _goToEditScreen(context, data.toJson());
-                                  },
-                                  child: Icon(Icons.edit, size: 20,)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      _showPopup(context, data.id, auth);
-                                    },
-                                    child: Icon(Icons.delete, size: 20,)),
-                              )
-                            ],
-                          ),
+                          child: row(context),
                         ),
                       ],
                     ),
@@ -125,10 +118,11 @@ class listDetails extends StatelessWidget {
                         fontSize: 12.0,
                       ),
                     ),
-                  ), Padding(
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                     child: Text(
-                      "Redeem Data: 24 Feb 2019",
+                      date,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -148,6 +142,36 @@ class listDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Row row(BuildContext context) {
+    if (isForHistory) {
+      return Row();
+    } else {
+      return Row(
+        children: <Widget>[
+          GestureDetector(
+              onTap: () {
+                _goToEditScreen(context, data.toJson());
+              },
+              child: Icon(
+                Icons.edit,
+                size: 20,
+              )),
+          Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: GestureDetector(
+                onTap: () {
+                  _showPopup(context, data.id, auth);
+                },
+                child: Icon(
+                  Icons.delete,
+                  size: 20,
+                )),
+          )
+        ],
+      );
+    }
   }
 
   Image getImage() {
@@ -187,6 +211,44 @@ class listDetails extends StatelessWidget {
   }
 }
 
+String dateFormatter(String startDate, String endDate, bool isForHistory,
+    String grabDate) {
+  var months = {
+    '01': 'Jan',
+    '02': 'Feb',
+    '03': 'Mar',
+    '04': 'Apr',
+    '05': 'May',
+    '06': 'Jun',
+    '07': 'Jul',
+    '08': 'Aug',
+    '09': 'Sept',
+    '10': 'Oct',
+    '11': 'Nov',
+    '12': 'Dec'
+  };
+
+  if (isForHistory) {
+    var grabDateArray = grabDate.split("/");
+    var grabMonth = months[grabDateArray[1]];
+    return "Redeem Date: ${grabDateArray[2]} "
+        "$grabMonth "
+        "${grabDateArray[0]}";
+  } else {
+    String startFormattedDate;
+    String endFormattedDate;
+    var startDateArray = startDate.split("/");
+    var endDateArray = endDate.split("/");
+    var startMonth = months[startDateArray[1]];
+    var endMonth = months[endDateArray[1]];
+    startFormattedDate = "Good from ${startDateArray[0]} "
+        "$startMonth "
+        "${startDateArray[2]} To ";
+    endFormattedDate = "${endDateArray[0]} " "$endMonth " "${endDateArray[2]}";
+    return startFormattedDate + endFormattedDate;
+  }
+}
+
 void _showPopup(BuildContext context, int id, ApiBlocBloc auth) {
   showDialog(
     context: context,
@@ -218,7 +280,6 @@ void _showPopup(BuildContext context, int id, ApiBlocBloc auth) {
 void RemoveCouponApi(int couponId, ApiBlocBloc auth) {
   auth.add(CouponDeleteEvent(couponId.toString()));
 }
-
 
 void _goToEditScreen(BuildContext context, Map<String, dynamic> data) async {
   var result = await Navigator.push(

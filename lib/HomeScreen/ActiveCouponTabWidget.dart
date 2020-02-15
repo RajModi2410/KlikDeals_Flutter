@@ -96,10 +96,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
           .map(
             (listData) {
           listData.isFromHistory = isForHistory;
-          return listDetails(data: listData);
+          return listDetails(data: listData, isForHistory: false);
         },
-      )
-          .toList(),
+      ).toList(),
     );
   }
 

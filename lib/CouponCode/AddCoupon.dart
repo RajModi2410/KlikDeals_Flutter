@@ -427,7 +427,7 @@ _CouponImage(bool isDirty, File imageBanner) {
     return new DecorationImage(
 
       image: new AssetImage('assets/images/logo.png'),
-      fit: BoxFit.cover,
+      fit: BoxFit.scaleDown,
     );
   }
 }
