@@ -57,6 +57,11 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
                 return RoundWidget();
+              }
+              if (currentState is ApiReloadState) {
+                print("Home Page :: We are in reloading state.....");
+                getCouponList();
+                return RoundWidget();
               } else if (currentState is couponApiErrorState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
@@ -66,6 +71,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
                 return EmptyListWidget(emptyMessage: "No coupon Data found");
+              } else if (currentState is CouponDeleteFetchedState) {
+                getCouponList();
+                return RoundWidget();
               } else {
                 return EmptyListWidget(emptyMessage: "No coupon Data found");
               }
@@ -128,4 +136,24 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      switch (state) {
+        case AppLifecycleState.resumed:
+          apiBloc.add(ReloadEvent(true));
+          break;
+        case AppLifecycleState.inactive:
+        // Handle this case
+          break;
+        case AppLifecycleState.paused:
+        // Handle this case
+          break;
+        case AppLifecycleState.detached:
+        // TODO: Handle this case.
+          break;
+      }
+    });
+  }
 }

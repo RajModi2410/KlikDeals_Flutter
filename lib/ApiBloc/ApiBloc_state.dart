@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 import 'package:meta/meta.dart';
 
 import 'models/SearchResponse.dart';
@@ -36,5 +34,10 @@ class ApiErrorState extends ApiBlocState {
 class ApiEmptyState extends ApiBlocState {
   @override
   
+  List<Object> get props => [];
+}
+
+class ApiReloadState extends ApiBlocState {
+  @override
   List<Object> get props => [];
 }

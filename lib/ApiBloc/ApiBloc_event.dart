@@ -31,6 +31,17 @@ class TokenGenerateEvent extends ApiBlocEvent {
   List<Object> get props => [token];
 }
 
+class ReloadEvent extends ApiBlocEvent {
+  final bool isReload;
+
+  ReloadEvent(this.isReload);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [isReload];
+}
+
+
 class LoginEvent extends ApiBlocEvent {
   final String email;
   final String pass;

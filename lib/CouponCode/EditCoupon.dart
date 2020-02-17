@@ -8,7 +8,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
@@ -74,14 +73,16 @@ class _EditCoupon extends State<EditCoupon>
       AddCouponDesign(context),
       BlocListener<ApiBlocBloc, ApiBlocState>(
           listener: (context, state) {
-            if (state is CouponApiErrorState) {
+            if (state is EditCouponApiErrorState) {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Somthing went to wrong. Please check again"),
                   backgroundColor: Colors.red,
                 ),
               );
-            } else if (state is CouponListFetchedState) {}
+            } else if (state is EditCouponApiFetchedState) {
+              Navigator.pop(context, true);
+            }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
               bloc: auth,

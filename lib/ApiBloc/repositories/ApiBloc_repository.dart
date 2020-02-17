@@ -8,6 +8,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/models/AddCouponResponse.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ApiBloc/models/DeleteCouponResponse.dart';
+import 'package:klik_deals/ApiBloc/models/EditCouponResponse.dart';
 import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 import 'package:klik_deals/ApiBloc/models/SearchResponse.dart';
@@ -106,7 +107,7 @@ class ApiBlocRepository {
     }
   }
 
-  Future<AddCouponResponse> editCoupon(EditCouponEvent map, File image) async {
+  Future<EditCouponResponse> editCoupon(EditCouponEvent map, File image) async {
     print(baseUrl + "editcoupon:" + map.toString());
     String fileName;
     if (image != null) {
@@ -128,11 +129,11 @@ class ApiBlocRepository {
       Dio.Response response = await dio.post(baseUrl + "editcoupon",
           data: formData, options: Dio.Options(headers: getCommonHeaders()));
       print("We got Some message :: ${response.data.toString()}");
-      return parseAddCouponResponse(response);
+      return parseEditCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.response != null) {
         Dio.Response response = e.response;
-        return parseAddCouponResponse(response);
+        return parseEditCouponResponse(response);
       }
     }
   }
@@ -237,6 +238,12 @@ class ApiBlocRepository {
   AddCouponResponse parseAddCouponResponse(Dio.Response response) {
     final responseString = (response.data);
     return AddCouponResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
+
+  EditCouponResponse parseEditCouponResponse(Dio.Response response) {
+    final responseString = (response.data);
+    return EditCouponResponse.fromJson(
         responseString, response.statusCode != successCode);
   }
 

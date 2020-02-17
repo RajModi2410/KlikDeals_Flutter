@@ -1,5 +1,6 @@
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/AddCouponResponse.dart';
+import 'package:klik_deals/ApiBloc/models/EditCouponResponse.dart';
 
 class CouponApiFetchedState extends ApiBlocState {
   final AddCouponResponse addCouponResponse;
@@ -19,4 +20,24 @@ class CouponApiErrorState extends ApiBlocState {
   @override
   // TODO: implement props
   List<Object> get props => [CouponApiErrorState];
+}
+
+class EditCouponApiFetchedState extends ApiBlocState {
+  final EditCouponResponse editCouponResponse;
+
+  EditCouponApiFetchedState(this.editCouponResponse);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [editCouponResponse];
+}
+
+class EditCouponApiErrorState extends ApiBlocState {
+  final EditCouponResponse editCouponResponse;
+
+  EditCouponApiErrorState(this.editCouponResponse);
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [editCouponResponse];
 }

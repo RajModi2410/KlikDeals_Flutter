@@ -54,9 +54,6 @@ class _MyDetailsList extends State<HomeMainTab> {
               unselectedLabelColor: Colors.white,
               indicatorSize: TabBarIndicatorSize.tab,
               indicator: BoxDecoration(
-                  // /*  borderRadius: BorderRadius.only(
-                  //     topLeft: Radius.circular(5),
-                  //     topRight: Radius.circular(5)),*/
                   color: Colors.white),
               onTap: (index) {
                 if (index == 0) {
@@ -86,6 +83,7 @@ class _MyDetailsList extends State<HomeMainTab> {
                 ),
                 title: new Text('HOME'),
                 onTap: () {
+                  Navigator.pop(context);
                   _goToHome();
                 },
               ),
@@ -97,6 +95,7 @@ class _MyDetailsList extends State<HomeMainTab> {
                 ),
                 title: new Text('PROFILE'),
                 onTap: () {
+                  Navigator.pop(context);
                   _goToProfile();
                 },
               ),
@@ -109,6 +108,7 @@ class _MyDetailsList extends State<HomeMainTab> {
                 ),
                 title: new Text('ADD COUPON'),
                 onTap: () {
+                  Navigator.pop(context);
                   _goToAddCoupon();
                 },
               ),

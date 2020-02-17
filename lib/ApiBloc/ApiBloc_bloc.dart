@@ -53,6 +53,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapEditCouponEventResponseEvents(event);
     } else if (event is UpdatePofileEvent) {
       yield* _mapUpdateProfileEventResponseEvents(event);
+    } else if (event is ReloadEvent) {
+      yield* _mapReloadResponseEvents();
     }
   }
 
@@ -78,9 +80,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     try {
       final response = await playerRepository.addCoupon(event, event.image);
       if (response.status) {
-        yield CouponApiFetchedState(response);
+        yield CouponAddFetchedState(response);
       } else {
-        yield CouponApiErrorState(response);
+        yield CouponAddErrorState(response);
       }
     } catch (e, s) {
       print("error $e");
@@ -95,9 +97,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     try {
       final response = await playerRepository.editCoupon(event, event.image);
       if (response.status) {
-        yield CouponApiFetchedState(response);
+        yield EditCouponApiFetchedState(response);
       } else {
-        yield CouponApiErrorState(response);
+        yield EditCouponApiErrorState(response);
       }
     } catch (e, s) {
       print("error $e");
@@ -203,4 +205,10 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       }
     }
   }
+
+
+  Stream<ApiBlocState> _mapReloadResponseEvents() async* {
+    yield ApiReloadState();
+  }
 }
+

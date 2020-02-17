@@ -152,7 +152,7 @@ class listDetails extends StatelessWidget {
         children: <Widget>[
           GestureDetector(
               onTap: () {
-                _goToEditScreen(context, data.toJson());
+                _goToEditScreen(context, data.toJson(), auth);
               },
               child: Icon(
                 Icons.edit,
@@ -281,10 +281,16 @@ void RemoveCouponApi(int couponId, ApiBlocBloc auth) {
   auth.add(CouponDeleteEvent(couponId.toString()));
 }
 
-void _goToEditScreen(BuildContext context, Map<String, dynamic> data) async {
+void _goToEditScreen(BuildContext context, Map<String, dynamic> data,
+    ApiBlocBloc auth) async {
   var result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditCoupon(map: data),
       ));
+
+  if (result) {
+    auth.add(ReloadEvent(true));
+  }
+
 }

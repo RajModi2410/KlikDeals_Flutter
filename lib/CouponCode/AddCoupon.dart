@@ -11,8 +11,6 @@ import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
-import 'CouponStates.dart';
-
 class AddCoupon extends StatefulWidget {
   _CouponAdd createState() => _CouponAdd();
 }
@@ -66,14 +64,17 @@ class _CouponAdd extends State<AddCoupon>
       AddCouponDesign(context),
       BlocListener<ApiBlocBloc, ApiBlocState>(
           listener: (context, state) {
-            if (state is CouponApiErrorState) {
+            if (state is CouponAddErrorState) {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text("Somthing went to wrong. Please check again"),
                   backgroundColor: Colors.red,
                 ),
               );
-            } else if (state is CouponListFetchedState) {}
+            } else if (state is CouponAddFetchedState) {
+              auth.add(ReloadEvent(true));
+              Navigator.pop(context, true);
+            }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
               bloc: auth,

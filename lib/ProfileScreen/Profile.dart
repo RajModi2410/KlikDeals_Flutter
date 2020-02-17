@@ -32,7 +32,8 @@ class _profilePage extends State<Profile>
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   ImagePickerHandler imagePickerBanner;
-  String _name, _addr, _email, _website, _desc, _number, _lat, _long;
+  String _name, _addr, _email, _website, _desc, _number, _lat, _long,
+      _addressString;
 
   TextEditingController _nameValue,
       _addressValue,
@@ -397,7 +398,7 @@ class _profilePage extends State<Profile>
         color: Colors.redAccent,
         onPressed: () {
           _goToLocationScreen(
-              context, _lat, _long, data.address);
+              context, _lat, _long, _addressString);
         },
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -553,6 +554,7 @@ class _profilePage extends State<Profile>
     var data = result.split("*");
     _lat = data[0].toString();
     _long = data[1].toString();
+    _addressString = data[2].toString();
     _addressValue = TextEditingController(text: data[2].toString());
 
     print(

@@ -6,7 +6,8 @@ import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:search_map_place/search_map_place.dart';
 
 class SelectAddress extends StatefulWidget {
-  SelectAddress({Key key, this.lat, this.long, this.addressString})
+  SelectAddress(
+      {Key key, @required this.lat, @required this.long, @required this.addressString})
       : super(key: key);
   final String lat;
   final String long;
@@ -27,31 +28,23 @@ class _SelectAddressState extends State<SelectAddress> {
   String selectedLatitude;
   String selectedLongitude;
   String selectedAddress;
+  CameraPosition _initialCamera;
+
+  Completer<GoogleMapController> _mapController = Completer();
+  String API_KEY = "AIzaSyCRYvqSRrhfWyH7JHKSgnakK-dV8bUIcA8";
 
   _SelectAddressState(this.latitudeStr, this.longitudeStr, this.addressStr);
 
   @override
   void initState() {
-    print(
-        "2 latitude :: $latitudeStr longitude :: $longitudeStr address :: $addressStr");
-
-
     latitude = double.parse(latitudeStr.toString());
     longitude = double.parse(longitudeStr.toString());
 
-    print(
-        "3 latitude :: $latitude longitude :: $longitude address :: $addressStr");
+    _initialCamera = CameraPosition(
+      target: LatLng(latitude, longitude),
+      zoom: 14.0000,
+    );
   }
-
-  Completer<GoogleMapController> _mapController = Completer();
-  String API_KEY = "AIzaSyCRYvqSRrhfWyH7JHKSgnakK-dV8bUIcA8";
-  final CameraPosition _initialCamera = CameraPosition(
-
-    target: LatLng(latitude != null ? latitude : 23.039298,
-        longitude != null ? longitude : 72.564697),
-//    target: LatLng(32, 42),
-    zoom: 14.0000,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +95,7 @@ class _SelectAddressState extends State<SelectAddress> {
 
               final latLong = geolocation.coordinates as LatLng;
               print("selected latlong :: ${latLong.latitude} :: ${latLong
-                      .longitude}");
+                  .longitude}");
               selectedLatitude = latLong.latitude.toString();
               selectedLongitude = latLong.longitude.toString();
               controller.animateCamera(
@@ -118,8 +111,12 @@ class _SelectAddressState extends State<SelectAddress> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () {
-                _validate(context, selectedLatitude, selectedLongitude,
-                    selectedAddress);
+                _validate(context,
+                    selectedLatitude != null ? selectedLatitude : latitude
+                        .toString()
+                    , selectedLongitude != null ? selectedLongitude : longitude
+                        .toString(),
+                    selectedAddress != null ? selectedAddress : addressStr);
               },
               child: Icon(Icons.done),
               backgroundColor: Colors.redAccent,
