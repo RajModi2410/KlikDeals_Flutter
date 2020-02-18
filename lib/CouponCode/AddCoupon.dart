@@ -29,6 +29,7 @@ class _CouponAdd extends State<AddCoupon>
   String _startDateValue;
   String _endDateValue;
   String _descValue;
+  String _errorMessage;
 
   TextEditingController _startDateController,
       _endDateController,
@@ -60,46 +61,95 @@ class _CouponAdd extends State<AddCoupon>
   @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
-    return Stack(children: <Widget>[
-      AddCouponDesign(context),
-      BlocListener<ApiBlocBloc, ApiBlocState>(
-          listener: (context, state) {
-            if (state is CouponAddErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Somthing went to wrong. Please check again"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is CouponAddFetchedState) {
-              auth.add(ReloadEvent(true));
-              Navigator.pop(context, true);
-            }
-          },
-          child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-              bloc: auth,
-              builder: (
-                BuildContext context,
-                ApiBlocState currentState,
-              ) {
-                if (currentState is ApiFetchingState) {
-                  round = RoundWidget();
-                  return round;
-                } else {
-                  return Container();
-                }
-              }))
-    ]);
-  }
-
-  Widget AddCouponDesign(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Add Coupon"),
-        backgroundColor: Colors.redAccent,
+        title: Text(
+          "Add Coupon",
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
       ),
       body: Stack(children: <Widget>[
+        AddCouponDesign(context),
+        BlocListener<ApiBlocBloc, ApiBlocState>(
+            listener: (context, state) {
+              // final snackBar = SnackBar(content: Text('Yay! A SnackBar!'));
+              //     Scaffold.of(context).showSnackBar(snackBar);
+              if (state is CouponAddErrorState) {
+                String error = "";
+                if (state.addCouponResponse.errorMessage.couponCode != null &&
+                    state.addCouponResponse.errorMessage.couponCode.length >
+                        0) {
+                  error = state.addCouponResponse.errorMessage.couponCode.first;
+                  print("We got the error in Coupon Code::$error");
+                } else if (state.addCouponResponse.errorMessage.startDate !=
+                        null &&
+                    state.addCouponResponse.errorMessage.startDate.length > 0) {
+                  error = state.addCouponResponse.errorMessage.startDate.first;
+                } else if (state.addCouponResponse.errorMessage.endDate !=
+                        null &&
+                    state.addCouponResponse.errorMessage.endDate.length > 0) {
+                  error = state.addCouponResponse.errorMessage.endDate.first;
+                } else if (state.addCouponResponse.errorMessage.couponImage !=
+                    null) {
+                  error =
+                      state.addCouponResponse.errorMessage.couponImage.first;
+                  print("We got the error in Coupoon image::$error");
+                } else if (state.addCouponResponse.errorMessage.description !=
+                        null &&
+                    state.addCouponResponse.errorMessage.description.length >
+                        0) {
+                  error =
+                      state.addCouponResponse.errorMessage.description.first;
+                }
+                if (error != null) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } else if (state is CouponAddFetchedState) {
+                auth.add(ReloadEvent(true));
+                Navigator.pop(context, true);
+              }
+            },
+            child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+                bloc: auth,
+                builder: (
+                  BuildContext context,
+                  ApiBlocState currentState,
+                ) {
+                  if (currentState is ApiFetchingState) {
+                    round = RoundWidget();
+                    return round;
+                  } else {
+                    return Container();
+                  }
+                }))
+      ]),
+    );
+  }
+
+  Widget _ShowerrorMessages() {
+    if (_errorMessage != null && _errorMessage.length > 0) {
+      return SnackBar(
+        content: Text(_errorMessage),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {},
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget AddCouponDesign(BuildContext context) {
+    return Stack(children: <Widget>[
         Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -124,8 +174,8 @@ class _CouponAdd extends State<AddCoupon>
             ),
           ),
         ),
-      ]),
-    );
+      ]);
+    
   }
 
   Padding _addCouponButton() {
@@ -154,7 +204,7 @@ class _CouponAdd extends State<AddCoupon>
           controller: _descriptionController,
           validator: (value) {
             if (value.isEmpty || value == null) {
-              return 'Please enter some text';
+              return 'Please enter coupon description';
             }
             return null;
           },
@@ -200,21 +250,21 @@ class _CouponAdd extends State<AddCoupon>
                   padding: const EdgeInsets.only(top: 8.0),
                   child: isDirty
                       ? new Container(
-                    height: 160.0,
-                    width: 360.0,
-                    decoration: new BoxDecoration(
-                      image: _CouponImage(isDirty, _imageBanner),
-                      border: Border.all(color: Colors.white, width: 0.5),
+                          height: 160.0,
+                          width: 360.0,
+                          decoration: new BoxDecoration(
+                            image: _CouponImage(isDirty, _imageBanner),
+                            border: Border.all(color: Colors.white, width: 0.5),
                           ),
-                  )
+                        )
                       : new Container(
-                    height: 160.0,
-                    width: 360.0,
-                    decoration: new BoxDecoration(
-                      image: _CouponImage(isDirty, null),
-                      border: Border.all(color: Colors.white, width: 0.5),
-                    ),
-                  )),
+                          height: 160.0,
+                          width: 360.0,
+                          decoration: new BoxDecoration(
+                            image: _CouponImage(isDirty, null),
+                            border: Border.all(color: Colors.white, width: 0.5),
+                          ),
+                        )),
             ],
           ),
         ),
@@ -278,7 +328,7 @@ class _CouponAdd extends State<AddCoupon>
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
           if (value.isEmpty) {
-            return 'Please enter some text';
+            return 'Please enter coupon code';
           }
           return null;
         },
@@ -426,7 +476,6 @@ _CouponImage(bool isDirty, File imageBanner) {
     );
   } else {
     return new DecorationImage(
-
       image: new AssetImage('assets/images/logo.png'),
       fit: BoxFit.scaleDown,
     );

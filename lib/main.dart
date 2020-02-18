@@ -32,8 +32,9 @@ void main() {
       ],
       child: MaterialApp(
 //        theme: myTheme,
-        home: SplashScreen(), 
-        routes: <String, WidgetBuilder>{
-        '/HomeScreen': (BuildContext context) => new LoginPage(),
-      })));
+          theme: ThemeData(primaryColor: Colors.redAccent),
+          home: SplashScreen(),
+          routes: <String, WidgetBuilder>{
+            '/HomeScreen': (BuildContext context) => new LoginPage(),
+          })));
 }

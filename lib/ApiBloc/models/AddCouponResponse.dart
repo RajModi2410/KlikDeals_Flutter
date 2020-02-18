@@ -31,20 +31,58 @@ class AddCouponResponse {
 }
 
 class ErrorMessage {
+  List<String> couponCode;
   List<String> startDate;
   List<String> endDate;
+  List<String> description;
+  List<String> couponImage;
 
-  ErrorMessage({this.startDate, this.endDate});
+  ErrorMessage(
+      {this.startDate,
+      this.endDate,
+      this.couponImage,
+      this.description,
+      this.couponCode});
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
-    startDate = json['start_date'].cast<String>();
-    endDate = json['end_date'].cast<String>();
+    var keys = json.keys;
+    if (keys.contains("coupon_code")) {
+      couponCode = json['coupon_code'].cast<String>();
+    } else {
+      couponCode = [];
+    }
+
+    if (keys.contains("start_date")) {
+      startDate = json['start_date'].cast<String>();
+    } else {
+      startDate = [];
+    }
+
+    if (keys.contains("coupon_code")) {
+      endDate = json['end_date'].cast<String>();
+    } else {
+      couponCode = [];
+    }
+
+    if (keys.contains("description")) {
+      description = json['description'].cast<String>();
+    } else {
+      description = [];
+    }
+
+    if (keys.contains("coupon_image")) {
+      couponImage = json['coupon_image'].cast<String>();
+    } else {
+      couponImage = [];
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
+    data['description'] = this.description;
+    data['coupon_image'] = this.couponImage;
     return data;
   }
 }

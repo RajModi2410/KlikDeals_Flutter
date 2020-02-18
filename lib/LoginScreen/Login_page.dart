@@ -86,13 +86,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
               String error = "";
               if (state.loginResponse.errorMessage.general_error.length > 0) {
                 error = state.loginResponse.errorMessage.general_error.first;
+                 print("We got the ERRR in LOGIN VALUE::$error");
               } else if (state.loginResponse.errorMessage.user_error.length >
                   0) {
                 // error = state.loginResponse.errorMessage.user_error.first;
                 this.loginBloc.emailChanged(ErroGen(
                     isError: true,
                     value: state.loginResponse.errorMessage.user_error.first));
-                error = null;
+              print("We got the error in LOGIN VALUE::$error");     
+                         error = null;
               }
               if (error != null) {
                 Scaffold.of(context).showSnackBar(
