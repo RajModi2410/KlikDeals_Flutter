@@ -114,7 +114,7 @@ class _profilePage extends State<Profile>
     return Scaffold(
         appBar: AppBar(
           title: Text('Edit Profile'),
-          backgroundColor: Colors.redAccent,
+          backgroundColor:  Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
           Container(
@@ -164,7 +164,7 @@ class _profilePage extends State<Profile>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.redAccent,
+        color:  Theme.of(context).primaryColor,
         onPressed: () {
           validateRequiredFields();
         },
@@ -195,8 +195,8 @@ class _profilePage extends State<Profile>
             }
             return null;
           },
-          style: TextStyle(color: Colors.redAccent),
-          cursorColor: Colors.redAccent,
+          style: TextStyle(color:  Theme.of(context).primaryColor),
+          cursorColor:  Theme.of(context).primaryColor,
           maxLines: 6,
           decoration: _inputType("About Vendor")),
     );
@@ -213,7 +213,7 @@ class _profilePage extends State<Profile>
           }
           return null;
         },
-        style: TextStyle(color: Colors.redAccent),
+        style: TextStyle(color:  Theme.of(context).primaryColor),
         controller: _websiteValue,
         decoration: _inputType("Website"),
       ),
@@ -229,7 +229,7 @@ class _profilePage extends State<Profile>
         keyboardType: TextInputType.emailAddress,
         controller: _emailAddressValue,
         decoration: _inputType("Email Address"),
-        style: TextStyle(color: Colors.redAccent),
+        style: TextStyle(color:  Theme.of(context).primaryColor),
       ),
     );
   }
@@ -249,7 +249,7 @@ class _profilePage extends State<Profile>
           return null;
         },
         keyboardType: TextInputType.number,
-        style: TextStyle(color: Colors.redAccent),
+        style: TextStyle(color:  Theme.of(context).primaryColor),
         controller: _phoneNumber,
         decoration: _inputType("Phone Number"),
       ),
@@ -273,7 +273,7 @@ class _profilePage extends State<Profile>
               Row(
                 children: <Widget>[
                   Text("Banner",
-                      style: TextStyle(fontSize: 16, color: Colors.redAccent)),
+                      style: TextStyle(fontSize: 16, color:  Theme.of(context).primaryColor)),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -283,7 +283,7 @@ class _profilePage extends State<Profile>
                           side: BorderSide(color: Colors.red)),
                       child: Text("Browse",
                           style: TextStyle(fontSize: 14, color: Colors.white)),
-                      color: Colors.redAccent,
+                      color:  Theme.of(context).primaryColor,
                       onPressed: () {
                         forlogo = false;
                         imagePicker.showDialog(context);
@@ -339,7 +339,7 @@ class _profilePage extends State<Profile>
                     padding: const EdgeInsets.all(8.0),
                     child: Text("Logo",
                         style:
-                        TextStyle(fontSize: 16, color: Colors.redAccent)),
+                        TextStyle(fontSize: 16, color:  Theme.of(context).primaryColor)),
                   ),
                   Spacer(),
                   Padding(
@@ -350,7 +350,7 @@ class _profilePage extends State<Profile>
                           side: BorderSide(color: Colors.red)),
                       child: Text("Browse",
                           style: TextStyle(fontSize: 12, color: Colors.white)),
-                      color: Colors.redAccent,
+                      color:  Theme.of(context).primaryColor,
                       onPressed: () {
                         forlogo = true;
                         imagePicker.showDialog(context);
@@ -395,7 +395,7 @@ class _profilePage extends State<Profile>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color: Colors.redAccent,
+        color:  Theme.of(context).primaryColor,
         onPressed: () {
           _goToLocationScreen(
               context, _lat, _long, _addressString);
@@ -427,7 +427,7 @@ class _profilePage extends State<Profile>
             return "Please enter Address";
           }
         },
-        style: TextStyle(color: Colors.redAccent),
+        style: TextStyle(color:  Theme.of(context).primaryColor),
         controller: _addressValue,
         decoration: _inputType("Address"),
       ),
@@ -447,7 +447,7 @@ class _profilePage extends State<Profile>
               return "Please enter name";
             }
           },
-          style: TextStyle(color: Colors.redAccent),
+          style: TextStyle(color:  Theme.of(context).primaryColor),
           decoration: _inputType(
             "Name",
           )),
@@ -472,14 +472,14 @@ class _profilePage extends State<Profile>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color: Colors.redAccent),
+      hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
       border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0)),
-      labelStyle: TextStyle(color: Colors.redAccent),
+      labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
