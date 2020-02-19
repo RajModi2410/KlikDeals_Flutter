@@ -7,17 +7,12 @@ class BackgroundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child:Image.asset('assets/images/splash_bg.png',fit: BoxFit.contain,),
-            ),
-          ],
-        ),
-      ),
-          );
+    return Container(
+      color: Colors.white,
+      foregroundDecoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/splash_bg.png'),
+              fit: BoxFit.cover)),
+    );
   }
 }
