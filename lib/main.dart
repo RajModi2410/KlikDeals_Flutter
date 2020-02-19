@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/splash_screen/splashScreen.dart';
+import 'package:klik_deals/commons/Routes.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
 import 'ApiBloc/repositories/ApiBloc_repository.dart';
-import 'LoginScreen/LoginScreen.dart';
 
 // Must be top-level function
 _parseAndDecode(String response) {
@@ -32,9 +32,18 @@ void main() {
       ],
       child: MaterialApp(
 //        theme: myTheme,
-          theme: ThemeData(primaryColor: Colors.redAccent),
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              fontFamily: "Montserrat",
+              primaryColor: Color(0xffAF201A),
+              errorColor: Color(0xffAF201A),
+              buttonColor: Color(0xffAF201A),
+          ),
           home: SplashScreen(),
-          routes: <String, WidgetBuilder>{
-            '/HomeScreen': (BuildContext context) => new LoginPage(),
-          })));
+          initialRoute: "/",
+          onGenerateRoute: RouteGenerator.generateRoute,
+          // routes: <String, WidgetBuilder>{
+          //   '/HomeScreen': (BuildContext context) => new LoginPage(),
+          // }
+          )));
 }

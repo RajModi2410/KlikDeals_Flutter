@@ -12,6 +12,7 @@ import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
 class AddCoupon extends StatefulWidget {
+  static const String routeName = "/addCoupon";
   _CouponAdd createState() => _CouponAdd();
 }
 
@@ -66,7 +67,10 @@ class _CouponAdd extends State<AddCoupon>
       appBar: AppBar(
         title: Text(
           "Add Coupon",
-          style: TextStyle(fontWeight: FontWeight.w700),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Montserrat"),
         ),
       ),
       body: Stack(children: <Widget>[
@@ -101,6 +105,9 @@ class _CouponAdd extends State<AddCoupon>
                         0) {
                   error =
                       state.addCouponResponse.errorMessage.description.first;
+                } else if (state.addCouponResponse.errorMessage.error != null &&
+                    state.addCouponResponse.errorMessage.error.length > 0) {
+                  error = state.addCouponResponse.errorMessage.error.first;
                 }
                 if (error != null) {
                   Scaffold.of(context).showSnackBar(
@@ -150,32 +157,31 @@ class _CouponAdd extends State<AddCoupon>
 
   Widget AddCouponDesign(BuildContext context) {
     return Stack(children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/splash_bg.png'),
-                  fit: BoxFit.cover)),
-        ),
-        new Padding(
-          padding: const EdgeInsets.only(left: 28.0, right: 28.0, top: 8.0),
-          child: Container(
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  _couponCode(),
-                  _startDate(context),
-                  _expiryDate(context),
-                  _uploadImage(context),
-                  _description(),
-                  _addCouponButton(),
-                ],
-              ),
+      Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/splash_bg.png'),
+                fit: BoxFit.cover)),
+      ),
+      new Padding(
+        padding: const EdgeInsets.only(left: 28.0, right: 28.0, top: 8.0),
+        child: Container(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                _couponCode(),
+                _startDate(context),
+                _expiryDate(context),
+                _uploadImage(context),
+                _description(),
+                _addCouponButton(),
+              ],
             ),
           ),
         ),
-      ]);
-    
+      ),
+    ]);
   }
 
   Padding _addCouponButton() {
@@ -185,7 +191,7 @@ class _CouponAdd extends State<AddCoupon>
         padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(30.0),
-            side: BorderSide(color:  Theme.of(context).primaryColor)),
+            side: BorderSide(color: Theme.of(context).primaryColor)),
         onPressed: () {
           _validateRequiredFields();
         },
@@ -208,8 +214,8 @@ class _CouponAdd extends State<AddCoupon>
             }
             return null;
           },
-          style: TextStyle(color:  Theme.of(context).primaryColor),
-          cursorColor:  Theme.of(context).primaryColor,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+          cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
           decoration: _inputType("Description", false)),
     );
@@ -233,13 +239,14 @@ class _CouponAdd extends State<AddCoupon>
                 children: <Widget>[
                   Text(
                     "Upload Coupon Image",
-                    style: TextStyle(fontSize: 15.0, color:  Theme.of(context).primaryColor),
+                    style: TextStyle(
+                        fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
                   Spacer(),
                   IconButton(
                     icon: new Icon(Icons.attach_file),
                     iconSize: 20,
-                    color:  Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       imagePicker.showDialog(context);
                     },
@@ -283,7 +290,7 @@ class _CouponAdd extends State<AddCoupon>
             }
             return null;
           },
-          style: TextStyle(color:  Theme.of(context).primaryColor),
+          style: TextStyle(color: Theme.of(context).primaryColor),
           controller: _endDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -291,7 +298,7 @@ class _CouponAdd extends State<AddCoupon>
               _showEndDatePicker(context, _Startdate);
             } else {
               final snackBar = SnackBar(
-                backgroundColor:  Theme.of(context).primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 content: Text("Please select start date first"),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
@@ -312,7 +319,7 @@ class _CouponAdd extends State<AddCoupon>
             }
             return null;
           },
-          style: TextStyle(color:  Theme.of(context).primaryColor),
+          style: TextStyle(color: Theme.of(context).primaryColor),
           controller: _startDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -332,8 +339,8 @@ class _CouponAdd extends State<AddCoupon>
           }
           return null;
         },
-        style: TextStyle(color:  Theme.of(context).primaryColor),
-        cursorColor:  Theme.of(context).primaryColor,
+        style: TextStyle(color: Theme.of(context).primaryColor),
+        cursorColor: Theme.of(context).primaryColor,
         decoration: _inputType("Coupon Code", false));
   }
 
@@ -341,14 +348,14 @@ class _CouponAdd extends State<AddCoupon>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
-      labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
@@ -358,7 +365,7 @@ class _CouponAdd extends State<AddCoupon>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
       suffixIcon: _InputsuffixIcon(isForCal),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -366,7 +373,7 @@ class _CouponAdd extends State<AddCoupon>
       border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0)),
-      labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
@@ -376,13 +383,13 @@ class _CouponAdd extends State<AddCoupon>
     if (isForCal) {
       return new Icon(
         Icons.calendar_today,
-        color:  Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         size: 20,
       );
     } else {
       return new Icon(
         Icons.attach_file,
-        color:  Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         size: 20,
       );
     }

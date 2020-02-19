@@ -16,6 +16,7 @@ import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:path/path.dart';
 
 import '../ApiBloc_provider.dart';
+import 'package:klik_deals/commons/KeyConstant.dart';
 
 class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
@@ -29,6 +30,8 @@ class ApiBlocRepository {
 
   ApiBlocRepository._internal() {
     dio.interceptors.add(LogInterceptor(responseBody: true));
+    dio.options.connectTimeout = 5000; //5s
+    dio.options.receiveTimeout = 3000;
   }
 
   void test(bool isError) {
@@ -56,7 +59,11 @@ class ApiBlocRepository {
           await dio.post(baseUrl + "vendorlogin", data: formData);
       return parseLoginResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+      print(e.type);
+      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return LoginResponse.error();
+      }
+      else if (e.response != null) {
         Dio.Response response = e.response;
         return parseLoginResponse(response);
       }
@@ -73,7 +80,11 @@ class ApiBlocRepository {
 
       return parseCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+      print(e.type);
+      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return CouponListResponse.error();
+      }
+      else if (e.response != null) {
         Dio.Response response = e.response;
         return parseCouponResponse(response);
       }
@@ -91,7 +102,7 @@ class ApiBlocRepository {
       "end_date": map.endDateValue,
       "description": map.descValue,
       "coupon_image":
-      await MultipartFile.fromFile(image.path, filename: fileName)
+          await MultipartFile.fromFile(image.path, filename: fileName)
     });
 
     try {
@@ -100,7 +111,10 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseAddCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return AddCouponResponse.error();
+      }
+      else if (e.response != null) {
         Dio.Response response = e.response;
         return parseAddCouponResponse(response);
       }
@@ -120,9 +134,9 @@ class ApiBlocRepository {
       "end_date": map.endDateValue,
       "description": map.descValue,
       "id": map.id,
-      if(image != null)
-        "coupon_image": await MultipartFile.fromFile(
-            image.path, filename: fileName)
+      if (image != null)
+        "coupon_image":
+            await MultipartFile.fromFile(image.path, filename: fileName)
     });
 
     try {
@@ -131,15 +145,18 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseEditCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return EditCouponResponse.error();
+      }
+      else if (e.response != null) {
         Dio.Response response = e.response;
         return parseEditCouponResponse(response);
       }
     }
   }
 
-  Future<UpdateProfileResponse> updateProfile(UpdatePofileEvent map, File logo,
-      File banner) async {
+  Future<UpdateProfileResponse> updateProfile(
+      UpdatePofileEvent map, File logo, File banner) async {
     print(baseUrl + "vendorprofile:" + map.toString());
     String logoFileName;
     String bannerFileName;
@@ -160,12 +177,11 @@ class ApiBlocRepository {
       "email": map.email,
       "website": map.website,
       "about": map.about,
-      if(logo != null)
+      if (logo != null)
         "logo": await MultipartFile.fromFile(logo.path, filename: logoFileName),
-      if(banner != null)
-        "banner": await MultipartFile.fromFile(
-            banner.path, filename: bannerFileName),
-
+      if (banner != null)
+        "banner":
+            await MultipartFile.fromFile(banner.path, filename: bannerFileName),
     });
 
     try {
@@ -174,7 +190,10 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseUpdateProfileResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+     if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return UpdateProfileResponse.error();
+      }
+      else  if (e.response != null) {
         Dio.Response response = e.response;
         return parseUpdateProfileResponse(response);
       }
@@ -189,7 +208,10 @@ class ApiBlocRepository {
           data: formData, options: Dio.Options(headers: getCommonHeaders()));
       return parseDeleteCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+     if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return DeleteCouponResponse.error();
+      }
+      else  if (e.response != null) {
         Dio.Response response = e.response;
         return parseDeleteCouponResponse(response);
       }
@@ -203,7 +225,10 @@ class ApiBlocRepository {
           options: Dio.Options(headers: getCommonHeaders()));
       return parseGetProfileResponse(response);
     } on Dio.DioError catch (e) {
-      if (e.response != null) {
+      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+        return GetProfileResponse.error();
+      }
+      else if (e.response != null) {
         Dio.Response response = e.response;
         return parseGetProfileResponse(response);
       }

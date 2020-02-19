@@ -15,6 +15,7 @@ var token = "";
 SharedPreferences sharedPreferences;
 
 class ActiveCouponTabWidget extends StatefulWidget {
+  static const String routeName = "/active_coupon";
   bool isForHistory;
 
   ActiveCouponTabWidget(this.isForHistory);
@@ -23,7 +24,8 @@ class ActiveCouponTabWidget extends StatefulWidget {
   State<StatefulWidget> createState() => new _ActiveCouponPage(isForHistory);
 }
 
-class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepAliveClientMixin<ActiveCouponTabWidget>{
+class _ActiveCouponPage extends State<ActiveCouponTabWidget>
+    with AutomaticKeepAliveClientMixin<ActiveCouponTabWidget> {
   bool _isLoading;
   ApiBlocBloc apiBloc;
   int _perpage = 10;
@@ -65,7 +67,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
               } else if (currentState is couponApiErrorState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                return CouponErrorWidget(errorMessage: currentState.couponlist.errorMessage.error.first);
+                return CouponErrorWidget(
+                    errorMessage:
+                        currentState.couponlist.errorMessage.error.first);
               } else if (currentState is CouponListFetchedState) {
                 return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
@@ -91,23 +95,41 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
                 image: AssetImage('assets/images/splash_bg.png'),
                 fit: BoxFit.cover)),
       ),
-      _gridView(data),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: _gridView(data),
+      ),
     ]);
   }
 
+  // Widget _gridView(List<Data> data) {
+  //   return GridView.count(
+  //     crossAxisCount: 2,
+  //     padding: EdgeInsets.all(4.0),
+  //     childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+  //     children: data
+  //         .map(
+  //           (listData) {
+  //         listData.isFromHistory = isForHistory;
+  //         return listDetails(data: listData, isForHistory: false);
+  //       },
+  //     ).toList(),
+  //   );
+  // }
+
   Widget _gridView(List<Data> data) {
-    return GridView.count(
-      crossAxisCount: 2,
-      padding: EdgeInsets.all(4.0),
-      childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
-      children: data
-          .map(
-            (listData) {
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+            crossAxisCount: 2,
+            mainAxisSpacing: 4.0,
+            crossAxisSpacing: 4.0),
+        itemCount: data.length,
+        itemBuilder: (BuildContext context, int index) {
+          var listData = data[index];
           listData.isFromHistory = isForHistory;
-          return listDetails(data: listData, isForHistory: false);
-        },
-      ).toList(),
-    );
+          return CouponItem(data: listData, isForHistory: false);
+        });
   }
 
   @override
@@ -120,7 +142,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
   getToken() async {
     sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token");
-    if (token!=null && token.isNotEmpty) {
+    if (token != null && token.isNotEmpty) {
       getCouponList();
     } else {}
     print("Home Page :: We got Token $token");
@@ -128,7 +150,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
 
   void getCouponList() {
     try {
-        apiBloc.add(CouponListEvent(_perpage, null));
+      apiBloc.add(CouponListEvent(_perpage, null));
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }
@@ -145,13 +167,13 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget> with AutomaticKeepA
           apiBloc.add(ReloadEvent(true));
           break;
         case AppLifecycleState.inactive:
-        // Handle this case
+          // Handle this case
           break;
         case AppLifecycleState.paused:
-        // Handle this case
+          // Handle this case
           break;
         case AppLifecycleState.detached:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
       }
     });

@@ -9,13 +9,13 @@ import 'package:klik_deals/HomeScreen/HomeState.dart';
 
 import 'RoundWidget.dart';
 
-class listDetails extends StatelessWidget {
+class CouponItem extends StatelessWidget {
   Data data;
   bool isForHistory = false;
   ApiBlocBloc auth;
   RoundWidget round;
 
-  listDetails({@required this.data, this.isForHistory});
+  CouponItem({@required this.data, this.isForHistory});
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +35,21 @@ class listDetails extends StatelessWidget {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content:
-                  Text(state.deleteCouponResponse.errorMessage.toString()),
+                      Text(state.deleteCouponResponse.errorMessage.toString()),
                   backgroundColor: Colors.red,
                 ),
               );
             } else if (state is CouponDeleteFetchedState) {
               print(
-                  "Delete coupon successfully :: ${state.deleteCouponResponse
-                      .message}");
+                  "Delete coupon successfully :: ${state.deleteCouponResponse.message}");
             }
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
               bloc: auth,
-              builder: (BuildContext context,
-                  ApiBlocState currentState,) {
+              builder: (
+                BuildContext context,
+                ApiBlocState currentState,
+              ) {
                 if (currentState is ApiFetchingState) {
                   round = RoundWidget();
                   return round;
@@ -85,6 +86,19 @@ class listDetails extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                    // child: ListTile(
+                    //   title: Text(
+                    //         data.couponCode,
+                    //         overflow: TextOverflow.ellipsis,
+                    //         maxLines: 1,
+                    //         style: TextStyle(
+                    //           fontSize: 15.0,
+                    //           color: Colors.black,
+                    //           fontWeight: FontWeight.bold,
+                    //         ),
+                    //       ),
+                    //       trailing: getActions(context),
+                    // ),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -102,7 +116,7 @@ class listDetails extends StatelessWidget {
                         ),
                         Expanded(
                           flex: 4,
-                          child: row(context),
+                          child: getActions(context),
                         ),
                       ],
                     ),
@@ -144,30 +158,31 @@ class listDetails extends StatelessWidget {
     );
   }
 
-  Row row(BuildContext context) {
+  Row getActions(BuildContext context) {
     if (isForHistory) {
       return Row();
     } else {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           GestureDetector(
               onTap: () {
                 _goToEditScreen(context, data.toJson(), auth);
               },
-              child: Icon(
-                Icons.edit,
-                size: 20,
-              )),
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: Image.asset("assets/images/pencils.png"))),
           Padding(
-            padding: const EdgeInsets.only(left: 4.0),
+            padding: const EdgeInsets.only(left: 10.0, right: 0),
             child: GestureDetector(
                 onTap: () {
                   _showPopup(context, data.id, auth);
                 },
-                child: Icon(
-                  Icons.delete,
-                  size: 20,
-                )),
+                 child: SizedBox(
+                height: 20,
+                width: 20,
+                child: Image.asset("assets/images/bins.png"))),
           )
         ],
       );
@@ -211,8 +226,8 @@ class listDetails extends StatelessWidget {
   }
 }
 
-String dateFormatter(String startDate, String endDate, bool isForHistory,
-    String grabDate) {
+String dateFormatter(
+    String startDate, String endDate, bool isForHistory, String grabDate) {
   var months = {
     '01': 'Jan',
     '02': 'Feb',
@@ -281,16 +296,12 @@ void RemoveCouponApi(int couponId, ApiBlocBloc auth) {
   auth.add(CouponDeleteEvent(couponId.toString()));
 }
 
-void _goToEditScreen(BuildContext context, Map<String, dynamic> data,
-    ApiBlocBloc auth) async {
-  var result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditCoupon(map: data),
-      ));
+void _goToEditScreen(
+    BuildContext context, Map<String, dynamic> data, ApiBlocBloc auth) async {
+  var result = await Navigator.of(context)
+      .pushNamed(EditCoupon.routeName, arguments: data);
 
   if (result) {
     auth.add(ReloadEvent(true));
   }
-
 }

@@ -1,3 +1,5 @@
+import 'package:klik_deals/commons/KeyConstant.dart';
+
 class CouponListResponse {
   bool status;
   String message;
@@ -38,6 +40,12 @@ class CouponListResponse {
       data['error_message'] = this.errorMessage.toJson();
     }
     return data;
+  }
+
+  CouponListResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
 }
 
@@ -172,4 +180,8 @@ class ErrorMessage {
     data['error'] = this.error;
     return data;
   }
+   ErrorMessage.error(String error) {
+    this.error = [error];
+  }
+
 }

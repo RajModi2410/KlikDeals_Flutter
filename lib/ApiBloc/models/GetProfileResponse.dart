@@ -1,3 +1,5 @@
+import 'package:klik_deals/commons/KeyConstant.dart';
+
 class GetProfileResponse {
   bool status;
   String message;
@@ -33,6 +35,12 @@ class GetProfileResponse {
       data['error_message'] = this.errorMessage.toJson();
     }
     return data;
+  }
+
+   GetProfileResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
 }
 
@@ -110,5 +118,10 @@ class ErrorMessage {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
     return data;
+  }
+
+
+   ErrorMessage.error(String error) {
+    this.error = [error];
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/HomeScreen');
+    Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
   }
 
   @override

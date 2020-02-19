@@ -1,3 +1,5 @@
+import 'package:klik_deals/commons/KeyConstant.dart';
+
 class DeleteCouponResponse {
   bool status;
   String message;
@@ -27,6 +29,12 @@ class DeleteCouponResponse {
     }
     return data;
   }
+
+   DeleteCouponResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
 }
 
 class ErrorMessage {
@@ -47,6 +55,10 @@ class ErrorMessage {
   @override
   String toString() {
     return 'ErrorMessage{error: $error}';
+  }
+
+    ErrorMessage.error(String error) {
+    this.error = [error];
   }
 
 }

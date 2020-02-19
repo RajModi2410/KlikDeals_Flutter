@@ -100,7 +100,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 Scaffold.of(context).showSnackBar(
                   SnackBar(
                     content: Text(error),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).errorColor,
                   ),
                 );
               }
@@ -179,7 +179,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     return Padding(
                       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                       child: TextFormField(
-                        style: TextStyle(color: Colors.redAccent),
+                        style: TextStyle(color:  Theme.of(context).primaryColor),
                         onChanged: (value) =>
                             loginBloc.emailChanged(
                                 ErroGen(isError: false, value: value)),
@@ -193,10 +193,10 @@ class _LoginFormV1State extends State<LoginFormV1> {
                         controller: emailInputController,
                         decoration: InputDecoration(
                           prefixIcon:
-                          Icon(Icons.mail_outline, color: Colors.redAccent),
+                          Icon(Icons.mail_outline, color:  Theme.of(context).primaryColor),
                           fillColor: Color(0xB3FFFFFF),
                           filled: true,
-                          hintStyle: TextStyle(color: Colors.redAccent),
+                          hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
                           focusedBorder: OutlineInputBorder(
                               borderRadius:
                               BorderRadius.all(Radius.circular(30.0)),
@@ -204,7 +204,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius: BorderRadius.circular(30.0)),
-                          labelStyle: TextStyle(color: Colors.redAccent),
+                          labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
                           contentPadding:
                           EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                           hintText: "Email",
@@ -228,7 +228,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               padding:
               const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
               child: TextFormField(
-                style: TextStyle(color: Colors.redAccent),
+                style: TextStyle(color:  Theme.of(context).primaryColor),
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
                 autofocus: false,
@@ -236,17 +236,17 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 textAlign: TextAlign.left,
                 controller: pwdInputController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline, color: Colors.redAccent),
+                  prefixIcon: Icon(Icons.lock_outline, color:  Theme.of(context).primaryColor),
                   fillColor: Color(0xB3FFFFFF),
                   filled: true,
-                  hintStyle: TextStyle(color: Colors.redAccent),
+                  hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       borderSide: BorderSide(color: Colors.grey)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(30.0)),
-                  labelStyle: TextStyle(color: Colors.redAccent),
+                  labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
                   contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                   hintText: "Password",
                 ),
@@ -270,7 +270,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: Colors.redAccent,
+              color:  Theme.of(context).primaryColor,
               onPressed: () {
                 validateAndSubmit();
               },
@@ -332,10 +332,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
   }
 
   void _goToHomePage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomeMainTab()),
-    );
+    Navigator.of(context).pushNamed(HomeMainTab.routeName);
   }
 
   void _onWidgetDidBuild(Function callback) {

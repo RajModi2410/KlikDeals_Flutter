@@ -14,6 +14,8 @@ import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'CouponStates.dart';
 
 class EditCoupon extends StatefulWidget {
+  static const String routeName = "/editCoupon";
+
   final Map<String, dynamic> map;
 
   EditCoupon({Key key, this.map}) : super(key: key);
@@ -69,71 +71,104 @@ class _EditCoupon extends State<EditCoupon>
   @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<ApiBlocBloc>(context);
-    return Stack(children: <Widget>[
-      AddCouponDesign(context),
-      BlocListener<ApiBlocBloc, ApiBlocState>(
-          listener: (context, state) {
-            if (state is EditCouponApiErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Somthing went to wrong. Please check again"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is EditCouponApiFetchedState) {
-              Navigator.pop(context, true);
-            }
-          },
-          child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-              bloc: auth,
-              builder: (
-                BuildContext context,
-                ApiBlocState currentState,
-              ) {
-                if (currentState is ApiFetchingState) {
-                  round = RoundWidget();
-                  return round;
-                } else {
-                  return Container();
+    return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(
+            "Edit Coupon",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        body: Stack(children: <Widget>[
+          AddCouponDesign(context),
+          BlocListener<ApiBlocBloc, ApiBlocState>(
+              listener: (context, state) {
+                if (state is EditCouponApiErrorState) {
+                  String error = "";
+                if (state.editCouponResponse.errorMessage.couponCode != null &&
+                    state.editCouponResponse.errorMessage.couponCode.length >
+                        0) {
+                  error = state.editCouponResponse.errorMessage.couponCode.first;
+                  print("We got the error in Coupon Code::$error");
+                } else if (state.editCouponResponse.errorMessage.startDate !=
+                        null &&
+                    state.editCouponResponse.errorMessage.startDate.length > 0) {
+                  error = state.editCouponResponse.errorMessage.startDate.first;
+                } else if (state.editCouponResponse.errorMessage.endDate !=
+                        null &&
+                    state.editCouponResponse.errorMessage.endDate.length > 0) {
+                  error = state.editCouponResponse.errorMessage.endDate.first;
+                } else if (state.editCouponResponse.errorMessage.couponImage !=
+                    null) {
+                  error =
+                      state.editCouponResponse.errorMessage.couponImage.first;
+                  print("We got the error in Coupoon image::$error");
+                } else if (state.editCouponResponse.errorMessage.description !=
+                        null &&
+                    state.editCouponResponse.errorMessage.description.length >
+                        0) {
+                  error =
+                      state.editCouponResponse.errorMessage.description.first;
+                } else if (state.editCouponResponse.errorMessage.error != null &&
+                    state.editCouponResponse.errorMessage.error.length > 0) {
+                  error = state.editCouponResponse.errorMessage.error.first;
                 }
-              }))
-    ]);
+                if (error != null) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ),
+                  );
+                }
+              } else if (state is EditCouponApiFetchedState) {
+                  Navigator.pop(context, true);
+                }
+              },
+              child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+                  bloc: auth,
+                  builder: (
+                    BuildContext context,
+                    ApiBlocState currentState,
+                  ) {
+                    if (currentState is ApiFetchingState) {
+                      round = RoundWidget();
+                      return round;
+                    } else {
+                      return Container();
+                    }
+                  }))
+        ]));
   }
 
   Widget AddCouponDesign(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text("Edit Coupon"),
-        backgroundColor: Colors.redAccent,
+    return Stack(children: <Widget>[
+      Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/splash_bg.png'),
+                fit: BoxFit.cover)),
       ),
-      body: Stack(children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/splash_bg.png'),
-                  fit: BoxFit.cover)),
-        ),
-        new Padding(
-          padding: const EdgeInsets.only(left: 28.0, right: 28.0, top: 8.0),
-          child: Container(
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  _couponCode(),
-                  _startDate(context),
-                  _expiryDate(context),
-                  _uploadImage(context),
-                  _description(),
-                  _addCouponButton(),
-                ],
-              ),
+      new Padding(
+        padding: const EdgeInsets.only(left: 28.0, right: 28.0, top: 8.0),
+        child: Container(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                _couponCode(),
+                _startDate(context),
+                _expiryDate(context),
+                _uploadImage(context),
+                _description(),
+                _addCouponButton(),
+              ],
             ),
           ),
         ),
-      ]),
-    );
+      ),
+    ]);
   }
 
   Padding _addCouponButton() {
@@ -143,17 +178,17 @@ class _EditCoupon extends State<EditCoupon>
         padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(30.0),
-            side: BorderSide(color: Colors.redAccent)),
+            side: BorderSide(color: Theme.of(context).primaryColor)),
         onPressed: () {
           _validateRequiredFields();
         },
-        color: Colors.red,
+        color: Theme.of(context).primaryColor,
         textColor: Colors.white,
         child: Text("SAVE".toUpperCase(), style: TextStyle(fontSize: 14)),
       ),
     );
   }
-
+  
   Padding _description() {
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
@@ -166,8 +201,8 @@ class _EditCoupon extends State<EditCoupon>
             }
             return null;
           },
-          style: TextStyle(color: Colors.redAccent),
-          cursorColor: Colors.redAccent,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+          cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
           decoration: _inputType("Description", false)),
     );
@@ -191,13 +226,14 @@ class _EditCoupon extends State<EditCoupon>
                 children: <Widget>[
                   Text(
                     "Upload Coupon Image",
-                    style: TextStyle(fontSize: 15.0, color: Colors.redAccent),
+                    style: TextStyle(
+                        fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
                   Spacer(),
                   IconButton(
                     icon: new Icon(Icons.attach_file),
                     iconSize: 20,
-                    color: Colors.redAccent,
+                    color: Theme.of(context).primaryColor,
                     onPressed: () {
                       imagePicker.showDialog(context);
                     },
@@ -242,7 +278,7 @@ class _EditCoupon extends State<EditCoupon>
             }
             return null;
           },
-          style: TextStyle(color: Colors.redAccent),
+          style: TextStyle(color: Theme.of(context).primaryColor),
           controller: _endDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -250,7 +286,7 @@ class _EditCoupon extends State<EditCoupon>
               _showEndDatePicker(context, _Startdate);
             } else {
               final snackBar = SnackBar(
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Theme.of(context).primaryColor,
                 content: Text("Please select start date first"),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
@@ -271,7 +307,7 @@ class _EditCoupon extends State<EditCoupon>
             }
             return null;
           },
-          style: TextStyle(color: Colors.redAccent),
+          style: TextStyle(color: Theme.of(context).primaryColor),
           controller: _startDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -291,8 +327,8 @@ class _EditCoupon extends State<EditCoupon>
           }
           return null;
         },
-        style: TextStyle(color: Colors.redAccent),
-        cursorColor: Colors.redAccent,
+        style: TextStyle(color: Theme.of(context).primaryColor),
+        cursorColor: Theme.of(context).primaryColor,
         decoration: _inputType("Coupon Code", false));
   }
 
@@ -300,14 +336,14 @@ class _EditCoupon extends State<EditCoupon>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color: Colors.redAccent),
+      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
       border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
-      labelStyle: TextStyle(color: Colors.redAccent),
+      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
@@ -317,7 +353,7 @@ class _EditCoupon extends State<EditCoupon>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color: Colors.redAccent),
+      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
       suffixIcon: _InputsuffixIcon(isForCal),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
@@ -325,7 +361,7 @@ class _EditCoupon extends State<EditCoupon>
       border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0)),
-      labelStyle: TextStyle(color: Colors.redAccent),
+      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
@@ -335,13 +371,13 @@ class _EditCoupon extends State<EditCoupon>
     if (isForCal) {
       return new Icon(
         Icons.calendar_today,
-        color: Colors.redAccent,
+        color: Theme.of(context).primaryColor,
         size: 20,
       );
     } else {
       return new Icon(
         Icons.attach_file,
-        color: Colors.redAccent,
+        color: Theme.of(context).primaryColor,
         size: 20,
       );
     }

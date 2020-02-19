@@ -104,7 +104,7 @@ void initState() {
           .map(
             (listData) {
           listData.isFromHistory = isForHistory;
-          return listDetails(data: listData, isForHistory: true);
+          return CouponItem(data: listData, isForHistory: true);
         },
       )
           .toList(),

@@ -25,6 +25,12 @@ class LoginResponse {
     }
   }
 
+  LoginResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
@@ -42,6 +48,10 @@ class ErrorMessage {
   List<String> user_error;
 
   ErrorMessage({this.general_error, this.user_error});
+
+  ErrorMessage.error(String error) {
+    this.general_error = [error];
+  }
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
     var keys = json.keys;

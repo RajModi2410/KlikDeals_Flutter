@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'LoginForm.dart';
-import 'Login_page.dart';
+import 'package:klik_deals/LoginScreen/LoginFormV1.dart';
 
 class LoginPage extends StatefulWidget {
+  static const String routeName = "/login";
   @override
   State<StatefulWidget> createState() => new _LoginPage();
 }

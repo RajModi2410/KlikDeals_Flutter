@@ -13,6 +13,7 @@ import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'ProfileStates.dart';
 
 class Profile extends StatefulWidget {
+  static const String routeName = "/profile";
   Profile({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -32,7 +33,14 @@ class _profilePage extends State<Profile>
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   ImagePickerHandler imagePickerBanner;
-  String _name, _addr, _email, _website, _desc, _number, _lat, _long,
+  String _name,
+      _addr,
+      _email,
+      _website,
+      _desc,
+      _number,
+      _lat,
+      _long,
       _addressString;
 
   TextEditingController _nameValue,
@@ -98,8 +106,10 @@ class _profilePage extends State<Profile>
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
               bloc: auth,
-              builder: (BuildContext context,
-                  ApiBlocState currentState,) {
+              builder: (
+                BuildContext context,
+                ApiBlocState currentState,
+              ) {
                 if (currentState is ApiFetchingState) {
                   round = RoundWidget();
                   return round;
@@ -114,7 +124,7 @@ class _profilePage extends State<Profile>
     return Scaffold(
         appBar: AppBar(
           title: Text('Edit Profile'),
-          backgroundColor:  Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
           Container(
@@ -164,7 +174,7 @@ class _profilePage extends State<Profile>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color:  Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         onPressed: () {
           validateRequiredFields();
         },
@@ -195,8 +205,8 @@ class _profilePage extends State<Profile>
             }
             return null;
           },
-          style: TextStyle(color:  Theme.of(context).primaryColor),
-          cursorColor:  Theme.of(context).primaryColor,
+          style: TextStyle(color: Theme.of(context).primaryColor),
+          cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
           decoration: _inputType("About Vendor")),
     );
@@ -213,7 +223,7 @@ class _profilePage extends State<Profile>
           }
           return null;
         },
-        style: TextStyle(color:  Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _websiteValue,
         decoration: _inputType("Website"),
       ),
@@ -229,7 +239,7 @@ class _profilePage extends State<Profile>
         keyboardType: TextInputType.emailAddress,
         controller: _emailAddressValue,
         decoration: _inputType("Email Address"),
-        style: TextStyle(color:  Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
   }
@@ -238,7 +248,6 @@ class _profilePage extends State<Profile>
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: TextFormField(
-
         onSaved: (value) => _number = value.trim(),
         validator: (value) {
           if (value.isEmpty || value == null) {
@@ -249,7 +258,7 @@ class _profilePage extends State<Profile>
           return null;
         },
         keyboardType: TextInputType.number,
-        style: TextStyle(color:  Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _phoneNumber,
         decoration: _inputType("Phone Number"),
       ),
@@ -266,14 +275,15 @@ class _profilePage extends State<Profile>
             side: BorderSide(width: 1, color: Colors.grey)),
         child: Padding(
           padding:
-          const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
+              const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: <Widget>[
                   Text("Banner",
-                      style: TextStyle(fontSize: 16, color:  Theme.of(context).primaryColor)),
+                      style: TextStyle(
+                          fontSize: 16, color: Theme.of(context).primaryColor)),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -283,7 +293,7 @@ class _profilePage extends State<Profile>
                           side: BorderSide(color: Colors.red)),
                       child: Text("Browse",
                           style: TextStyle(fontSize: 14, color: Colors.white)),
-                      color:  Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor,
                       onPressed: () {
                         forlogo = false;
                         imagePicker.showDialog(context);
@@ -296,21 +306,21 @@ class _profilePage extends State<Profile>
                 padding: const EdgeInsets.all(8.0),
                 child: _imageBanner == null
                     ? new Container(
-                  height: 160.0,
-                  width: 360.0,
-                  decoration: new BoxDecoration(
-                    image: _bannerImage(isDirty,
-                        data != null ? data.banner : null, _imageBanner),
-                  ),
-                )
+                        height: 160.0,
+                        width: 360.0,
+                        decoration: new BoxDecoration(
+                          image: _bannerImage(isDirty,
+                              data != null ? data.banner : null, _imageBanner),
+                        ),
+                      )
                     : new Container(
-                  height: 160.0,
-                  width: 360.0,
-                  decoration: new BoxDecoration(
-                    image: _bannerImage(isDirty,
-                        data != null ? data.banner : null, _imageBanner),
-                  ),
-                ),
+                        height: 160.0,
+                        width: 360.0,
+                        decoration: new BoxDecoration(
+                          image: _bannerImage(isDirty,
+                              data != null ? data.banner : null, _imageBanner),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -329,7 +339,7 @@ class _profilePage extends State<Profile>
             side: BorderSide(width: 1, color: Colors.grey)),
         child: Padding(
           padding:
-          const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
+              const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -338,8 +348,9 @@ class _profilePage extends State<Profile>
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text("Logo",
-                        style:
-                        TextStyle(fontSize: 16, color:  Theme.of(context).primaryColor)),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor)),
                   ),
                   Spacer(),
                   Padding(
@@ -350,7 +361,7 @@ class _profilePage extends State<Profile>
                           side: BorderSide(color: Colors.red)),
                       child: Text("Browse",
                           style: TextStyle(fontSize: 12, color: Colors.white)),
-                      color:  Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor,
                       onPressed: () {
                         forlogo = true;
                         imagePicker.showDialog(context);
@@ -363,23 +374,23 @@ class _profilePage extends State<Profile>
                 padding: const EdgeInsets.all(8.0),
                 child: _image == null
                     ? new Container(
-                    height: 160.0,
-                    width: 360.0,
-                    decoration: new BoxDecoration(
-                      image: _LogoImage(
-                          isDirty, data != null ? data.logo : null, _image),
+                        height: 160.0,
+                        width: 360.0,
+                        decoration: new BoxDecoration(
+                          image: _LogoImage(
+                              isDirty, data != null ? data.logo : null, _image),
 //                              image: new NetworkImage(_image.path),
-                    ))
+                        ))
                     : new Container(
-                  height: 160.0,
-                  width: 360.0,
-                  decoration: new BoxDecoration(
-                    image: _LogoImage(
-                        isDirty, data != null ? data.logo : null, _image),
+                        height: 160.0,
+                        width: 360.0,
+                        decoration: new BoxDecoration(
+                          image: _LogoImage(
+                              isDirty, data != null ? data.logo : null, _image),
 //                            image: new NetworkImage(_image.path),
-                    border: Border.all(color: Colors.white, width: 0.5),
-                  ),
-                ),
+                          border: Border.all(color: Colors.white, width: 0.5),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -395,10 +406,9 @@ class _profilePage extends State<Profile>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        color:  Theme.of(context).primaryColor,
+        color: Theme.of(context).primaryColor,
         onPressed: () {
-          _goToLocationScreen(
-              context, _lat, _long, _addressString);
+          _goToLocationScreen(context, _lat, _long, _addressString);
         },
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -421,13 +431,11 @@ class _profilePage extends State<Profile>
       child: TextFormField(
         onSaved: (value) => _addr = value.trim(),
         validator: (value) {
-          if (value.trim() == null || value
-              .trim()
-              .isEmpty) {
+          if (value.trim() == null || value.trim().isEmpty) {
             return "Please enter Address";
           }
         },
-        style: TextStyle(color:  Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _addressValue,
         decoration: _inputType("Address"),
       ),
@@ -441,13 +449,11 @@ class _profilePage extends State<Profile>
           controller: _nameValue,
           onSaved: (value) => _name = value.trim(),
           validator: (value) {
-            if (value.trim() == null || value
-                .trim()
-                .isEmpty) {
+            if (value.trim() == null || value.trim().isEmpty) {
               return "Please enter name";
             }
           },
-          style: TextStyle(color:  Theme.of(context).primaryColor),
+          style: TextStyle(color: Theme.of(context).primaryColor),
           decoration: _inputType(
             "Name",
           )),
@@ -472,14 +478,14 @@ class _profilePage extends State<Profile>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
       border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(30.0)),
-      labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
+      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
       contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
       hintText: hintText,
     );
@@ -514,17 +520,8 @@ class _profilePage extends State<Profile>
       print(_imageBanner);
       print(_image);
       try {
-        auth.add(UpdatePofileEvent(
-            _name,
-            _addr,
-            _lat,
-            _long,
-            _number,
-            _email,
-            _website,
-            _desc,
-            _imageBanner,
-            _image));
+        auth.add(UpdatePofileEvent(_name, _addr, _lat, _long, _number, _email,
+            _website, _desc, _imageBanner, _image));
       } catch (e) {
         print('Error: $e');
       }
@@ -547,9 +544,8 @@ class _profilePage extends State<Profile>
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              SelectAddress(
-                  addressString: address, lat: latitude, long: longitude)),
+          builder: (context) => SelectAddress(
+              addressString: address, lat: latitude, long: longitude)),
     );
     var data = result.split("*");
     _lat = data[0].toString();
@@ -558,8 +554,7 @@ class _profilePage extends State<Profile>
     _addressValue = TextEditingController(text: data[2].toString());
 
     print(
-        "We got selected latlong ::: ${data[0].toString()} - ${data[1]
-            .toString()} - ${data[2].toString()}");
+        "We got selected latlong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:klik_deals/commons/KeyConstant.dart';
+
 class UpdateProfileResponse {
   bool status;
   String message;
@@ -34,6 +36,11 @@ class UpdateProfileResponse {
     }
     return data;
   }
+   UpdateProfileResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
 }
 
 class Response {
@@ -56,6 +63,7 @@ class ErrorMessage {
   List<String> mapLat;
   List<String> mapLog;
   List<String> phoneNumber;
+  List<String> error;
 
   ErrorMessage({this.mapLat, this.mapLog, this.phoneNumber});
 
@@ -71,5 +79,9 @@ class ErrorMessage {
     data['map_log'] = this.mapLog;
     data['phone_number'] = this.phoneNumber;
     return data;
+  }
+
+   ErrorMessage.error(String error) {
+    this.error = [error];
   }
 }

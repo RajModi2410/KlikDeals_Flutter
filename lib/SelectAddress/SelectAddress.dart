@@ -51,7 +51,7 @@ class _SelectAddressState extends State<SelectAddress> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Address'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor:  Theme.of(context).primaryColor,
       ),
       body: Stack(children: <Widget>[
         Container(
@@ -119,7 +119,7 @@ class _SelectAddressState extends State<SelectAddress> {
                     selectedAddress != null ? selectedAddress : addressStr);
               },
               child: Icon(Icons.done),
-              backgroundColor: Colors.redAccent,
+              backgroundColor:  Theme.of(context).primaryColor,
             ),
           ),
         ),

@@ -1,3 +1,5 @@
+import 'package:klik_deals/commons/KeyConstant.dart';
+
 class AddCouponResponse {
   bool status;
   String message;
@@ -28,6 +30,11 @@ class AddCouponResponse {
     }
     return data;
   }
+  AddCouponResponse.error() {
+    status = false;
+    message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
+    errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
 }
 
 class ErrorMessage {
@@ -36,6 +43,7 @@ class ErrorMessage {
   List<String> endDate;
   List<String> description;
   List<String> couponImage;
+  List<String> error;
 
   ErrorMessage(
       {this.startDate,
@@ -75,6 +83,12 @@ class ErrorMessage {
     } else {
       couponImage = [];
     }
+
+    if (keys.contains("error")) {
+      couponImage = json['error'].cast<String>();
+    } else {
+      couponImage = [];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +97,11 @@ class ErrorMessage {
     data['end_date'] = this.endDate;
     data['description'] = this.description;
     data['coupon_image'] = this.couponImage;
+    data['error'] = this.error;
     return data;
+  }
+
+   ErrorMessage.error(String error) {
+    this.error = [error];
   }
 }
