@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:klik_deals/ApiBloc/models/DrawerItem.dart';
 import 'package:klik_deals/CouponCode/AddCoupon.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/HomeScreen/HistoryTabWidget.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/MyThemeData.dart';
 import 'package:klik_deals/ProfileScreen/Profile.dart';
+import 'package:klik_deals/commons/AuthUtils.dart';
+import 'package:klik_deals/mywidgets/SingleDrawerItem.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMainTab extends StatefulWidget {
   static const String routeName = "/home";
@@ -21,6 +25,13 @@ class _MyDetailsList extends State<HomeMainTab>
   bool firstSelected = true;
   bool isHomeScreen = true;
   TabController _controller;
+  List<DrawerItem> sideMenu = [
+    DrawerItem("assets/images/home_menu.png", "HOME",selecteImage: "assets/images/home_white.png"),
+    DrawerItem("assets/images/user_profile.png", "PROFILE"),
+    DrawerItem("assets/images/voucher.png", "ADD COUPON"),
+    DrawerItem("assets/images/logout.png", "LOGOUT")
+  ];
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -76,58 +87,89 @@ class _MyDetailsList extends State<HomeMainTab>
           new DrawerHeader(
             child: new Image.asset('assets/images/logo.png'),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: new Row(children: <Widget>[
-              SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: Image.asset('assets/images/home_menu.png')),
-              InkWell(
-                child: new Text('HOME'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _goToHome();
-                },
-              ),
-            ]),
+          new Container(
+            height: double.maxFinite,
+            child: ListView.builder(
+                itemCount: sideMenu.length,
+                itemBuilder: (context, index) {
+                  return SingleDrawerItem1(
+                      item: sideMenu[index],
+                      currentIndex: index,
+                      selectedIndex: _selectedIndex,
+                      onClicked: (currentIndex) {
+                        // setState(() {
+                        //   _selectedIndex = currentIndex;
+                        // });
+                        switch (currentIndex) {
+                          case 0:
+                            _goToHome();
+                            break;
+                          case 1:
+                            _goToProfile();
+                            break;
+                          case 2:
+                            _goToAddCoupon();
+                            break;
+                          case 3:
+                            _logOut();
+                            break;
+                          default:
+                        }
+                      });
+                }),
           ),
-          new ListTile(
-            leading: SizedBox(
-              height: 20,
-              width: 20,
-              child: Image.asset('assets/images/user_profile.png'),
-            ),
-            title: new Text('PROFILE'),
-            onTap: () {
-              Navigator.pop(context);
-              _goToProfile(context);
-            },
-          ),
-//              new Divider(),
-          new ListTile(
-            leading: SizedBox(
-              height: 20,
-              width: 20,
-              child: Image.asset('assets/images/voucher.png'),
-            ),
-            title: new Text('ADD COUPON'),
-            onTap: () {
-              Navigator.pop(context);
-              _goToAddCoupon();
-            },
-          ),
-          new ListTile(
-            leading: SizedBox(
-              height: 20,
-              width: 20,
-              child: Image.asset('assets/images/logout.png'),
-            ),
-            title: new Text('LOGOUT'),
-            onTap: () {
-              _logOut(context);
-            },
-          ),
+          // Padding(
+          //     padding: const EdgeInsets.only(left: 16),
+          //     child: Container(
+          //       // color: this.selectedIndex == this.currentIndex ? Theme.of(context).primaryColor: Colors.white,
+          //       child: SizedBox(
+          //         height: 56,
+          //         child: new Row(children: <Widget>[
+          //           Padding(
+          //             padding: const EdgeInsets.only(right: 16),
+          //             child: SizedBox(
+          //                 height: 20,
+          //                 width: 20,
+          //                 // child: Image.asset('assets/images/home_menu.png')
+          //                 child: Image.asset(sideMenu[0].imagePath)),
+          //           ),
+          //           InkWell(
+          //             // child: new Text('HOME'),
+          //             child: new Text(sideMenu[0].title),
+          //             onTap: () {
+          //               Navigator.pop(context);
+          //               _goToHome();
+          //               // onClicked(currentIndex);
+          //             },
+          //           ),
+          //         ]),
+          //       ),
+          //     )),
+          // SingleDrawerItem(
+          //   item: DrawerItem("assets/images/home_menu.png", "HOME"),
+          //   onClicked: (index) {
+          //     _goToHome();
+          //   },
+          // ),
+          // ListTile(
+          //   title: Text("Hello"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //   },
+          // ),
+          // SingleDrawerItem1(
+          //   item: DrawerItem("assets/images/voucher.png", "ADD COUPON"),
+          //   onClicked: () {
+          //     Navigator.of(context).pop();
+          //     // _goToAddCoupon(context);
+          //   },
+          // ),
+          // SingleDrawerItem(
+          //   item: DrawerItem("assets/images/logout.png", "LOGOUT"),
+          //   onClicked: (index) {
+          //     _logOut();
+          //   },
+          // ),
         ],
       )),
       body: TabBarView(
@@ -144,17 +186,29 @@ class _MyDetailsList extends State<HomeMainTab>
     Navigator.pop(context);
   }
 
-  void _goToProfile(BuildContext context) {
+  void _goToProfile() {
     isHomeScreen = false;
+    print("_goToProfile " +
+        context.widget.toStringShort() +
+        "::" +
+        context.widget.hashCode.toString());
+    Navigator.pop(context);
     Navigator.of(context).pushNamed(Profile.routeName);
   }
 
   void _goToAddCoupon() {
     isHomeScreen = false;
-    Navigator.of(context).pushNamed(AddCoupon.routeName);
+    setState(() {
+      print("_goToAddCoupon " +
+          context.widget.toStringShort() +
+          "::" +
+          context.widget.hashCode.toString());
+      Navigator.pop(context);
+      Navigator.of(context).pushNamed(AddCoupon.routeName);
+    });
   }
 
-  Future<bool> _logOut(BuildContext context) {
+  Future<bool> _logOut() {
     return showDialog(
         context: context,
         child: AlertDialog(
@@ -179,7 +233,8 @@ class _MyDetailsList extends State<HomeMainTab>
 }
 
 Future<void> clearDataAndRedirectLoginScreen(BuildContext context) async {
-  /*SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove("token");*/
-  Navigator.popUntil(context, ModalRoute.withName(LoginPage.routeName));
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool removed = await prefs.remove(AuthUtils.authTokenKey);
+  print("reved the token : $removed");
+  Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
 }

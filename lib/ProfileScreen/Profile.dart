@@ -7,6 +7,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
@@ -28,7 +29,7 @@ class _profilePage extends State<Profile>
   bool forlogo = false;
   bool isDirty = false;
   Response data;
-  ApiBlocBloc auth;
+  ProfileBloc auth;
   RoundWidget round;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
@@ -53,7 +54,7 @@ class _profilePage extends State<Profile>
   @override
   void initState() {
     super.initState();
-    auth = BlocProvider.of<ApiBlocBloc>(context);
+    auth = BlocProvider.of<ProfileBloc>(context);
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -86,85 +87,107 @@ class _profilePage extends State<Profile>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      ProfileData(context),
-      BlocListener<ApiBlocBloc, ApiBlocState>(
-          listener: (context, state) {
-            if (state is GetProfileApiErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Something went to wrong. Please try again"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is GetProfileApiFetchedState) {
-              data = state.getProfileResponse.response;
-              setState(() {
-                setData(data);
-              });
-            }
-          },
-          child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-              bloc: auth,
-              builder: (
-                BuildContext context,
-                ApiBlocState currentState,
-              ) {
-                if (currentState is ApiFetchingState) {
-                  round = RoundWidget();
-                  return round;
-                } else {
-                  return Container();
-                }
-              }))
-    ]);
-  }
-
-  Widget ProfileData(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text('Edit Profile'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/splash_bg.png'),
-                    fit: BoxFit.cover)),
-          ),
-          new SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 24.0, right: 24.0, top: 8.0, bottom: 16.0),
-                    child: Column(
-                      verticalDirection: VerticalDirection.down,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        _profileName(),
-                        _address(),
-                        _selectAddressButton(context, data.toString()),
-                        selectLogo(),
-                        selectBanner(),
-                        phoneNumber(),
-                        emailAddress(),
-                        website(),
-                        desc(),
-                        saveButton(),
-                      ],
+          ProfileData(context),
+          BlocListener<ProfileBloc, ApiBlocState>(
+              listener: (context, state) {
+                if (state is GetProfileApiErrorState) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text("Something went to wrong. Please try again"),
+                      backgroundColor: Colors.red,
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
+                  );
+                } else if (state is GetProfileApiFetchedState) {
+                  data = state.getProfileResponse.response;
+                  setState(() {
+                    setData(data);
+                  });
+                } else if (state is UpdateProfileApiErrorState) {
+                  var error = state.error;
+                  if (error != null) {
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            "Unable to complete profile update due to $error"),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  }
+                } else if (state is UpdateProfileSuccessState) {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Profile Updated successfully",
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
+                  );
+                }
+              },
+              child: BlocBuilder<ProfileBloc, ApiBlocState>(
+                  bloc: auth,
+                  builder: (
+                    BuildContext context,
+                    ApiBlocState currentState,
+                  ) {
+                    if (currentState is ApiFetchingState) {
+                      round = RoundWidget();
+                      return round;
+                    } else {
+                      return Container();
+                    }
+                  }))
         ]));
+  }
+
+  Widget ProfileData(BuildContext context) {
+    return Stack(children: <Widget>[
+      Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/splash_bg.png'),
+                fit: BoxFit.cover)),
+      ),
+      new SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 24.0, right: 24.0, top: 8.0, bottom: 16.0),
+                child: Column(
+                  verticalDirection: VerticalDirection.down,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _profileName(),
+                    _address(),
+                    _selectAddressButton(context, data.toString()),
+                    selectLogo(),
+                    selectBanner(),
+                    phoneNumber(),
+                    emailAddress(),
+                    website(),
+                    desc(),
+                    saveButton(),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    ]);
   }
 
   Padding saveButton() {
@@ -547,14 +570,15 @@ class _profilePage extends State<Profile>
           builder: (context) => SelectAddress(
               addressString: address, lat: latitude, long: longitude)),
     );
-    var data = result.split("*");
-    _lat = data[0].toString();
-    _long = data[1].toString();
-    _addressString = data[2].toString();
-    _addressValue = TextEditingController(text: data[2].toString());
-
-    print(
-        "We got selected latlong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
+    if (result != null) {
+      var data = result.split("*");
+      _lat = data[0].toString();
+      _long = data[1].toString();
+      _addressString = data[2].toString();
+      _addressValue = TextEditingController(text: data[2].toString());
+      print(
+          "We got selected latlong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
+    }
   }
 }
 
@@ -598,6 +622,6 @@ _LogoImage(bool isDirty, String oldLogo, File imageLogo) {
   }
 }
 
-void callGetVendorProfile(ApiBlocBloc auth) {
+void callGetVendorProfile(ProfileBloc auth) {
   auth.add(GetProfileEvent());
 }

@@ -60,10 +60,10 @@ class ApiBlocRepository {
       return parseLoginResponse(response);
     } on Dio.DioError catch (e) {
       print(e.type);
-      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return LoginResponse.error();
-      }
-      else if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseLoginResponse(response);
       }
@@ -81,10 +81,10 @@ class ApiBlocRepository {
       return parseCouponResponse(response);
     } on Dio.DioError catch (e) {
       print(e.type);
-      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return CouponListResponse.error();
-      }
-      else if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseCouponResponse(response);
       }
@@ -111,10 +111,10 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseAddCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return AddCouponResponse.error();
-      }
-      else if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseAddCouponResponse(response);
       }
@@ -145,10 +145,10 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseEditCouponResponse(response);
     } on Dio.DioError catch (e) {
-      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return EditCouponResponse.error();
-      }
-      else if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseEditCouponResponse(response);
       }
@@ -165,7 +165,7 @@ class ApiBlocRepository {
       print("File base name: $logoFileName");
     }
     if (banner != null) {
-      bannerFileName = basename(logo.path);
+      bannerFileName = basename(banner.path);
       print("File base name: $bannerFileName");
     }
     Dio.FormData formData = FormData.fromMap({
@@ -190,10 +190,10 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseUpdateProfileResponse(response);
     } on Dio.DioError catch (e) {
-     if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return UpdateProfileResponse.error();
-      }
-      else  if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseUpdateProfileResponse(response);
       }
@@ -208,10 +208,10 @@ class ApiBlocRepository {
           data: formData, options: Dio.Options(headers: getCommonHeaders()));
       return parseDeleteCouponResponse(response);
     } on Dio.DioError catch (e) {
-     if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return DeleteCouponResponse.error();
-      }
-      else  if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseDeleteCouponResponse(response);
       }
@@ -225,10 +225,10 @@ class ApiBlocRepository {
           options: Dio.Options(headers: getCommonHeaders()));
       return parseGetProfileResponse(response);
     } on Dio.DioError catch (e) {
-      if(e.type == Dio.DioErrorType.RECEIVE_TIMEOUT || e.type == Dio.DioErrorType.CONNECT_TIMEOUT){
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         return GetProfileResponse.error();
-      }
-      else if (e.response != null) {
+      } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseGetProfileResponse(response);
       }

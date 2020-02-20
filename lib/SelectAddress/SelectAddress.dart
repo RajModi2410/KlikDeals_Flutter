@@ -7,7 +7,10 @@ import 'package:search_map_place/search_map_place.dart';
 
 class SelectAddress extends StatefulWidget {
   SelectAddress(
-      {Key key, @required this.lat, @required this.long, @required this.addressString})
+      {Key key,
+      @required this.lat,
+      @required this.long,
+      @required this.addressString})
       : super(key: key);
   final String lat;
   final String long;
@@ -18,7 +21,6 @@ class SelectAddress extends StatefulWidget {
 }
 
 class _SelectAddressState extends State<SelectAddress> {
-
   String latitudeStr;
   String longitudeStr;
   String addressStr;
@@ -32,26 +34,87 @@ class _SelectAddressState extends State<SelectAddress> {
 
   Completer<GoogleMapController> _mapController = Completer();
   String API_KEY = "AIzaSyCRYvqSRrhfWyH7JHKSgnakK-dV8bUIcA8";
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+  BitmapDescriptor _markerIcon;
 
   _SelectAddressState(this.latitudeStr, this.longitudeStr, this.addressStr);
+  final MarkerId markerId = MarkerId("Home");
 
   @override
   void initState() {
     latitude = double.parse(latitudeStr.toString());
     longitude = double.parse(longitudeStr.toString());
-
+    LatLng _kMapCenter = LatLng(latitude, longitude);
     _initialCamera = CameraPosition(
-      target: LatLng(latitude, longitude),
-      zoom: 14.0000,
+      target: _kMapCenter,
+      zoom: 21.0000,
     );
+
+    createMarker(_kMapCenter);
+  }
+
+  void createMarker(LatLng _kMapCenter) {
+    Marker marker = Marker(
+      markerId: markerId,
+      position: _kMapCenter,
+      // draggable: true,
+      infoWindow: InfoWindow(title: "Current Address", snippet: '*'),
+      // onTap: () {
+      //   _onMarkerTapped(markerId);
+      // },
+      onDragEnd: (LatLng position) {
+        _onMarkerDragEnd(markerId, position);
+      },
+    );
+    setState(() {
+      markers[markerId] = marker;
+    });
+  }
+  void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
+    final Marker tappedMarker = markers[markerId];
+    selectedLatitude = newPosition.latitude.toString();
+    selectedLongitude = newPosition.longitude.toString();
+  }
+
+  Set<Marker> _createMarker() {
+    print("we got _createMarker");
+    // TODO(iskakaushik): Remove this when collection literals makes it to stable.
+    // https://github.com/flutter/flutter/issues/28312
+    // ignore: prefer_collection_literals
+    return <Marker>[
+      Marker(
+        markerId: MarkerId("marker_1"),
+        position: LatLng(latitude, longitude),
+        icon: _markerIcon,
+      ),
+    ].toSet();
+  }
+
+  Future<void> _createMarkerImageFromAsset(BuildContext context) async {
+    if (_markerIcon == null) {
+      final ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context);
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration, 'assets/images/baseline_location.png')
+          .then(_updateBitmap);
+    }
+  }
+
+  void _updateBitmap(BitmapDescriptor bitmap) {
+    print("we got _updateBitmap and " + (bitmap != null).toString());
+    setState(() {
+      _markerIcon = bitmap;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    _createMarkerImageFromAsset(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Address'),
-        backgroundColor:  Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Stack(children: <Widget>[
         Container(
@@ -60,26 +123,20 @@ class _SelectAddressState extends State<SelectAddress> {
                   image: AssetImage('assets/images/splash_bg.png'),
                   fit: BoxFit.cover)),
         ),
-
         GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: _initialCamera,
           onMapCreated: (GoogleMapController controller) {
             _mapController.complete(controller);
           },
+          markers: Set<Marker>.of(markers.values),
+          // _createMarker(),
         ),
-
         Positioned(
           top: 10,
 //          height: MediaQuery.of(context).size.height*0.11,
-          left: MediaQuery
-              .of(context)
-              .size
-              .width * 0.05,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.9,
+          left: MediaQuery.of(context).size.width * 0.05,
+          width: MediaQuery.of(context).size.width * 0.9,
           child: SearchMapPlaceWidget(
             apiKey: API_KEY,
             location: _initialCamera.target,
@@ -91,17 +148,19 @@ class _SelectAddressState extends State<SelectAddress> {
               final geolocation = await place.geolocation;
 
               final GoogleMapController controller =
-              await _mapController.future;
+                  await _mapController.future;
 
               final latLong = geolocation.coordinates as LatLng;
-              print("selected latlong :: ${latLong.latitude} :: ${latLong
-                  .longitude}");
+              print(
+                  "selected latlong :: ${latLong.latitude} :: ${latLong.longitude}");
               selectedLatitude = latLong.latitude.toString();
               selectedLongitude = latLong.longitude.toString();
               controller.animateCamera(
                   CameraUpdate.newLatLng(geolocation.coordinates));
               controller.animateCamera(
                   CameraUpdate.newLatLngBounds(geolocation.bounds, 0));
+              markers.remove(markerId);
+              createMarker(latLong);
             },
           ),
         ),
@@ -111,15 +170,18 @@ class _SelectAddressState extends State<SelectAddress> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () {
-                _validate(context,
-                    selectedLatitude != null ? selectedLatitude : latitude
-                        .toString()
-                    , selectedLongitude != null ? selectedLongitude : longitude
-                        .toString(),
+                _validate(
+                    context,
+                    selectedLatitude != null
+                        ? selectedLatitude
+                        : latitude.toString(),
+                    selectedLongitude != null
+                        ? selectedLongitude
+                        : longitude.toString(),
                     selectedAddress != null ? selectedAddress : addressStr);
               },
               child: Icon(Icons.done),
-              backgroundColor:  Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
           ),
         ),

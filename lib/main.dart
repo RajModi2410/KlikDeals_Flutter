@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/History_bloc.dart';
+import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/splash_screen/splashScreen.dart';
 import 'package:klik_deals/commons/Routes.dart';
 
@@ -29,21 +30,23 @@ void main() {
             builder: (context) => ApiBlocBloc(ApiBlocRepository())),
         BlocProvider<HistoryBloc>(
             builder: (context) => HistoryBloc(ApiBlocRepository())),
+        BlocProvider<ProfileBloc>(
+            builder: (context) => ProfileBloc(ApiBlocRepository())),
       ],
       child: MaterialApp(
 //        theme: myTheme,
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              fontFamily: "Montserrat",
-              primaryColor: Color(0xffAF201A),
-              errorColor: Color(0xffAF201A),
-              buttonColor: Color(0xffAF201A),
-          ),
-          home: SplashScreen(),
-          initialRoute: "/",
-          onGenerateRoute: RouteGenerator.generateRoute,
-          // routes: <String, WidgetBuilder>{
-          //   '/HomeScreen': (BuildContext context) => new LoginPage(),
-          // }
-          )));
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: "Montserrat",
+          primaryColor: Color(0xffAF201A),
+          errorColor: Color(0xffAF201A),
+          buttonColor: Color(0xffAF201A),
+        ),
+        home: SplashScreen(),
+        initialRoute: "/",
+        onGenerateRoute: RouteGenerator.generateRoute,
+        // routes: <String, WidgetBuilder>{
+        //   '/HomeScreen': (BuildContext context) => new LoginPage(),
+        // }
+      )));
 }

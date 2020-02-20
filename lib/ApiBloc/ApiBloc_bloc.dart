@@ -47,12 +47,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapAddCouponEventResponseEvents(event);
     } else if (event is CouponDeleteEvent) {
       yield* _mapDeleteCouponEventResponseEvents(event);
-    } else if (event is GetProfileEvent) {
-      yield* _mapGetProfileEventResponseEvents(event);
     } else if (event is EditCouponEvent) {
       yield* _mapEditCouponEventResponseEvents(event);
-    } else if (event is UpdatePofileEvent) {
-      yield* _mapUpdateProfileEventResponseEvents(event);
     } else if (event is ReloadEvent) {
       yield* _mapReloadResponseEvents();
     }
@@ -143,43 +139,6 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield ApiErrorState();
     }
   }
-
-  Stream<ApiBlocState> _mapGetProfileEventResponseEvents(
-      GetProfileEvent event) async* {
-    yield ApiFetchingState();
-    try {
-      final response = await playerRepository.getProfile();
-      if (response.status) {
-        yield GetProfileApiFetchedState(response);
-      } else {
-        yield GetProfileApiErrorState(response);
-      }
-    } catch (e, s) {
-      print("We got error 1:: ${e.toString()}");
-      print(s);
-//      e.printStackTrace();
-      yield ApiErrorState();
-    }
-  }
-
-  Stream<ApiBlocState> _mapUpdateProfileEventResponseEvents(
-      UpdatePofileEvent event) async* {
-    yield ApiFetchingState();
-    try {
-      final response = await playerRepository.updateProfile(
-          event, event.logo, event.banner);
-      if (response.status) {
-        yield UpdateProfileApiFetchedState(response);
-      } else {
-        yield UpdateProfileApiErrorState(response);
-      }
-    } catch (e, s) {
-      print("error $e");
-      print("stacktrace $s");
-      yield ApiErrorState();
-    }
-  }
-
 
   Stream<ApiBlocState> _mapSearchResponseEvents(
       RestaurantSearchEvent event) async* {

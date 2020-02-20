@@ -12,9 +12,13 @@ class UpdateProfileResponse {
   UpdateProfileResponse.fromJson(Map<String, dynamic> json, bool isError) {
     status = json['status'];
     message = json['message'];
+    if(!isError){
     response = json['response'] != null
         ? new Response.fromJson(json['response'])
         : null;
+    }else{
+      response = null;
+    }
     if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
@@ -36,7 +40,8 @@ class UpdateProfileResponse {
     }
     return data;
   }
-   UpdateProfileResponse.error() {
+
+  UpdateProfileResponse.error() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
@@ -63,14 +68,50 @@ class ErrorMessage {
   List<String> mapLat;
   List<String> mapLog;
   List<String> phoneNumber;
+  List<String> banner;
+  List<String> logo;
   List<String> error;
 
   ErrorMessage({this.mapLat, this.mapLog, this.phoneNumber});
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
-    mapLat = json['map_lat'].cast<String>();
-    mapLog = json['map_log'].cast<String>();
-    phoneNumber = json['phone_number'].cast<String>();
+    var keys = json.keys;
+    if (keys.contains(KeyConstant.ERROR_LAT)) {
+      mapLat = json[KeyConstant.ERROR_LAT].cast<String>();
+    } else {
+      mapLat = [];
+    }
+
+    if (keys.contains(KeyConstant.ERROR_LONG)) {
+      mapLog = json[KeyConstant.ERROR_LONG].cast<String>();
+    } else {
+      mapLog = [];
+    }
+
+    if (keys.contains(KeyConstant.ERROR_PHONE)) {
+      phoneNumber = json[KeyConstant.ERROR_PHONE].cast<String>();
+    } else {
+      phoneNumber = [];
+    }
+
+     if (keys.contains(KeyConstant.ERROR_BANNER)) {
+      banner = json[KeyConstant.ERROR_BANNER].cast<String>();
+    } else {
+      banner = [];
+    }
+
+    if(keys.contains(KeyConstant.ERROR_LOGO)){
+      logo = json[KeyConstant.ERROR_LOGO].cast<String>();
+    } else {
+      logo = [];
+    }
+
+ if (keys.contains(KeyConstant.ERROR_GENERAL)) {
+      error = json[KeyConstant.ERROR_GENERAL].cast<String>();
+    } else {
+      error = [];
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -81,7 +122,7 @@ class ErrorMessage {
     return data;
   }
 
-   ErrorMessage.error(String error) {
+  ErrorMessage.error(String error) {
     this.error = [error];
   }
 }

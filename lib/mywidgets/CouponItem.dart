@@ -25,7 +25,6 @@ class CouponItem extends StatelessWidget {
     } else {
       date = dateFormatter(data.startDate, data.endDate, isForHistory, "");
     }
-    print("Formatted Date :: $date");
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Stack(children: <Widget>[
       couponList(context, date),

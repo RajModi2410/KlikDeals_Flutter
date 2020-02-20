@@ -5,7 +5,9 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/LoginScreen/LoginBloc.dart';
+import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
+import 'package:klik_deals/commons/AuthUtils.dart';
 import 'package:klik_deals/mywidgets/HomeMainTab.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -18,8 +20,12 @@ var token = "";
 SharedPreferences sharedPreferences;
 
 class LoginFormV1 extends StatefulWidget {
+  final ClickCallback callback;
+
+  const LoginFormV1({Key key, this.callback}) : super(key: key);
+
   @override
-  State<LoginFormV1> createState() => _LoginFormV1State();
+  State<LoginFormV1> createState() => _LoginFormV1State(this.callback);
 }
 
 String emailValidator(String value) {
@@ -45,6 +51,7 @@ String passwordValidator(String value) {
 
 class _LoginFormV1State extends State<LoginFormV1> {
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
   bool _isLoading;
@@ -54,17 +61,22 @@ class _LoginFormV1State extends State<LoginFormV1> {
   ApiBlocBloc auth;
   var loginBloc = LoginBloc();
   RoundWidget round;
+  final ClickCallback callback;
+
+  _LoginFormV1State(this.callback);
 
   @override
   void initState() {
     emailInputController =
-    new TextEditingController(text: "testing8@webdesksolution.com");
+        new TextEditingController(text: "testing8@webdesksolution.com");
     pwdInputController = new TextEditingController(text: "12345678");
     emailInputController.addListener(_printEmailValue);
     pwdInputController.addListener(_printPasswordValue);
     _isLoading = false;
     _errorMessage = "";
     super.initState();
+
+    fetchSessionAndNavigate();
   }
 
   @override
@@ -86,15 +98,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
               String error = "";
               if (state.loginResponse.errorMessage.general_error.length > 0) {
                 error = state.loginResponse.errorMessage.general_error.first;
-                 print("We got the ERRR in LOGIN VALUE::$error");
+                print("We got the ERRR in LOGIN VALUE::$error");
               } else if (state.loginResponse.errorMessage.user_error.length >
                   0) {
                 // error = state.loginResponse.errorMessage.user_error.first;
                 this.loginBloc.emailChanged(ErroGen(
                     isError: true,
                     value: state.loginResponse.errorMessage.user_error.first));
-              print("We got the error in LOGIN VALUE::$error");     
-                         error = null;
+                print("We got the error in LOGIN VALUE::$error");
+                error = null;
               }
               if (error != null) {
                 Scaffold.of(context).showSnackBar(
@@ -179,10 +191,9 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     return Padding(
                       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                       child: TextFormField(
-                        style: TextStyle(color:  Theme.of(context).primaryColor),
-                        onChanged: (value) =>
-                            loginBloc.emailChanged(
-                                ErroGen(isError: false, value: value)),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        onChanged: (value) => loginBloc.emailChanged(
+                            ErroGen(isError: false, value: value)),
                         keyboardType: TextInputType.emailAddress,
                         autofocus: false,
                         // initialValue: "testing9@webdesksolution.com",
@@ -192,21 +203,23 @@ class _LoginFormV1State extends State<LoginFormV1> {
                         textAlign: TextAlign.left,
                         controller: emailInputController,
                         decoration: InputDecoration(
-                          prefixIcon:
-                          Icon(Icons.mail_outline, color:  Theme.of(context).primaryColor),
+                          prefixIcon: Icon(Icons.mail_outline,
+                              color: Theme.of(context).primaryColor),
                           fillColor: Color(0xB3FFFFFF),
                           filled: true,
-                          hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
+                          hintStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
                           focusedBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(30.0)),
+                                  BorderRadius.all(Radius.circular(30.0)),
                               borderSide: BorderSide(color: Colors.grey)),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                               borderRadius: BorderRadius.circular(30.0)),
-                          labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
                           contentPadding:
-                          EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
+                              EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                           hintText: "Email",
                         ),
                       ),
@@ -226,9 +239,9 @@ class _LoginFormV1State extends State<LoginFormV1> {
           new Expanded(
             child: Padding(
               padding:
-              const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
+                  const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
               child: TextFormField(
-                style: TextStyle(color:  Theme.of(context).primaryColor),
+                style: TextStyle(color: Theme.of(context).primaryColor),
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
                 autofocus: false,
@@ -236,17 +249,18 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 textAlign: TextAlign.left,
                 controller: pwdInputController,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock_outline, color:  Theme.of(context).primaryColor),
+                  prefixIcon: Icon(Icons.lock_outline,
+                      color: Theme.of(context).primaryColor),
                   fillColor: Color(0xB3FFFFFF),
                   filled: true,
-                  hintStyle: TextStyle(color:  Theme.of(context).primaryColor),
+                  hintStyle: TextStyle(color: Theme.of(context).primaryColor),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       borderSide: BorderSide(color: Colors.grey)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(30.0)),
-                  labelStyle: TextStyle(color:  Theme.of(context).primaryColor),
+                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                   hintText: "Password",
                 ),
@@ -270,7 +284,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color:  Theme.of(context).primaryColor,
+              color: Theme.of(context).primaryColor,
               onPressed: () {
                 validateAndSubmit();
               },
@@ -332,17 +346,18 @@ class _LoginFormV1State extends State<LoginFormV1> {
   }
 
   void _goToHomePage() {
+    // callback();
     Navigator.of(context).pushNamed(HomeMainTab.routeName);
   }
 
   void _onWidgetDidBuild(Function callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
+      // callback();
+      Navigator.of(context).pushNamed(HomeMainTab.routeName);
     });
   }
 
   void _onSetOnShredPrefe(String token) async {
-    sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString("token", token);
   }
 
@@ -364,5 +379,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   void displayErrorInPasswordValue(String value) {
     loginBloc.passwordChanged(ErroGen(isError: true, value: value));
+  }
+
+  void fetchSessionAndNavigate() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    String authToken = AuthUtils.getToken(sharedPreferences);
+    print("we got token $authToken");
+    if (authToken != null) {
+      auth.add(TokenGenerateEvent(authToken));
+      this.callback();
+    }
   }
 }
