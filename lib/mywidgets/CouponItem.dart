@@ -35,7 +35,7 @@ class CouponItem extends StatelessWidget {
                 SnackBar(
                   content:
                       Text(state.deleteCouponResponse.errorMessage.toString()),
-                  backgroundColor: Colors.red,
+                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               );
             } else if (state is CouponDeleteFetchedState) {

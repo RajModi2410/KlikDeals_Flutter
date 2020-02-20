@@ -113,7 +113,7 @@ class _CouponAdd extends State<AddCoupon>
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content: Text(error),
-                      backgroundColor: Colors.red,
+                      backgroundColor: Theme.of(context).primaryColor,
                     ),
                   );
                 }
@@ -195,7 +195,7 @@ class _CouponAdd extends State<AddCoupon>
         onPressed: () {
           _validateRequiredFields();
         },
-        color: Colors.red,
+        color: Theme.of(context).primaryColor,
         textColor: Colors.white,
         child: Text("ADD COUPON".toUpperCase(), style: TextStyle(fontSize: 14)),
       ),

@@ -101,7 +101,7 @@ class _profilePage extends State<Profile>
                     SnackBar(
                       content:
                           Text("Something went to wrong. Please try again"),
-                      backgroundColor: Colors.red,
+                      backgroundColor: Theme.of(context).primaryColor,
                     ),
                   );
                 } else if (state is GetProfileApiFetchedState) {

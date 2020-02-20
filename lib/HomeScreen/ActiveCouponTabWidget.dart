@@ -45,7 +45,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
             Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text('error occurred'),
-                backgroundColor: Colors.red,
+                backgroundColor: Theme.of(context).primaryColor,
               ),
             );
           } else if (state is CouponListFetchedState) {}

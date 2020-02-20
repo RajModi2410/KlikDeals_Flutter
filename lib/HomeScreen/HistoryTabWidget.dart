@@ -51,7 +51,7 @@ void initState() {
             Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text('error occurred'),
-                backgroundColor: Colors.red,
+                backgroundColor: Theme.of(context).primaryColor,
               ),
             );
           } else if (state is CouponListFetchedState) {}
