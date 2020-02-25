@@ -5,6 +5,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
+import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
@@ -44,7 +45,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text('error occurred'),
+                content: Text('error occurred during fetching coupons..'),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
             );
@@ -74,12 +75,12 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                 return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
-                return EmptyListWidget(emptyMessage: "No coupon Data found");
+                return EmptyListWidget(emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
               } else if (currentState is CouponDeleteFetchedState) {
                 getCouponList();
                 return RoundWidget();
               } else {
-                return EmptyListWidget(emptyMessage: "No coupon Data found");
+                return EmptyListWidget(emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
               }
             }),
       ),

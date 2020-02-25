@@ -41,3 +41,10 @@ class ApiReloadState extends ApiBlocState {
   @override
   List<Object> get props => [];
 }
+
+class NoInternetState extends ApiBlocState{
+
+  @override
+  List<Object> get props => [];
+
+}

@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
 import 'ProfileStates.dart';
@@ -50,6 +51,8 @@ class _profilePage extends State<Profile>
       _emailAddressValue,
       _websiteValue,
       _descValue;
+
+  ApiBlocEvent lastEvent;
 
   @override
   void initState() {
@@ -93,7 +96,7 @@ class _profilePage extends State<Profile>
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
-          ProfileData(context),
+          profileData(context),
           BlocListener<ProfileBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is GetProfileApiErrorState) {
@@ -141,6 +144,12 @@ class _profilePage extends State<Profile>
                     if (currentState is ApiFetchingState) {
                       round = RoundWidget();
                       return round;
+                    } else if (currentState is NoInternetState) {
+                      return NoNetworkWidget(
+                        retry: () {
+                          retryCall();
+                        },
+                      );
                     } else {
                       return Container();
                     }
@@ -148,7 +157,7 @@ class _profilePage extends State<Profile>
         ]));
   }
 
-  Widget ProfileData(BuildContext context) {
+  Widget profileData(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -543,11 +552,23 @@ class _profilePage extends State<Profile>
       print(_imageBanner);
       print(_image);
       try {
-        auth.add(UpdatePofileEvent(_name, _addr, _lat, _long, _number, _email,
-            _website, _desc, _imageBanner, _image));
+        lastEvent = UpdatePofileEvent(_name, _addr, _lat, _long, _number,
+            _email, _website, _desc, _imageBanner, _image);
+        auth.add(lastEvent);
       } catch (e) {
         print('Error: $e');
       }
+    }
+  }
+
+  void callGetVendorProfile(ProfileBloc auth) {
+    lastEvent = GetProfileEvent();
+    auth.add(lastEvent);
+  }
+
+  retryCall() {
+    if (lastEvent != null) {
+      auth.add(lastEvent);
     }
   }
 
@@ -620,8 +641,4 @@ _LogoImage(bool isDirty, String oldLogo, File imageLogo) {
       fit: BoxFit.scaleDown,
     );
   }
-}
-
-void callGetVendorProfile(ProfileBloc auth) {
-  auth.add(GetProfileEvent());
 }

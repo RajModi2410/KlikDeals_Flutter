@@ -7,6 +7,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
 import 'package:klik_deals/ProfileScreen/ProfileStates.dart';
+import 'package:klik_deals/commons/AppExceptions.dart';
 
 class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   ApiBlocRepository playerRepository;
@@ -51,6 +52,9 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
         String error = getError(response.errorMessage);
         yield UpdateProfileApiErrorState(response, error);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("error $e");
       print("stacktrace $s");
@@ -87,6 +91,9 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield GetProfileApiErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);

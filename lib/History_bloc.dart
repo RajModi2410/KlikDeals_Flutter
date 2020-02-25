@@ -6,6 +6,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
+import 'package:klik_deals/commons/AppExceptions.dart';
 
 class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   final ApiBlocRepository playerRepository;
@@ -18,9 +19,9 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   //   return _historyBlocSingleton;
   // }
   // HistoryBloc._internal(this.playerRepository);
-  
+
   @override
-  Future<void> close() async{
+  Future<void> close() async {
     // dispose objects
     await super.close();
   }
@@ -29,7 +30,7 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   ApiBlocState get initialState => ApiUninitializedState();
 
   @override
-  Stream<ApiBlocState> mapEventToState(ApiBlocEvent event)  async* {
+  Stream<ApiBlocState> mapEventToState(ApiBlocEvent event) async* {
     // TODO: implement mapEventToState
     if (event is CouponListEvent) {
       yield* _mapCouponListResponseEvents(event);
@@ -42,10 +43,13 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     try {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status) {
-          yield CouponHistoryListFetchedState(response);
+        yield CouponHistoryListFetchedState(response);
       } else {
-          yield CouponHistoryErroState(response);
+        yield CouponHistoryErroState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);

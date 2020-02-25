@@ -1,13 +1,17 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
-class DeleteCouponResponse {
+class DeleteCouponResponse extends ApiResponse {
   bool status;
   String message;
   ErrorMessage errorMessage;
 
-  DeleteCouponResponse({this.status, this.message, this.errorMessage});
+  DeleteCouponResponse({this.status, this.message, this.errorMessage})
+      : super.error(false);
 
-  DeleteCouponResponse.fromJson(Map<String, dynamic> json, bool isError) {
+  DeleteCouponResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
     if (isError) {
@@ -30,14 +34,19 @@ class DeleteCouponResponse {
     return data;
   }
 
-   DeleteCouponResponse.error() {
+  DeleteCouponResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
+
+  @override
+  bool isTokenError() {
+    return errorMessage.isTokenError();
+  }
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError {
   List<String> error;
 
   ErrorMessage({this.error});
@@ -57,8 +66,13 @@ class ErrorMessage {
     return 'ErrorMessage{error: $error}';
   }
 
-    ErrorMessage.error(String error) {
+  ErrorMessage.error(String error) {
     this.error = [error];
   }
 
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return super.checkTokenError(error);
+  }
 }

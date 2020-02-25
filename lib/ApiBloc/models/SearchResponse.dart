@@ -1,4 +1,6 @@
-class SearchResponse {
+import 'package:klik_deals/commons/ApiResponse.dart';
+
+class SearchResponse extends ApiResponse{
   int resultsFound;
   int resultsStart;
   int resultsShown;
@@ -7,9 +9,9 @@ class SearchResponse {
   SearchResponse({this.resultsFound,
     this.resultsStart,
     this.resultsShown,
-    this.restaurants});
+    this.restaurants}): super.error(false);
 
-  SearchResponse.fromJson(Map<String, dynamic> json) {
+  SearchResponse.fromJson(Map<String, dynamic> json): super.error(false) {
     resultsFound = json['results_found'];
     resultsStart = json['results_start'];
     resultsShown = json['results_shown'];
@@ -30,6 +32,12 @@ class SearchResponse {
       data['restaurants'] = this.restaurants.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return false;
   }
 }
 

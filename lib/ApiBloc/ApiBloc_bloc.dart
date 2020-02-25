@@ -6,6 +6,7 @@ import 'package:klik_deals/CouponCode/CouponStates.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/ProfileScreen/ProfileStates.dart';
+import 'package:klik_deals/commons/AppExceptions.dart';
 
 import 'ApiBloc_event.dart';
 import 'ApiBloc_state.dart';
@@ -18,7 +19,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   @override
   void onTransition(Transition<ApiBlocEvent, ApiBlocState> transition) {
     super.onTransition(transition);
-    print(transition);
+    print("ApiBlocBloc:" + transition.toString());
   }
 
   @override
@@ -63,6 +64,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield LoginApiErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("error $e");
       print("stacktrace $s");
@@ -80,6 +84,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield CouponAddErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("error $e");
       print("stacktrace $s");
@@ -97,6 +104,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield EditCouponApiErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("error $e");
       print("stacktrace $s");
@@ -110,10 +120,13 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     try {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status) {
-          yield CouponListFetchedState(response);
+        yield CouponListFetchedState(response);
       } else {
-          yield couponApiErrorState(response);
+        yield couponApiErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);
@@ -132,6 +145,9 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield CouponDeleteErrorState(response);
       }
+    } on NoInternetException catch (e) {
+      print("No Intenet exception");
+      yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);
@@ -159,15 +175,16 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
         } else {
           yield ApiEmptyState();
         }
+      } on NoInternetException catch (e) {
+        print("No Intenet exception");
+        yield NoInternetState();
       } catch (e) {
         yield ApiErrorState();
       }
     }
   }
 
-
   Stream<ApiBlocState> _mapReloadResponseEvents() async* {
     yield ApiReloadState();
   }
 }
-

@@ -1,14 +1,18 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
-class LoginResponse {
+class LoginResponse extends ApiResponse {
   bool status;
   String message;
   ErrorMessage errorMessage;
   String token;
 
-  LoginResponse({this.status, this.message, this.errorMessage, this.token});
+  LoginResponse({this.status, this.message, this.errorMessage, this.token})
+      : super(ApiStatus.COMPLETED);
 
-  LoginResponse.fromJson(Map<String, dynamic> json, bool isError) {
+  LoginResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
     if (isError) {
@@ -25,7 +29,7 @@ class LoginResponse {
     }
   }
 
-  LoginResponse.error() {
+  LoginResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
@@ -41,9 +45,15 @@ class LoginResponse {
     data['token'] = this.token;
     return data;
   }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return errorMessage.isTokenError();
+  }
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError {
   List<String> general_error;
   List<String> user_error;
 
@@ -73,5 +83,11 @@ class ErrorMessage {
     data[KeyConstant.ERROR_GENERAL] = this.general_error;
     data[KeyConstant.ERROR_KEY_USER] = this.user_error;
     return data;
+  }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return super.checkTokenError(general_error);
   }
 }

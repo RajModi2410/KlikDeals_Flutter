@@ -1,22 +1,26 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
-class UpdateProfileResponse {
+class UpdateProfileResponse extends ApiResponse {
   bool status;
   String message;
   Response response;
   ErrorMessage errorMessage;
 
   UpdateProfileResponse(
-      {this.status, this.message, this.response, this.errorMessage});
+      {this.status, this.message, this.response, this.errorMessage})
+      : super.error(false);
 
-  UpdateProfileResponse.fromJson(Map<String, dynamic> json, bool isError) {
+  UpdateProfileResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
-    if(!isError){
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
-    }else{
+    if (!isError) {
+      response = json['response'] != null
+          ? new Response.fromJson(json['response'])
+          : null;
+    } else {
       response = null;
     }
     if (isError) {
@@ -41,10 +45,16 @@ class UpdateProfileResponse {
     return data;
   }
 
-  UpdateProfileResponse.error() {
+  UpdateProfileResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return errorMessage.isTokenError();
   }
 }
 
@@ -64,7 +74,7 @@ class Response {
   }
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError {
   List<String> mapLat;
   List<String> mapLog;
   List<String> phoneNumber;
@@ -94,24 +104,23 @@ class ErrorMessage {
       phoneNumber = [];
     }
 
-     if (keys.contains(KeyConstant.ERROR_BANNER)) {
+    if (keys.contains(KeyConstant.ERROR_BANNER)) {
       banner = json[KeyConstant.ERROR_BANNER].cast<String>();
     } else {
       banner = [];
     }
 
-    if(keys.contains(KeyConstant.ERROR_LOGO)){
+    if (keys.contains(KeyConstant.ERROR_LOGO)) {
       logo = json[KeyConstant.ERROR_LOGO].cast<String>();
     } else {
       logo = [];
     }
 
- if (keys.contains(KeyConstant.ERROR_GENERAL)) {
+    if (keys.contains(KeyConstant.ERROR_GENERAL)) {
       error = json[KeyConstant.ERROR_GENERAL].cast<String>();
     } else {
       error = [];
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -124,5 +133,11 @@ class ErrorMessage {
 
   ErrorMessage.error(String error) {
     this.error = [error];
+  }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return super.checkTokenError(error);
   }
 }

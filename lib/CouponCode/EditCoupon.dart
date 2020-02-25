@@ -51,6 +51,10 @@ class _EditCoupon extends State<EditCoupon>
   void initState() {
     super.initState();
     data = Data.fromJson(mapData);
+    _Startdate = new DateFormat("yyyy/MM/dd").parse(data.startDate);
+    print("We are getting $_Startdate and ${data.startDate}");  
+    // _endDateValue= new DateFormat("yyyy/MM/dd").parse(data.startDate);
+    // print("We are getting $_Startdate and ${data.startDate}");  
     _isLoading = false;
     _controller = new AnimationController(
       vsync: this,
@@ -86,43 +90,53 @@ class _EditCoupon extends State<EditCoupon>
               listener: (context, state) {
                 if (state is EditCouponApiErrorState) {
                   String error = "";
-                if (state.editCouponResponse.errorMessage.couponCode != null &&
-                    state.editCouponResponse.errorMessage.couponCode.length >
-                        0) {
-                  error = state.editCouponResponse.errorMessage.couponCode.first;
-                  print("We got the error in Coupon Code::$error");
-                } else if (state.editCouponResponse.errorMessage.startDate !=
-                        null &&
-                    state.editCouponResponse.errorMessage.startDate.length > 0) {
-                  error = state.editCouponResponse.errorMessage.startDate.first;
-                } else if (state.editCouponResponse.errorMessage.endDate !=
-                        null &&
-                    state.editCouponResponse.errorMessage.endDate.length > 0) {
-                  error = state.editCouponResponse.errorMessage.endDate.first;
-                } else if (state.editCouponResponse.errorMessage.couponImage !=
-                    null) {
-                  error =
-                      state.editCouponResponse.errorMessage.couponImage.first;
-                  print("We got the error in Coupoon image::$error");
-                } else if (state.editCouponResponse.errorMessage.description !=
-                        null &&
-                    state.editCouponResponse.errorMessage.description.length >
-                        0) {
-                  error =
-                      state.editCouponResponse.errorMessage.description.first;
-                } else if (state.editCouponResponse.errorMessage.error != null &&
-                    state.editCouponResponse.errorMessage.error.length > 0) {
-                  error = state.editCouponResponse.errorMessage.error.first;
-                }
-                if (error != null) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(error),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                }
-              } else if (state is EditCouponApiFetchedState) {
+                  if (state.editCouponResponse.errorMessage.couponCode !=
+                          null &&
+                      state.editCouponResponse.errorMessage.couponCode.length >
+                          0) {
+                    error =
+                        state.editCouponResponse.errorMessage.couponCode.first;
+                    print("We got the error in Coupon Code::$error");
+                  } else if (state.editCouponResponse.errorMessage.startDate !=
+                          null &&
+                      state.editCouponResponse.errorMessage.startDate.length >
+                          0) {
+                    error =
+                        state.editCouponResponse.errorMessage.startDate.first;
+                  } else if (state.editCouponResponse.errorMessage.endDate !=
+                          null &&
+                      state.editCouponResponse.errorMessage.endDate.length >
+                          0) {
+                    error = state.editCouponResponse.errorMessage.endDate.first;
+                  } else if (state
+                          .editCouponResponse.errorMessage.couponImage !=
+                      null &&
+                      state.editCouponResponse.errorMessage.couponImage.length >
+                          0) {
+                    error =
+                        state.editCouponResponse.errorMessage.couponImage.first;
+                    print("We got the error in Coupoon image::$error");
+                  } else if (state
+                              .editCouponResponse.errorMessage.description !=
+                          null &&
+                      state.editCouponResponse.errorMessage.description.length >
+                          0) {
+                    error =
+                        state.editCouponResponse.errorMessage.description.first;
+                  } else if (state.editCouponResponse.errorMessage.error !=
+                          null &&
+                      state.editCouponResponse.errorMessage.error.length > 0) {
+                    error = state.editCouponResponse.errorMessage.error.first;
+                  }
+                  if (error != null) {
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(error),
+                        backgroundColor: Theme.of(context).errorColor,
+                      ),
+                    );
+                  }
+                } else if (state is EditCouponApiFetchedState) {
                   Navigator.pop(context, true);
                 }
               },
@@ -188,7 +202,7 @@ class _EditCoupon extends State<EditCoupon>
       ),
     );
   }
-  
+
   Padding _description() {
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),

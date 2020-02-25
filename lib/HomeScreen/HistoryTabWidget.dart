@@ -4,6 +4,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
+import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
@@ -24,7 +25,8 @@ class HistoryTabWidget extends StatefulWidget {
   State<StatefulWidget> createState() => new _HistoryTabState(isForHistory);
 }
 
-class _HistoryTabState extends State<HistoryTabWidget>{// with AutomaticKeepAliveClientMixin<HistoryTabWidget>{
+class _HistoryTabState extends State<HistoryTabWidget> {
+  // with AutomaticKeepAliveClientMixin<HistoryTabWidget>{
   bool _isLoading;
   HistoryBloc auth;
   int _perpage = 10;
@@ -33,12 +35,12 @@ class _HistoryTabState extends State<HistoryTabWidget>{// with AutomaticKeepAliv
 
   _HistoryTabState(this.isForHistory);
 
-@override
-void initState() { 
-  super.initState();
-  print("we are initstate _HistoryTabState");
-  getToken();
-}
+  @override
+  void initState() {
+    super.initState();
+    print("we are initstate _HistoryTabState");
+    getToken();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,8 @@ void initState() {
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text('error occurred'),
+                content:
+                    Text('error occurred during fetching history coupons..'),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
             );
@@ -68,14 +71,18 @@ void initState() {
               } else if (currentState is CouponHistoryErroState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                return CouponErrorWidget(errorMessage: currentState.couponlist.errorMessage.error.first);
+                return CouponErrorWidget(
+                    errorMessage:
+                        currentState.couponlist.errorMessage.error.first);
               } else if (currentState is CouponHistoryListFetchedState) {
                 return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
-                return EmptyListWidget(emptyMessage: "No coupon Data found");
+                return EmptyListWidget(
+                    emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
               } else {
-                return EmptyListWidget(emptyMessage: "No coupon Data found");
+                return EmptyListWidget(
+                    emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
               }
             }),
       ),
@@ -100,21 +107,19 @@ void initState() {
       crossAxisCount: 2,
       padding: EdgeInsets.all(4.0),
       childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
-      children: data
-          .map(
-            (listData) {
+      children: data.map(
+        (listData) {
           listData.isFromHistory = isForHistory;
           return CouponItem(data: listData, isForHistory: true);
         },
-      )
-          .toList(),
+      ).toList(),
     );
   }
 
   getToken() async {
     sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString("token");
-    if (token!=null && token.isNotEmpty) {
+    if (token != null && token.isNotEmpty) {
       getCouponList();
     } else {}
     print("Home Page :: We got Token $token");
@@ -122,7 +127,7 @@ void initState() {
 
   void getCouponList() {
     try {
-        auth.add(CouponListEvent(_perpage, "history"));
+      auth.add(CouponListEvent(_perpage, "history"));
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }

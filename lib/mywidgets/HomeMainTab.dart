@@ -26,7 +26,8 @@ class _MyDetailsList extends State<HomeMainTab>
   bool isHomeScreen = true;
   TabController _controller;
   List<DrawerItem> sideMenu = [
-    DrawerItem("assets/images/home_menu.png", "HOME",selecteImage: "assets/images/home_white.png"),
+    DrawerItem("assets/images/home_menu.png", "HOME",
+        selecteImage: "assets/images/home_white.png"),
     DrawerItem("assets/images/user_profile.png", "PROFILE"),
     DrawerItem("assets/images/voucher.png", "ADD COUPON"),
     DrawerItem("assets/images/logout.png", "LOGOUT")
@@ -118,58 +119,6 @@ class _MyDetailsList extends State<HomeMainTab>
                       });
                 }),
           ),
-          // Padding(
-          //     padding: const EdgeInsets.only(left: 16),
-          //     child: Container(
-          //       // color: this.selectedIndex == this.currentIndex ? Theme.of(context).primaryColor: Colors.white,
-          //       child: SizedBox(
-          //         height: 56,
-          //         child: new Row(children: <Widget>[
-          //           Padding(
-          //             padding: const EdgeInsets.only(right: 16),
-          //             child: SizedBox(
-          //                 height: 20,
-          //                 width: 20,
-          //                 // child: Image.asset('assets/images/home_menu.png')
-          //                 child: Image.asset(sideMenu[0].imagePath)),
-          //           ),
-          //           InkWell(
-          //             // child: new Text('HOME'),
-          //             child: new Text(sideMenu[0].title),
-          //             onTap: () {
-          //               Navigator.pop(context);
-          //               _goToHome();
-          //               // onClicked(currentIndex);
-          //             },
-          //           ),
-          //         ]),
-          //       ),
-          //     )),
-          // SingleDrawerItem(
-          //   item: DrawerItem("assets/images/home_menu.png", "HOME"),
-          //   onClicked: (index) {
-          //     _goToHome();
-          //   },
-          // ),
-          // ListTile(
-          //   title: Text("Hello"),
-          //   onTap: () {
-          //     Navigator.of(context).pop();
-          //   },
-          // ),
-          // SingleDrawerItem1(
-          //   item: DrawerItem("assets/images/voucher.png", "ADD COUPON"),
-          //   onClicked: () {
-          //     Navigator.of(context).pop();
-          //     // _goToAddCoupon(context);
-          //   },
-          // ),
-          // SingleDrawerItem(
-          //   item: DrawerItem("assets/images/logout.png", "LOGOUT"),
-          //   onClicked: (index) {
-          //     _logOut();
-          //   },
-          // ),
         ],
       )),
       body: TabBarView(

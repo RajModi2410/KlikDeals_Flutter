@@ -1,15 +1,17 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
-class GetProfileResponse {
+class GetProfileResponse   extends ApiResponse{
   bool status;
   String message;
   Response response;
   ErrorMessage errorMessage;
 
   GetProfileResponse(
-      {this.status, this.message, this.response, this.errorMessage});
+      {this.status, this.message, this.response, this.errorMessage}): super.error(false);
 
-  GetProfileResponse.fromJson(Map<String, dynamic> json, bool isError) {
+  GetProfileResponse.fromJson(Map<String, dynamic> json, bool isError) : super.error(isError){
     status = json['status'];
     message = json['message'];
     response = json['response'] != null
@@ -37,10 +39,17 @@ class GetProfileResponse {
     return data;
   }
 
-   GetProfileResponse.error() {
+   GetProfileResponse.error(): super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
+
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return errorMessage.isTokenError();
   }
 }
 
@@ -105,7 +114,7 @@ class Response {
   }
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError{
   List<String> error;
 
   ErrorMessage({this.error});
@@ -123,5 +132,10 @@ class ErrorMessage {
 
    ErrorMessage.error(String error) {
     this.error = [error];
+  }
+
+  @override
+  bool isTokenError() {
+    return super.checkTokenError(error);
   }
 }

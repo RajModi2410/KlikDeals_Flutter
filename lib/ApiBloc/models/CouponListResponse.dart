@@ -1,15 +1,17 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
-class CouponListResponse {
+class CouponListResponse  extends ApiResponse{
   bool status;
   String message;
   Response response;
   ErrorMessage errorMessage;
 
   CouponListResponse(
-      {this.status, this.message, this.response, this.errorMessage});
+      {this.status, this.message, this.response, this.errorMessage}): super.error(false);
 
-  CouponListResponse.fromJson(Map<String, dynamic> json, bool parseError) {
+  CouponListResponse.fromJson(Map<String, dynamic> json, bool parseError) : super.error(parseError){
     status = json['status'];
     message = json['message'];
 
@@ -42,10 +44,15 @@ class CouponListResponse {
     return data;
   }
 
-  CouponListResponse.error() {
+  CouponListResponse.error():super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
+  }
+
+  @override
+  bool isTokenError() {
+    return errorMessage.isTokenError();
   }
 }
 
@@ -166,7 +173,7 @@ class Data {
   }
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError{
   List<String> error;
 
   ErrorMessage({this.error});
@@ -182,6 +189,11 @@ class ErrorMessage {
   }
    ErrorMessage.error(String error) {
     this.error = [error];
+  }
+
+  @override
+  bool isTokenError() {
+    return super.checkTokenError(error);
   }
 
 }

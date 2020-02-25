@@ -95,7 +95,8 @@ class _CouponAdd extends State<AddCoupon>
                     state.addCouponResponse.errorMessage.endDate.length > 0) {
                   error = state.addCouponResponse.errorMessage.endDate.first;
                 } else if (state.addCouponResponse.errorMessage.couponImage !=
-                    null) {
+                    null &&
+                    state.addCouponResponse.errorMessage.couponImage.length > 0) {
                   error =
                       state.addCouponResponse.errorMessage.couponImage.first;
                   print("We got the error in Coupoon image::$error");

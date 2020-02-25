@@ -13,25 +13,39 @@ import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
 import 'package:klik_deals/ApiBloc/models/SearchResponse.dart';
 import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
+import 'package:klik_deals/commons/AppExceptions.dart';
 import 'package:path/path.dart';
 
 import '../ApiBloc_provider.dart';
-import 'package:klik_deals/commons/KeyConstant.dart';
+
+typedef void VoidCallback();
 
 class ApiBlocRepository {
   final ApiBlocProvider _apiBlocProvider = ApiBlocProvider();
   var dio = Dio.Dio();
+  static dynamic Function() simples;
 
   static final ApiBlocRepository _instance = ApiBlocRepository._internal();
 
-  factory ApiBlocRepository() {
+  factory ApiBlocRepository({Function onRevoke}) {
+    print("this is factory");
+    if (simples == null) {
+      simples = onRevoke;
+    }
+
     return _instance;
   }
 
   ApiBlocRepository._internal() {
-    dio.interceptors.add(LogInterceptor(responseBody: true));
+    print("this is factory _internal");
+    dio.interceptors.add(LogInterceptor(responseBody: false));
     dio.options.connectTimeout = 5000; //5s
     dio.options.receiveTimeout = 3000;
+    // dio
+    //   ..interceptors.add(InterceptorsWrapper(
+    //       onError: (DioError dioError) => errorInterceptor(dioError)));
+    // _onRevoke();
   }
 
   void test(bool isError) {
@@ -61,8 +75,10 @@ class ApiBlocRepository {
     } on Dio.DioError catch (e) {
       print(e.type);
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return LoginResponse.error();
+        // return LoginResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
         return parseLoginResponse(response);
@@ -82,28 +98,47 @@ class ApiBlocRepository {
     } on Dio.DioError catch (e) {
       print(e.type);
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return CouponListResponse.error();
+        // return CouponListResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseCouponResponse(response);
+        return checkForTokenError(parseCouponResponse(response));
       }
     }
   }
 
-  Future<AddCouponResponse> addCoupon(AddCouponEvent map, File image) async {
-    print(baseUrl + "addcoupon:" + map.toString());
-    String fileName = basename(image.path);
-    print("File base name: $fileName");
+  ApiResponse checkForTokenError(ApiResponse apiResponse) {
+    if (apiResponse.isTokenError()) {
+      simples();
+    }
+    return apiResponse;
+  }
 
-    Dio.FormData formData = FormData.fromMap({
-      "coupon_code": map.couponCodeValue,
-      "start_date": map.startDateValue,
-      "end_date": map.endDateValue,
-      "description": map.descValue,
-      "coupon_image":
-          await MultipartFile.fromFile(image.path, filename: fileName)
-    });
+  Future<AddCouponResponse> addCoupon(AddCouponEvent map, File image) async {
+    print(baseUrl + "addcoupon:" + map.toMap().toString());
+    Dio.FormData formData = null;
+    if (image != null) {
+      String fileName = basename(image.path);
+      print("File base name: $fileName");
+
+      formData = FormData.fromMap({
+        "coupon_code": map.couponCodeValue,
+        "start_date": map.startDateValue,
+        "end_date": map.endDateValue,
+        "description": map.descValue,
+        "coupon_image":
+            await MultipartFile.fromFile(image.path, filename: fileName)
+      });
+    } else {
+      formData = FormData.fromMap({
+        "coupon_code": map.couponCodeValue,
+        "start_date": map.startDateValue,
+        "end_date": map.endDateValue,
+        "description": map.descValue,
+      });
+    }
 
     try {
       Dio.Response response = await dio.post(baseUrl + "addcoupon",
@@ -112,11 +147,13 @@ class ApiBlocRepository {
       return parseAddCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return AddCouponResponse.error();
+        // return AddCouponResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseAddCouponResponse(response);
+        return checkForTokenError(parseAddCouponResponse(response));
       }
     }
   }
@@ -146,11 +183,13 @@ class ApiBlocRepository {
       return parseEditCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return EditCouponResponse.error();
+        // return EditCouponResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseEditCouponResponse(response);
+        return checkForTokenError(parseEditCouponResponse(response));
       }
     }
   }
@@ -162,11 +201,11 @@ class ApiBlocRepository {
     String bannerFileName;
     if (logo != null) {
       logoFileName = basename(logo.path);
-      print("File base name: $logoFileName");
+      print("logoFileName File base name: $logoFileName");
     }
     if (banner != null) {
       bannerFileName = basename(banner.path);
-      print("File base name: $bannerFileName");
+      print("bannerFileName File base name: $bannerFileName");
     }
     Dio.FormData formData = FormData.fromMap({
       "name": map.name,
@@ -190,12 +229,15 @@ class ApiBlocRepository {
       print("We got Some message :: ${response.data.toString()}");
       return parseUpdateProfileResponse(response);
     } on Dio.DioError catch (e) {
+      print("we got dio vendorprofile : " + e.type.toString());
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return UpdateProfileResponse.error();
+        throw NoInternetException("");
+        // return UpdateProfileResponse.error();
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseUpdateProfileResponse(response);
+        return checkForTokenError(parseUpdateProfileResponse(response));
       }
     }
   }
@@ -209,11 +251,13 @@ class ApiBlocRepository {
       return parseDeleteCouponResponse(response);
     } on Dio.DioError catch (e) {
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return DeleteCouponResponse.error();
+        // return DeleteCouponResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseDeleteCouponResponse(response);
+        return checkForTokenError(parseDeleteCouponResponse(response));
       }
     }
   }
@@ -225,12 +269,15 @@ class ApiBlocRepository {
           options: Dio.Options(headers: getCommonHeaders()));
       return parseGetProfileResponse(response);
     } on Dio.DioError catch (e) {
+      print("we got dio error : " + e.type.toString());
       if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-        return GetProfileResponse.error();
+        // return GetProfileResponse.error();
+        throw NoInternetException("");
       } else if (e.response != null) {
         Dio.Response response = e.response;
-        return parseGetProfileResponse(response);
+        return checkForTokenError(parseGetProfileResponse(response));
       }
     }
   }
@@ -289,4 +336,24 @@ class ApiBlocRepository {
     return GetProfileResponse.fromJson(
         responseString, response.statusCode != successCode);
   }
+
+  dynamic errorInterceptor(DioError dioError) {
+    print("we are getting error : " + dioError.response.statusCode.toString());
+    if (dioError.response.statusCode == 401) {
+      // UnauthorizedException exception = UnauthorizedException(dioError);
+      throw DioError(error: "Dio can't establish new connection after closed.");
+      // exception.message
+      // navigatorKey.currentState.pushNamedAndRemoveUntil(
+      //   "/login", (Route<dynamic> route) => false);
+      // print("let's call onRevoke  and ${simples == null}");
+      // simples();
+    }
+    return dioError;
+  }
+}
+
+class UnauthorizedException extends DioError {
+  Dio.DioError dioError;
+
+  UnauthorizedException(this.dioError) : super() {}
 }

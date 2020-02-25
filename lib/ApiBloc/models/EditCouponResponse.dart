@@ -1,12 +1,14 @@
+import 'package:klik_deals/commons/ApiError.dart';
+import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
-class EditCouponResponse {
+class EditCouponResponse   extends ApiResponse{
   bool status;
   String message;
   ErrorMessage errorMessage;
 
-  EditCouponResponse({this.status, this.message, this.errorMessage});
+  EditCouponResponse({this.status, this.message, this.errorMessage}): super.error(false);
 
-  EditCouponResponse.fromJson(Map<String, dynamic> json, bool isError) {
+  EditCouponResponse.fromJson(Map<String, dynamic> json, bool isError)  : super.error(isError){
     status = json['status'];
     message = json['message'];
 
@@ -29,14 +31,22 @@ class EditCouponResponse {
     return data;
   }
 
-   EditCouponResponse.error() {
+   EditCouponResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return errorMessage.isTokenError();
+  }
+
+  
 }
 
-class ErrorMessage {
+class ErrorMessage extends ApiError{
   List<String> couponCode;
   List<String> startDate;
   List<String> endDate;
@@ -65,7 +75,7 @@ class ErrorMessage {
       startDate = [];
     }
 
-    if (keys.contains("coupon_code")) {
+    if (keys.contains("end_date")) {
       endDate = json['end_date'].cast<String>();
     } else {
       couponCode = [];
@@ -84,9 +94,9 @@ class ErrorMessage {
     }
 
     if (keys.contains("error")) {
-      couponImage = json['error'].cast<String>();
+      error = json['error'].cast<String>();
     } else {
-      couponImage = [];
+      error = [];
     }
   }
 
@@ -102,5 +112,12 @@ class ErrorMessage {
 
    ErrorMessage.error(String error) {
     this.error = [error];
+  }
+
+
+  @override
+  bool isTokenError() {
+    // TODO: implement isTokenError
+    return super.checkTokenError(error);
   }
 }
