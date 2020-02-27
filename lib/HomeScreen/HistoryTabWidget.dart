@@ -8,6 +8,7 @@ import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +33,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
   int _perpage = 10;
   var choices;
   bool isForHistory;
+  ApiBlocEvent lastEvent;
 
   _HistoryTabState(this.isForHistory);
 
@@ -80,6 +82,12 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                 print("Home Page :: We got empty data.....");
                 return EmptyListWidget(
                     emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
+              } else if (currentState is NoInternetState) {
+                return NoNetworkWidget(
+                  retry: () {
+                    retryCall();
+                  },
+                );
               } else {
                 return EmptyListWidget(
                     emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
@@ -127,9 +135,16 @@ class _HistoryTabState extends State<HistoryTabWidget> {
 
   void getCouponList() {
     try {
-      auth.add(CouponListEvent(_perpage, "history"));
+      lastEvent = CouponListEvent(_perpage, "history");
+      auth.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
+    }
+  }
+
+  void retryCall() {
+    if (lastEvent != null) {
+      auth.add(lastEvent);
     }
   }
 

@@ -5,7 +5,6 @@ import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
 import 'package:klik_deals/CouponCode/CouponStates.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
-import 'package:klik_deals/ProfileScreen/ProfileStates.dart';
 import 'package:klik_deals/commons/AppExceptions.dart';
 
 import 'ApiBloc_event.dart';
@@ -35,9 +34,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   Stream<ApiBlocState> mapEventToState(
     ApiBlocEvent event,
   ) async* {
-    if (event is RestaurantSearchEvent) {
-      yield* _mapSearchResponseEvents(event);
-    } else if (event is LoginEvent) {
+    if (event is LoginEvent) {
       yield* _mapLoginEventResponseEvents(event);
     } else if (event is TokenGenerateEvent) {
       playerRepository.token = event.token;
@@ -153,34 +150,6 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       print(s);
 //      e.printStackTrace();
       yield ApiErrorState();
-    }
-  }
-
-  Stream<ApiBlocState> _mapSearchResponseEvents(
-      RestaurantSearchEvent event) async* {
-    if (event.query.isEmpty) {
-      yield ApiUninitializedState();
-    } else {
-      yield ApiFetchingState();
-
-      try {
-        final response = await playerRepository.searchRestaurant(
-            event.query, event.numberOfRecord);
-        if (response.restaurants != null) {
-          if (response.restaurants.length == 0) {
-            yield ApiEmptyState();
-          } else {
-            yield ApiFetchedState(searchResult: response);
-          }
-        } else {
-          yield ApiEmptyState();
-        }
-      } on NoInternetException catch (e) {
-        print("No Intenet exception");
-        yield NoInternetState();
-      } catch (e) {
-        yield ApiErrorState();
-      }
     }
   }
 

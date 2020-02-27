@@ -9,6 +9,7 @@ import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
 import 'package:klik_deals/mywidgets/HomeMainTab.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,6 +63,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
   var loginBloc = LoginBloc();
   RoundWidget round;
   final ClickCallback callback;
+  ApiBlocEvent lastEvent;
 
   _LoginFormV1State(this.callback);
 
@@ -118,7 +120,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
               }
             } else if (state is LoginApiFetchedState) {
               token = state.loginResponse.token.toString();
-              auth.add(TokenGenerateEvent(token));
+              lastEvent = TokenGenerateEvent(token);
+              auth.add(lastEvent);
               _onSetOnShredPrefe(token);
               _goToHomePage();
             }
@@ -132,6 +135,12 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 if (currentState is ApiFetchingState) {
                   round = RoundWidget();
                   return round;
+                } else if (currentState is NoInternetState) {
+                  return NoNetworkWidget(
+                    retry: () {
+                      retryCall();
+                    },
+                  );
                 } else {
                   return Container();
                 }
@@ -335,7 +344,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
     print("validateAndSubmit");
     if (validateAndSave()) {
       try {
-        auth.add(LoginEvent(_email, _password));
+        lastEvent = LoginEvent(_email, _password);
+        auth.add(lastEvent);
         setState(() {
           _isLoading = false;
         });
@@ -386,8 +396,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
     String authToken = AuthUtils.getToken(sharedPreferences);
     print("we got token $authToken");
     if (authToken != null) {
-      auth.add(TokenGenerateEvent(authToken));
+      lastEvent = TokenGenerateEvent(authToken);
+      auth.add(lastEvent);
       this.callback();
+    }
+  }
+
+  void retryCall() {
+    if (lastEvent != null) {
+      auth.add(lastEvent);
     }
   }
 }

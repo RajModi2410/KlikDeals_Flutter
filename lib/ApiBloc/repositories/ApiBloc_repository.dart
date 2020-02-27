@@ -39,7 +39,7 @@ class ApiBlocRepository {
 
   ApiBlocRepository._internal() {
     print("this is factory _internal");
-    dio.interceptors.add(LogInterceptor(responseBody: false));
+    dio.interceptors.add(LogInterceptor(responseBody: true));
     dio.options.connectTimeout = 5000; //5s
     dio.options.receiveTimeout = 3000;
     // dio

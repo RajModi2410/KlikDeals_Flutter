@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
 import 'CouponStates.dart';
@@ -39,6 +40,7 @@ class _EditCoupon extends State<EditCoupon>
   String _startDateValue;
   String _endDateValue;
   String _descValue;
+  ApiBlocEvent lastEvent;
 
   TextEditingController _startDateController,
       _endDateController,
@@ -52,9 +54,9 @@ class _EditCoupon extends State<EditCoupon>
     super.initState();
     data = Data.fromJson(mapData);
     _Startdate = new DateFormat("yyyy/MM/dd").parse(data.startDate);
-    print("We are getting $_Startdate and ${data.startDate}");  
+    print("We are getting $_Startdate and ${data.startDate}");
     // _endDateValue= new DateFormat("yyyy/MM/dd").parse(data.startDate);
-    // print("We are getting $_Startdate and ${data.startDate}");  
+    // print("We are getting $_Startdate and ${data.startDate}");
     _isLoading = false;
     _controller = new AnimationController(
       vsync: this,
@@ -109,8 +111,8 @@ class _EditCoupon extends State<EditCoupon>
                           0) {
                     error = state.editCouponResponse.errorMessage.endDate.first;
                   } else if (state
-                          .editCouponResponse.errorMessage.couponImage !=
-                      null &&
+                              .editCouponResponse.errorMessage.couponImage !=
+                          null &&
                       state.editCouponResponse.errorMessage.couponImage.length >
                           0) {
                     error =
@@ -149,6 +151,12 @@ class _EditCoupon extends State<EditCoupon>
                     if (currentState is ApiFetchingState) {
                       round = RoundWidget();
                       return round;
+                    } else if (currentState is NoInternetState) {
+                      return NoNetworkWidget(
+                        retry: () {
+                          retryCall();
+                        },
+                      );
                     } else {
                       return Container();
                     }
@@ -453,8 +461,9 @@ class _EditCoupon extends State<EditCoupon>
       print(_descValue);
       print(_imageBanner);
       try {
-        auth.add(EditCouponEvent(_couponCodeValue, _startDateValue,
-            _endDateValue, _descValue, data.id.toString(), _imageBanner));
+        lastEvent = EditCouponEvent(_couponCodeValue, _startDateValue,
+            _endDateValue, _descValue, data.id.toString(), _imageBanner);
+        auth.add(lastEvent);
 
         setState(() {
           _isLoading = false;
@@ -474,6 +483,12 @@ class _EditCoupon extends State<EditCoupon>
       });
     } else {
       print("Image is null please check @416");
+    }
+  }
+
+  void retryCall() {
+    if (lastEvent != null) {
+      auth.add(lastEvent);
     }
   }
 }

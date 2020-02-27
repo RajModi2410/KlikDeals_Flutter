@@ -9,6 +9,7 @@ import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +33,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   int _perpage = 10;
   var choices;
   bool isForHistory;
+  ApiBlocEvent lastEvent;
 
   _ActiveCouponPage(this.isForHistory);
 
@@ -75,12 +77,20 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                 return _couponList(currentState.couponlist.response.data);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
-                return EmptyListWidget(emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                return EmptyListWidget(
+                    emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
               } else if (currentState is CouponDeleteFetchedState) {
                 getCouponList();
                 return RoundWidget();
+              } else if (currentState is NoInternetState) {
+                return NoNetworkWidget(
+                  retry: () {
+                    retryCall();
+                  },
+                );
               } else {
-                return EmptyListWidget(emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                return EmptyListWidget(
+                    emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
               }
             }),
       ),
@@ -120,8 +130,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   Widget _gridView(List<Data> data) {
     return GridView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+            // childAspectRatio: 1,//isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
             crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
@@ -129,7 +140,13 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
         itemBuilder: (BuildContext context, int index) {
           var listData = data[index];
           listData.isFromHistory = isForHistory;
-          return CouponItem(data: listData, isForHistory: false);
+          // return GridTile(child: null)
+          return CouponItem(
+              data: listData,
+              isForHistory: false,
+              onDeleteClick: (id) {
+                _showPopup(id);
+              });
         });
   }
 
@@ -151,7 +168,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   void getCouponList() {
     try {
-      apiBloc.add(CouponListEvent(_perpage, null));
+      lastEvent = CouponListEvent(_perpage, null);
+      apiBloc.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
     }
@@ -165,7 +183,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     setState(() {
       switch (state) {
         case AppLifecycleState.resumed:
-          apiBloc.add(ReloadEvent(true));
+          lastEvent = ReloadEvent(true);
+          apiBloc.add(lastEvent);
           break;
         case AppLifecycleState.inactive:
           // Handle this case
@@ -178,5 +197,44 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           break;
       }
     });
+  }
+
+  void retryCall() {
+    if (lastEvent != null) {
+      apiBloc.add(lastEvent);
+    }
+  }
+
+  void _showPopup(int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Warning"),
+          content: new Text("Are you sure want to delete this coupon?"),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('ACCEPT'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                RemoveCouponApi(id);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void RemoveCouponApi(int couponId) {
+    lastEvent = CouponDeleteEvent(couponId.toString());
+    apiBloc.add(lastEvent);
   }
 }

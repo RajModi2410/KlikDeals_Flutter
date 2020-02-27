@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
 class AddCoupon extends StatefulWidget {
@@ -31,6 +32,7 @@ class _CouponAdd extends State<AddCoupon>
   String _endDateValue;
   String _descValue;
   String _errorMessage;
+  ApiBlocEvent lastEvent;
 
   TextEditingController _startDateController,
       _endDateController,
@@ -95,8 +97,9 @@ class _CouponAdd extends State<AddCoupon>
                     state.addCouponResponse.errorMessage.endDate.length > 0) {
                   error = state.addCouponResponse.errorMessage.endDate.first;
                 } else if (state.addCouponResponse.errorMessage.couponImage !=
-                    null &&
-                    state.addCouponResponse.errorMessage.couponImage.length > 0) {
+                        null &&
+                    state.addCouponResponse.errorMessage.couponImage.length >
+                        0) {
                   error =
                       state.addCouponResponse.errorMessage.couponImage.first;
                   print("We got the error in Coupoon image::$error");
@@ -119,7 +122,8 @@ class _CouponAdd extends State<AddCoupon>
                   );
                 }
               } else if (state is CouponAddFetchedState) {
-                auth.add(ReloadEvent(true));
+                lastEvent = ReloadEvent(true);
+                auth.add(lastEvent);
                 Navigator.pop(context, true);
               }
             },
@@ -132,6 +136,12 @@ class _CouponAdd extends State<AddCoupon>
                   if (currentState is ApiFetchingState) {
                     round = RoundWidget();
                     return round;
+                  } else if (currentState is NoInternetState) {
+                    return NoNetworkWidget(
+                      retry: () {
+                        retryCall();
+                      },
+                    );
                   } else {
                     return Container();
                   }
@@ -452,8 +462,9 @@ class _CouponAdd extends State<AddCoupon>
       print(_descValue);
       print(_imageBanner);
       try {
-        auth.add(AddCouponEvent(_couponCodeValue, _startDateValue,
-            _endDateValue, _descValue, _imageBanner));
+        lastEvent = AddCouponEvent(_couponCodeValue, _startDateValue,
+            _endDateValue, _descValue, _imageBanner);
+        auth.add(lastEvent);
         setState(() {
           _isLoading = false;
         });
@@ -472,6 +483,12 @@ class _CouponAdd extends State<AddCoupon>
       });
     } else {
       print("Image is null please check @416");
+    }
+  }
+
+  void retryCall() {
+    if (lastEvent != null) {
+      auth.add(lastEvent);
     }
   }
 }
