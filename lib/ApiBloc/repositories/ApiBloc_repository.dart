@@ -255,7 +255,7 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return DeleteCouponResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+       } else if (e.response != null) {
         Dio.Response response = e.response;
         return checkForTokenError(parseDeleteCouponResponse(response));
       }
