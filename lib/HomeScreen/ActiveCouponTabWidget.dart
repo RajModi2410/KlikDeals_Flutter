@@ -6,6 +6,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
@@ -35,14 +36,23 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   bool isForHistory;
   ApiBlocEvent lastEvent;
 
-  int perPage = 4;
+//Pagination Stuff Start
   int currentPage = 1;
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
   bool hasReachedEnd = false;
   bool inProcess = false;
+//Pagination Stuff End
 
   _ActiveCouponPage(this.isForHistory);
+
+  @override
+  void initState() {
+    super.initState();
+    getToken();
+    print("_ActiveCouponPage initstate");
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +76,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
               BuildContext context,
               ApiBlocState currentState,
             ) {
+              inProcess = false;
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
                 return RoundWidget();
@@ -121,21 +132,15 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   }
 
   Widget _gridView(Response data) {
-    return GridView.builder(
-        controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
+    return CustomScrollView(controller: _scrollController, slivers: <Widget>[
+      new SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             childAspectRatio: 8.0 / 10.0,
             crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
-        itemCount: getTotalCount(data),
-        itemBuilder: (BuildContext context, int index) {
-          if (index == data.data.length) {
-            print(
-                "we are getting bottom at $index and total is: ${data.data.length}");
-            return BottomLoader();
-          } else {
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
             var listData = data.data[index];
             listData.isFromHistory = isForHistory;
             // return GridTile(child: null)
@@ -145,8 +150,42 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                 onDeleteClick: (id) {
                   _showPopup(id);
                 });
-          }
-        });
+          },
+          childCount: getTotalCount(data),
+        ),
+      ),
+      new SliverToBoxAdapter(
+        child: hasReachedEnd ? Container() : BottomLoader(),
+      )
+    ]);
+
+    //       child: GridView.builder(
+    //       controller: _scrollController,
+    //       physics: const AlwaysScrollableScrollPhysics(),
+    //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //           childAspectRatio: 8.0 / 10.0,
+    //           crossAxisCount: 2,
+    //           mainAxisSpacing: 4.0,
+    //           crossAxisSpacing: 4.0),
+    //       itemCount: getTotalCount(data),
+    //       itemBuilder: (BuildContext context, int index) {
+    //         if (index == data.data.length) {
+    //           print(
+    //               "we are getting bottom at $index and total is: ${data.data.length}");
+    //           return BottomLoader();
+    //         } else {
+    //           var listData = data.data[index];
+    //           listData.isFromHistory = isForHistory;
+    //           // return GridTile(child: null)
+    //           return CouponItem(
+    //               data: listData,
+    //               isForHistory: false,
+    //               onDeleteClick: (id) {
+    //                 _showPopup(id);
+    //               });
+    //         }
+    //       }),
+    // );
   }
 
   int getTotalCount(Response vendorList) {
@@ -154,20 +193,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     hasReachedEnd = responseData.currentPage == responseData.lastPage;
     print(
         "CategoriesListScreen We need Data ::: $hasReachedEnd :: ${responseData.currentPage} :: ${responseData.lastPage}");
-    // BottomLoader();
-    // print("CategoriesListScreen we are in bottom of::$BottomLoader()");
-    // return vendorList == null ? 0 : resppnse.data.length + (hasReachedEnd? 0 : 1);
-    var totalLength = responseData.data.length + (hasReachedEnd ? 0 : 1);
+    var totalLength = responseData.data.length;
     print("We are returning totalLength : $totalLength");
     return totalLength;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getToken();
-    print("_ActiveCouponPage initstate");
-    _scrollController.addListener(_onScroll);
   }
 
   void _onScroll() {
@@ -177,9 +205,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       if (!hasReachedEnd && !inProcess) {
         inProcess = true;
         print("Before current page : $currentPage");
-        // currentPage = currentPage + 1;
-        // print("current page : $currentPage");
-        // getCouponList();
+        currentPage = currentPage + 1;
+        print("current page : $currentPage");
+        getCouponList();
       } else {
         // print("limit reahed : " + hasReachedEnd.toString());
       }
@@ -264,24 +292,5 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   void RemoveCouponApi(int couponId) {
     lastEvent = CouponDeleteEvent(couponId.toString());
     apiBloc.add(lastEvent);
-  }
-}
-
-class BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.amber,
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(
-          width: 33,
-          height: 33,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-          ),
-        ),
-      ),
-    );
   }
 }

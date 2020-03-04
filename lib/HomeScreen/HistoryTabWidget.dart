@@ -5,6 +5,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponHistoryItem.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
@@ -32,10 +33,17 @@ class _HistoryTabState extends State<HistoryTabWidget> {
   bool _isLoading;
   HistoryBloc auth;
   int _perpage = 10;
-  int currentPage = 1;
   var choices;
   bool isForHistory;
   ApiBlocEvent lastEvent;
+
+//Pagination Stuff Start
+  int currentPage = 1;
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+  bool hasReachedEnd = false;
+  bool inProcess = false;
+//Pagination Stuff End
 
   _HistoryTabState(this.isForHistory);
 
@@ -44,6 +52,23 @@ class _HistoryTabState extends State<HistoryTabWidget> {
     super.initState();
     print("we are initstate _HistoryTabState");
     getToken();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      if (!hasReachedEnd && !inProcess) {
+        inProcess = true;
+        print("Before current page : $currentPage");
+        currentPage = currentPage + 1;
+        print("current page : $currentPage");
+        getCouponList();
+      } else {
+        // print("limit reahed : " + hasReachedEnd.toString());
+      }
+    }
   }
 
   @override
@@ -69,6 +94,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
               BuildContext context,
               ApiBlocState currentState,
             ) {
+              inProcess = false;
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
                 return RoundWidget();
@@ -79,7 +105,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                     errorMessage:
                         currentState.couponlist.errorMessage.error.first);
               } else if (currentState is CouponHistoryListFetchedState) {
-                return _couponList(currentState.couponlist.response.data);
+                return _couponList(currentState.couponlist.response);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
                 return EmptyListWidget(
@@ -100,7 +126,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
     // return null;
   }
 
-  Widget _couponList(List<Data> data) {
+  Widget _couponList(Response data) {
     return Stack(children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -112,18 +138,39 @@ class _HistoryTabState extends State<HistoryTabWidget> {
     ]);
   }
 
-  Widget _gridView(List<Data> data) {
-    return GridView.count(
-      crossAxisCount: 2,
-      padding: EdgeInsets.all(4.0),
-      childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
-      children: data.map(
-        (listData) {
-          listData.isFromHistory = isForHistory;
-          return CouponHistoryItem(data: listData);
-        },
-      ).toList(),
-    );
+  Widget _gridView(Response data) {
+    return CustomScrollView(controller: _scrollController, slivers: <Widget>[
+      new SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: 10.0 / 12.5,
+              crossAxisCount: 2,
+              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 4.0),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              var listData = data.data[index];
+              listData.isFromHistory = isForHistory;
+              return CouponHistoryItem(data: listData);
+            },
+            childCount: getTotalCount(data),
+          )),
+      new SliverToBoxAdapter(
+        child: hasReachedEnd ? Container() : BottomLoader(),
+      )
+    ]);
+  }
+
+  int getTotalCount(Response vendorList) {
+    var responseData = vendorList;
+    hasReachedEnd = responseData.currentPage == responseData.lastPage;
+    print(
+        "CategoriesListScreen We need Data ::: $hasReachedEnd :: ${responseData.currentPage} :: ${responseData.lastPage}");
+    // BottomLoader();
+    // print("CategoriesListScreen we are in bottom of::$BottomLoader()");
+    // return vendorList == null ? 0 : resppnse.data.length + (hasReachedEnd? 0 : 1);
+    var totalLength = responseData.data.length; // + (hasReachedEnd ? 0 : 1);
+    print("We are returning totalLength : $totalLength");
+    return totalLength;
   }
 
   getToken() async {
@@ -137,7 +184,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
 
   void getCouponList() {
     try {
-      lastEvent = CouponListEvent(_perpage, "history",currentPage);
+      lastEvent = CouponListEvent(_perpage, "history", currentPage);
       auth.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
