@@ -58,12 +58,12 @@ class _MyDetailsList extends State<HomeMainTab>
       appBar: AppBar(
         title: Text(
           "KLIK DEALS",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.title,
         ),
         bottom: TabBar(
           controller: _controller,
           labelStyle:
-              TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w400),
+              TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w500),
           labelColor: Theme.of(context).primaryColor,
           unselectedLabelColor: Colors.white,
           indicatorSize: TabBarIndicatorSize.tab,

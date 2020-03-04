@@ -6,6 +6,7 @@ import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
+import 'package:klik_deals/mywidgets/CouponHistoryItem.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
@@ -31,6 +32,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
   bool _isLoading;
   HistoryBloc auth;
   int _perpage = 10;
+  int currentPage = 1;
   var choices;
   bool isForHistory;
   ApiBlocEvent lastEvent;
@@ -118,7 +120,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
       children: data.map(
         (listData) {
           listData.isFromHistory = isForHistory;
-          return CouponItem(data: listData, isForHistory: true);
+          return CouponHistoryItem(data: listData);
         },
       ).toList(),
     );
@@ -135,7 +137,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
 
   void getCouponList() {
     try {
-      lastEvent = CouponListEvent(_perpage, "history");
+      lastEvent = CouponListEvent(_perpage, "history",currentPage);
       auth.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");

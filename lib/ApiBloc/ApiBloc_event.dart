@@ -29,7 +29,6 @@ class ReloadEvent extends ApiBlocEvent {
   List<Object> get props => [isReload];
 }
 
-
 class LoginEvent extends ApiBlocEvent {
   final String email;
   final String pass;
@@ -52,8 +51,12 @@ class LoginEvent extends ApiBlocEvent {
 class CouponListEvent extends ApiBlocEvent {
   final int perPage;
   final String action;
-
-  CouponListEvent(this.perPage, this.action);
+  final int currentPage;
+  CouponListEvent(
+    this.perPage,
+    this.action,
+    this.currentPage,
+  );
 
   Map toMap() {
     var map = new Map<String, dynamic>();
@@ -61,6 +64,7 @@ class CouponListEvent extends ApiBlocEvent {
     if (action != null && action.isNotEmpty) {
       map["action"] = action;
     }
+    map["page"] = currentPage;
     return map;
   }
 
@@ -109,8 +113,7 @@ class AddCouponEvent extends ApiBlocEvent {
   }
 
   // TODO: implement props
-  List<Object> get props =>
-      [
+  List<Object> get props => [
         this.couponCodeValue,
         this.startDateValue,
         this.endDateValue,
@@ -142,8 +145,7 @@ class EditCouponEvent extends ApiBlocEvent {
   }
 
   // TODO: implement props
-  List<Object> get props =>
-      [
+  List<Object> get props => [
         this.couponCodeValue,
         this.startDateValue,
         this.endDateValue,
@@ -165,7 +167,8 @@ class UpdatePofileEvent extends ApiBlocEvent {
   File logo;
   File banner;
 
-  UpdatePofileEvent(this.name,
+  UpdatePofileEvent(
+      this.name,
       this.address,
       this.map_lat,
       this.map_log,
@@ -191,8 +194,7 @@ class UpdatePofileEvent extends ApiBlocEvent {
   }
 
   // TODO: implement props
-  List<Object> get props =>
-      [
+  List<Object> get props => [
         this.name,
         this.address,
         this.map_lat,

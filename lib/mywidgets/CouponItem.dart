@@ -24,11 +24,7 @@ class CouponItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String date;
-    if (isForHistory) {
-      date = dateFormatter("", "", isForHistory, data.grabDate);
-    } else {
-      date = dateFormatter(data.startDate, data.endDate, isForHistory, "");
-    }
+    date = dateFormatter(data.startDate, data.endDate, isForHistory, "");
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Stack(children: <Widget>[
       couponList(context, date),
@@ -107,8 +103,8 @@ class CouponItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black,
+                      fontSize: 16.0,
+                      color: Color(0xff434A5E),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -120,20 +116,21 @@ class CouponItem extends StatelessWidget {
               ],
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-          //   child: Text(
-          //     data.description,
-          //     overflow: TextOverflow.ellipsis,
-          //     maxLines: 1,
-          //     style: TextStyle(
-          //       color: Colors.black54,
-          //       fontSize: 12.0,
-          //     ),
-          //   ),
-          // ),
           Padding(
-            padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+            child: Text(
+              data.description,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Color(0xff434A5E),
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
             child: Text(
               date,
               overflow: TextOverflow.ellipsis,
@@ -144,47 +141,37 @@ class CouponItem extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-                top: data.isFromHistory ? 4.0 : 0,
-                left: data.isFromHistory ? 8.0 : 0),
-            child: _staus(),
-          ),
         ],
       ),
     );
   }
 
   Row getActions(BuildContext context) {
-    if (isForHistory) {
-      return Row();
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          GestureDetector(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        GestureDetector(
+            onTap: () {
+              _goToEditScreen(context, data.toJson(), auth);
+            },
+            child: SizedBox(
+                height: 16,
+                width: 16,
+                child: Image.asset("assets/images/pencils.png"))),
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0, right: 0),
+          child: GestureDetector(
               onTap: () {
-                _goToEditScreen(context, data.toJson(), auth);
+                // _showPopup(context, data.id, auth);
+                onDeleteClick(data.id);
               },
               child: SizedBox(
                   height: 16,
                   width: 16,
-                  child: Image.asset("assets/images/pencils.png"))),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 0),
-            child: GestureDetector(
-                onTap: () {
-                  // _showPopup(context, data.id, auth);
-                  onDeleteClick(data.id);
-                },
-                child: SizedBox(
-                    height: 16,
-                    width: 16,
-                    child: Image.asset("assets/images/bins.png"))),
-          )
-        ],
-      );
-    }
+                  child: Image.asset("assets/images/bins.png"))),
+        )
+      ],
+    );
   }
 
   Widget getImage() {
@@ -210,72 +197,23 @@ class CouponItem extends StatelessWidget {
       );
     }
   }
-
-  Widget _staus() {
-    if (data.isFromHistory) {
-      return Text(
-        "${data.statusName}",
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-        style: TextStyle(
-          color: Colors.black54,
-          fontSize: 12.0,
-        ),
-      );
-    } else {
-      return Text(
-        "",
-        style: TextStyle(
-          color: Colors.black54,
-          fontSize: 12.0,
-        ),
-      );
-    }
-  }
 }
 
 String dateFormatter(
     String startDate, String endDate, bool isForHistory, String grabDate) {
-  // var months = {
-  //   '01': 'Jan',
-  //   '02': 'Feb',
-  //   '03': 'Mar',
-  //   '04': 'Apr',
-  //   '05': 'May',
-  //   '06': 'Jun',
-  //   '07': 'Jul',
-  //   '08': 'Aug',
-  //   '09': 'Sept',
-  //   '10': 'Oct',
-  //   '11': 'Nov',
-  //   '12': 'Dec'
-  // };
-
   if (isForHistory) {
     DateTime grabFormat = new DateFormat('yyyy/MM/dd').parse(grabDate);
     String grabDateFormat = new DateFormat('yyyy MMM dd').format(grabFormat);
-    // var grabDateArray = grabDate.split("/");
-    // var grabMonth = months[grabDateArray[1]];
-    // return "Redeem Date: ${grabDateArray[2]} "
-    //     "$grabMonth "
-    //     "${grabDateArray[0]}";
-    return "Redeem Date: $grabDateFormat";
+    return "Redeem at: $grabDateFormat";
   } else {
     DateFormat originalFormat = new DateFormat('yyyy/MM/dd');
     DateFormat convertFormat = new DateFormat('MMM dd');
     String startFormattedDate;
     String endFormattedDate;
-    // var startDateArray = startDate.split("/");
-    // var endDateArray = endDate.split("/");
-    // var startMonth = months[startDateArray[1]];
-    // var endMonth = months[endDateArray[1]];
-    startFormattedDate =
-        "" + convertFormat.format(originalFormat.parse(startDate)) + " To ";
+    startFormattedDate = "Good from " +
+        convertFormat.format(originalFormat.parse(startDate)) +
+        " To ";
     endFormattedDate = convertFormat.format(originalFormat.parse(endDate));
-    // startFormattedDate = "Good from ${startDateArray[0]} "
-    //     "$startMonth "
-    //     "${startDateArray[2]} To ";
-    // endFormattedDate = "${endDateArray[0]} " "$endMonth " "${endDateArray[2]}";
     return startFormattedDate + endFormattedDate;
   }
 }

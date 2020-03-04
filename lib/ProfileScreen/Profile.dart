@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
@@ -11,6 +10,7 @@ import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
+import 'package:klik_deals/mywidgets/SuccessDialog.dart';
 
 import 'ProfileStates.dart';
 
@@ -64,10 +64,12 @@ class _profilePage extends State<Profile>
     );
     callGetVendorProfile(auth);
 
-    imagePicker = new ImagePickerHandler(this, _controller);
+    imagePicker = new ImagePickerHandler(this, _controller,
+        maxWidth: 150, maxHeight: 150);
     imagePicker.init();
 
-    imagePickerBanner = new ImagePickerHandler(this, _controller);
+    imagePickerBanner =
+        new ImagePickerHandler(this, _controller, maxWidth: 1080);
     imagePickerBanner.init();
   }
 
@@ -92,7 +94,7 @@ class _profilePage extends State<Profile>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Edit Profile'),
+          title: Text('Edit Profile', style: Theme.of(context).textTheme.title),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
@@ -124,15 +126,27 @@ class _profilePage extends State<Profile>
                     );
                   }
                 } else if (state is UpdateProfileSuccessState) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Profile Updated successfully",
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                      backgroundColor: Colors.white,
+                  // Scaffold.of(context).showSnackBar(
+                  //   SnackBar(
+                  //     content: Text(
+                  //       "Profile Updated successfully",
+                  //       style: TextStyle(color: Theme.of(context).primaryColor),
+                  //     ),
+                  //     backgroundColor: Colors.white,
+                  //   ),
+                  // );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => SuccessDialog(
+                      mainMessage: "Profile Updated successfully",
+                      okButtonText: "Okay!",
                     ),
-                  );
+                  ).then((isConfirm) {
+                    print("we got isConfirm $isConfirm");
+                    if (isConfirm) {
+                      Navigator.of(context).pop();
+                    }
+                  });
                 }
               },
               child: BlocBuilder<ProfileBloc, ApiBlocState>(
@@ -541,19 +555,19 @@ class _profilePage extends State<Profile>
   void validateRequiredFields() {
     if (validateAndSave()) {
       print(":::::::::::::::We get coupon data :::::::::::");
-      print(_name);
-      print(_addr);
-      print(_number);
-      print(_email);
-      print(_website);
-      print(_desc);
-      print(_lat);
-      print(_long);
-      print(_imageBanner);
-      print(_image);
+      print("_name $_name");
+      print("_addr $_addr");
+      print("_number $_number");
+      print("_email $_email");
+      print("_website $_website");
+      print("_desc $_desc");
+      print("_lat $_lat");
+      print("_long $_long");
+      print("_imageBanner $_imageBanner");
+      print("_imageLogo $_image");
       try {
         lastEvent = UpdatePofileEvent(_name, _addr, _lat, _long, _number,
-            _email, _website, _desc, _imageBanner, _image);
+            _email, _website, _desc, _image, _imageBanner);
         auth.add(lastEvent);
       } catch (e) {
         print('Error: $e');
@@ -617,6 +631,8 @@ _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
     );
   } else {
     return new DecorationImage(
+      colorFilter: new ColorFilter.mode(
+          Colors.white.withOpacity(0.2), BlendMode.dstATop),
       image: new AssetImage('assets/images/logo.png'),
       fit: BoxFit.scaleDown,
     );
@@ -637,6 +653,8 @@ _LogoImage(bool isDirty, String oldLogo, File imageLogo) {
     );
   } else {
     return new DecorationImage(
+      colorFilter: new ColorFilter.mode(
+          Colors.white.withOpacity(0.2), BlendMode.dstATop),
       image: new AssetImage('assets/images/logo.png'),
       fit: BoxFit.scaleDown,
     );

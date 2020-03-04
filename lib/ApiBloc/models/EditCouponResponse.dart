@@ -1,14 +1,17 @@
 import 'package:klik_deals/commons/ApiError.dart';
 import 'package:klik_deals/commons/ApiResponse.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
-class EditCouponResponse   extends ApiResponse{
+
+class EditCouponResponse extends ApiResponse {
   bool status;
   String message;
   ErrorMessage errorMessage;
 
-  EditCouponResponse({this.status, this.message, this.errorMessage}): super.error(false);
+  EditCouponResponse({this.status, this.message, this.errorMessage})
+      : super.error(false);
 
-  EditCouponResponse.fromJson(Map<String, dynamic> json, bool isError)  : super.error(isError){
+  EditCouponResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
 
@@ -31,7 +34,7 @@ class EditCouponResponse   extends ApiResponse{
     return data;
   }
 
-   EditCouponResponse.error() : super.network() {
+  EditCouponResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
@@ -42,11 +45,9 @@ class EditCouponResponse   extends ApiResponse{
     // TODO: implement isTokenError
     return errorMessage.isTokenError();
   }
-
-  
 }
 
-class ErrorMessage extends ApiError{
+class ErrorMessage extends ApiError {
   List<String> couponCode;
   List<String> startDate;
   List<String> endDate;
@@ -110,14 +111,34 @@ class ErrorMessage extends ApiError{
     return data;
   }
 
-   ErrorMessage.error(String error) {
+  ErrorMessage.error(String error) {
     this.error = [error];
   }
-
 
   @override
   bool isTokenError() {
     // TODO: implement isTokenError
     return super.checkTokenError(error);
+  }
+
+  @override
+  String getCommonError() {
+    String returnError;
+    if (couponCode != null && couponCode.length > 0) {
+      returnError = couponCode.first;
+      print("We got the error in Coupon Code::$returnError");
+    } else if (startDate != null && startDate.length > 0) {
+      returnError = startDate.first;
+    } else if (endDate != null && endDate.length > 0) {
+      returnError = endDate.first;
+    } else if (couponImage != null && couponImage.length > 0) {
+      returnError = couponImage.first;
+      print("We got the error in Coupoon image::$returnError");
+    } else if (description != null && description.length > 0) {
+      returnError = description.first;
+    } else if (error != null && error.length > 0) {
+      returnError = error.first;
+    }
+    return returnError;
   }
 }

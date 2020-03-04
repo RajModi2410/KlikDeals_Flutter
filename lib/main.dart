@@ -55,12 +55,22 @@ void main() {
         navigatorKey: locator<NavigationService>().navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          cursorColor: Colors.black,
-          fontFamily: "Montserrat",
-          primaryColor: Color(0xffAF201A),
-          errorColor: Color(0xffAF201A),
-          buttonColor: Color(0xffAF201A),
-        ),
+            cursorColor: Colors.black,
+            fontFamily: "Montserrat",
+            primaryColor: Color(0xffAF201A),
+            errorColor: Color(0xffAF201A),
+            buttonColor: Color(0xffAF201A),
+            textTheme: TextTheme(
+                //Theme for Toolbar Text. It is global style. If need to update for single page
+                //than please change in that page only.
+                title: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                subtitle: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ))),
         home: Stack(
           children: <Widget>[
             AuthPage(simples: (AuthBloc _authBloc) {

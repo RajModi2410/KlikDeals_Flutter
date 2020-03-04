@@ -71,6 +71,7 @@ class _SelectAddressState extends State<SelectAddress> {
       markers[markerId] = marker;
     });
   }
+
   void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
     final Marker tappedMarker = markers[markerId];
     selectedLatitude = newPosition.latitude.toString();
@@ -113,7 +114,7 @@ class _SelectAddressState extends State<SelectAddress> {
     _createMarkerImageFromAsset(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Address'),
+        title: Text('Select Address', style: Theme.of(context).textTheme.title),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Stack(children: <Widget>[

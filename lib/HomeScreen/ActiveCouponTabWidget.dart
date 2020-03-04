@@ -35,6 +35,13 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   bool isForHistory;
   ApiBlocEvent lastEvent;
 
+  int perPage = 4;
+  int currentPage = 1;
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 200.0;
+  bool hasReachedEnd = false;
+  bool inProcess = false;
+
   _ActiveCouponPage(this.isForHistory);
 
   @override
@@ -74,7 +81,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     errorMessage:
                         currentState.couponlist.errorMessage.error.first);
               } else if (currentState is CouponListFetchedState) {
-                return _couponList(currentState.couponlist.response.data);
+                return _couponList(currentState.couponlist.response);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
                 return EmptyListWidget(
@@ -98,7 +105,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     // return null;
   }
 
-  Widget _couponList(List<Data> data) {
+  Widget _couponList(Response data) {
     return Stack(children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -113,41 +120,46 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     ]);
   }
 
-  // Widget _gridView(List<Data> data) {
-  //   return GridView.count(
-  //     crossAxisCount: 2,
-  //     padding: EdgeInsets.all(4.0),
-  //     childAspectRatio: isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
-  //     children: data
-  //         .map(
-  //           (listData) {
-  //         listData.isFromHistory = isForHistory;
-  //         return listDetails(data: listData, isForHistory: false);
-  //       },
-  //     ).toList(),
-  //   );
-  // }
-
-  Widget _gridView(List<Data> data) {
+  Widget _gridView(Response data) {
     return GridView.builder(
+        controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            // childAspectRatio: 1,//isForHistory ? 10.0 / 12.5 : 8.0 / 10.0,
+            childAspectRatio: 8.0 / 10.0,
             crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
-        itemCount: data.length,
+        itemCount: getTotalCount(data),
         itemBuilder: (BuildContext context, int index) {
-          var listData = data[index];
-          listData.isFromHistory = isForHistory;
-          // return GridTile(child: null)
-          return CouponItem(
-              data: listData,
-              isForHistory: false,
-              onDeleteClick: (id) {
-                _showPopup(id);
-              });
+          if (index == data.data.length) {
+            print(
+                "we are getting bottom at $index and total is: ${data.data.length}");
+            return BottomLoader();
+          } else {
+            var listData = data.data[index];
+            listData.isFromHistory = isForHistory;
+            // return GridTile(child: null)
+            return CouponItem(
+                data: listData,
+                isForHistory: false,
+                onDeleteClick: (id) {
+                  _showPopup(id);
+                });
+          }
         });
+  }
+
+  int getTotalCount(Response vendorList) {
+    var responseData = vendorList;
+    hasReachedEnd = responseData.currentPage == responseData.lastPage;
+    print(
+        "CategoriesListScreen We need Data ::: $hasReachedEnd :: ${responseData.currentPage} :: ${responseData.lastPage}");
+    // BottomLoader();
+    // print("CategoriesListScreen we are in bottom of::$BottomLoader()");
+    // return vendorList == null ? 0 : resppnse.data.length + (hasReachedEnd? 0 : 1);
+    var totalLength = responseData.data.length + (hasReachedEnd ? 0 : 1);
+    print("We are returning totalLength : $totalLength");
+    return totalLength;
   }
 
   @override
@@ -155,6 +167,23 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     super.initState();
     getToken();
     print("_ActiveCouponPage initstate");
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      if (!hasReachedEnd && !inProcess) {
+        inProcess = true;
+        print("Before current page : $currentPage");
+        // currentPage = currentPage + 1;
+        // print("current page : $currentPage");
+        // getCouponList();
+      } else {
+        // print("limit reahed : " + hasReachedEnd.toString());
+      }
+    }
   }
 
   getToken() async {
@@ -168,7 +197,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   void getCouponList() {
     try {
-      lastEvent = CouponListEvent(_perpage, null);
+      lastEvent = CouponListEvent(_perpage, null, currentPage);
       apiBloc.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
@@ -178,7 +207,6 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   @override
   bool get wantKeepAlive => true;
 
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
       switch (state) {
@@ -236,5 +264,24 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   void RemoveCouponApi(int couponId) {
     lastEvent = CouponDeleteEvent(couponId.toString());
     apiBloc.add(lastEvent);
+  }
+}
+
+class BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.amber,
+      alignment: Alignment.center,
+      child: Center(
+        child: SizedBox(
+          width: 33,
+          height: 33,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.5,
+          ),
+        ),
+      ),
+    );
   }
 }

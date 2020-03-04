@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/mywidgets/ErrorDialog.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
@@ -80,10 +81,7 @@ class _EditCoupon extends State<EditCoupon>
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(
-            "Edit Coupon",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
+          title: Text("Edit Coupon", style: Theme.of(context).textTheme.title),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
@@ -91,52 +89,26 @@ class _EditCoupon extends State<EditCoupon>
           BlocListener<ApiBlocBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is EditCouponApiErrorState) {
-                  String error = "";
-                  if (state.editCouponResponse.errorMessage.couponCode !=
-                          null &&
-                      state.editCouponResponse.errorMessage.couponCode.length >
-                          0) {
-                    error =
-                        state.editCouponResponse.errorMessage.couponCode.first;
-                    print("We got the error in Coupon Code::$error");
-                  } else if (state.editCouponResponse.errorMessage.startDate !=
-                          null &&
-                      state.editCouponResponse.errorMessage.startDate.length >
-                          0) {
-                    error =
-                        state.editCouponResponse.errorMessage.startDate.first;
-                  } else if (state.editCouponResponse.errorMessage.endDate !=
-                          null &&
-                      state.editCouponResponse.errorMessage.endDate.length >
-                          0) {
-                    error = state.editCouponResponse.errorMessage.endDate.first;
-                  } else if (state
-                              .editCouponResponse.errorMessage.couponImage !=
-                          null &&
-                      state.editCouponResponse.errorMessage.couponImage.length >
-                          0) {
-                    error =
-                        state.editCouponResponse.errorMessage.couponImage.first;
-                    print("We got the error in Coupoon image::$error");
-                  } else if (state
-                              .editCouponResponse.errorMessage.description !=
-                          null &&
-                      state.editCouponResponse.errorMessage.description.length >
-                          0) {
-                    error =
-                        state.editCouponResponse.errorMessage.description.first;
-                  } else if (state.editCouponResponse.errorMessage.error !=
-                          null &&
-                      state.editCouponResponse.errorMessage.error.length > 0) {
-                    error = state.editCouponResponse.errorMessage.error.first;
-                  }
+                  String error =
+                      state.editCouponResponse.errorMessage.getCommonError();
                   if (error != null) {
-                    Scaffold.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(error),
-                        backgroundColor: Theme.of(context).errorColor,
+                    //ErrorDialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => ErrorDialog(
+                        mainMessage: error,
+                        okButtonText: "Okay!",
                       ),
-                    );
+                    ).then((isConfirm) {
+                      print("we got isConfirm $isConfirm");
+                    });
+                    // if (error != null) {
+                    //   Scaffold.of(context).showSnackBar(
+                    //     SnackBar(
+                    //       content: Text(error),
+                    //       backgroundColor: Theme.of(context).errorColor,
+                    //     ),
+                    //   );
                   }
                 } else if (state is EditCouponApiFetchedState) {
                   Navigator.pop(context, true);
@@ -507,6 +479,8 @@ _CouponImage(bool isDirty, File imageBanner, String couponImage) {
   } else {
     return new DecorationImage(
       image: new AssetImage('assets/images/logo.png'),
+      colorFilter: new ColorFilter.mode(
+          Colors.white.withOpacity(0.2), BlendMode.dstATop),
       fit: BoxFit.scaleDown,
     );
   }

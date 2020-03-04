@@ -120,4 +120,25 @@ class ErrorMessage extends ApiError {
   bool isTokenError() {
     return super.checkTokenError(this.error);
   }
+
+  @override
+  String getCommonError() {
+    String returnErro = "";
+    if (couponCode != null && couponCode.length > 0) {
+      returnErro = couponCode.first;
+      print("We got the error in Coupon Code::$returnErro");
+    } else if (startDate != null && startDate.length > 0) {
+      returnErro = startDate.first;
+    } else if (endDate != null && endDate.length > 0) {
+      returnErro = endDate.first;
+    } else if (couponImage != null && couponImage.length > 0) {
+      returnErro = couponImage.first;
+      print("We got the error in Coupoon image::$returnErro");
+    } else if (description != null && description.length > 0) {
+      returnErro = description.first;
+    } else if (error != null && error.length > 0) {
+      returnErro = error.first;
+    }
+    return returnErro;
+  }
 }

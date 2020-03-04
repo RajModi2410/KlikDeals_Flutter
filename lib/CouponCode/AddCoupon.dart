@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/mywidgets/ErrorDialog.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
@@ -54,7 +55,7 @@ class _CouponAdd extends State<AddCoupon>
     _couponCodeController = TextEditingController();
     _descriptionController = TextEditingController();
 
-    imagePicker = new ImagePickerHandler(this, _controller);
+    imagePicker = new ImagePickerHandler(this, _controller, maxWidth: 720);
     imagePicker.init();
   }
 
@@ -69,10 +70,7 @@ class _CouponAdd extends State<AddCoupon>
       appBar: AppBar(
         title: Text(
           "Add Coupon",
-          style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              fontFamily: "Montserrat"),
+          style: Theme.of(context).textTheme.title,
         ),
       ),
       body: Stack(children: <Widget>[
@@ -82,44 +80,25 @@ class _CouponAdd extends State<AddCoupon>
               // final snackBar = SnackBar(content: Text('Yay! A SnackBar!'));
               //     Scaffold.of(context).showSnackBar(snackBar);
               if (state is CouponAddErrorState) {
-                String error = "";
-                if (state.addCouponResponse.errorMessage.couponCode != null &&
-                    state.addCouponResponse.errorMessage.couponCode.length >
-                        0) {
-                  error = state.addCouponResponse.errorMessage.couponCode.first;
-                  print("We got the error in Coupon Code::$error");
-                } else if (state.addCouponResponse.errorMessage.startDate !=
-                        null &&
-                    state.addCouponResponse.errorMessage.startDate.length > 0) {
-                  error = state.addCouponResponse.errorMessage.startDate.first;
-                } else if (state.addCouponResponse.errorMessage.endDate !=
-                        null &&
-                    state.addCouponResponse.errorMessage.endDate.length > 0) {
-                  error = state.addCouponResponse.errorMessage.endDate.first;
-                } else if (state.addCouponResponse.errorMessage.couponImage !=
-                        null &&
-                    state.addCouponResponse.errorMessage.couponImage.length >
-                        0) {
-                  error =
-                      state.addCouponResponse.errorMessage.couponImage.first;
-                  print("We got the error in Coupoon image::$error");
-                } else if (state.addCouponResponse.errorMessage.description !=
-                        null &&
-                    state.addCouponResponse.errorMessage.description.length >
-                        0) {
-                  error =
-                      state.addCouponResponse.errorMessage.description.first;
-                } else if (state.addCouponResponse.errorMessage.error != null &&
-                    state.addCouponResponse.errorMessage.error.length > 0) {
-                  error = state.addCouponResponse.errorMessage.error.first;
-                }
+                String error =
+                    state.addCouponResponse.errorMessage.getCommonError();
                 if (error != null) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(error),
-                      backgroundColor: Theme.of(context).primaryColor,
+                  //ErrorDialog
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ErrorDialog(
+                      mainMessage: error,
+                      okButtonText: "Okay!",
                     ),
-                  );
+                  ).then((isConfirm) {
+                    print("we got isConfirm $isConfirm");
+                  });
+                  // Scaffold.of(context).showSnackBar(
+                  //   SnackBar(
+                  //     content: Text(error),
+                  //     backgroundColor: Theme.of(context).primaryColor,
+                  //   ),
+                  // );
                 }
               } else if (state is CouponAddFetchedState) {
                 lastEvent = ReloadEvent(true);
@@ -171,6 +150,8 @@ class _CouponAdd extends State<AddCoupon>
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
+                // colorFilter: ColorFilter.mode(
+                //     Colors.black.withOpacity(0.2), BlendMode.dstATop),
                 image: AssetImage('assets/images/splash_bg.png'),
                 fit: BoxFit.cover)),
       ),
@@ -217,6 +198,7 @@ class _CouponAdd extends State<AddCoupon>
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
       child: TextFormField(
+          keyboardType: TextInputType.multiline,
           onSaved: (value) => _descValue = value.trim(),
           controller: _descriptionController,
           validator: (value) {
@@ -501,6 +483,8 @@ _CouponImage(bool isDirty, File imageBanner) {
     );
   } else {
     return new DecorationImage(
+      colorFilter: new ColorFilter.mode(
+          Colors.white.withOpacity(0.2), BlendMode.dstATop),
       image: new AssetImage('assets/images/logo.png'),
       fit: BoxFit.scaleDown,
     );

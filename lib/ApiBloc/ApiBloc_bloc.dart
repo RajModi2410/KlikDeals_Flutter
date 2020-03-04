@@ -113,10 +113,20 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
 
   Stream<ApiBlocState> _mapCouponListResponseEvents(
       CouponListEvent event) async* {
-    yield ApiFetchingState();
+    final currentState = state;
+    if (event.currentPage == 1) {
+      yield ApiFetchingState();
+    }
+
     try {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status) {
+        if (currentState is CouponListFetchedState && event.currentPage != 1) {
+          response.response.data =
+              currentState.couponlist.response.data + response.response.data;
+        } else {
+          print("state not matched");
+        }
         yield CouponListFetchedState(response);
       } else {
         yield couponApiErrorState(response);

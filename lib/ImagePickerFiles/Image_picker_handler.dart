@@ -9,12 +9,18 @@ class ImagePickerHandler {
   ImagePickerDialog imagePicker;
   AnimationController _controller;
   ImagePickerListener _listener;
+  double maxWidth = -1;
+  double maxHeight = -1;
 
-  ImagePickerHandler(this._listener, this._controller);
+  ImagePickerHandler(this._listener, this._controller,
+      {this.maxWidth, this.maxHeight});
 
   openCamera() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1080);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: (maxWidth!=null && maxWidth > -1 ? maxWidth : 720),
+        maxHeight: (maxHeight!=null && maxHeight > -1 ? maxHeight : 400));
     _listener.userImage(image);
 
 //    cropImage(image);
@@ -22,7 +28,10 @@ class ImagePickerHandler {
 
   openGallery() async {
     imagePicker.dismissDialog();
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1080);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: (maxWidth!=null && maxWidth > -1 ? maxWidth : 720),
+        maxHeight: (maxHeight!=null && maxHeight > -1 ? maxHeight : 400));
     _listener.userImage(image);
 //    cropImage(image);
   }

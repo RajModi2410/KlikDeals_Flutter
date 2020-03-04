@@ -12,4 +12,8 @@ abstract class ApiError {
     print("we are getting token $isToken");
     return isToken;
   }
+
+  String getCommonError(){
+    return null;
+  }
 }
