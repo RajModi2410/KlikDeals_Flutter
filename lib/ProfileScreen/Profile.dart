@@ -244,6 +244,11 @@ class _profilePage extends State<Profile>
   Padding desc() {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
+
+      child : GestureDetector(
+        onTap: (){
+          this._dismissKeyboard(context);
+        },
       child: TextFormField(
           onSaved: (value) => _desc = value.trim(),
           controller: _descValue,
@@ -257,7 +262,9 @@ class _profilePage extends State<Profile>
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
           decoration: _inputType("About Vendor")),
+      )
     );
+    
   }
 
   Padding website() {
@@ -291,10 +298,16 @@ class _profilePage extends State<Profile>
       ),
     );
   }
-
+_dismissKeyboard(BuildContext context) {
+  FocusScope.of(context).requestFocus(new FocusNode());
+}
   Padding phoneNumber() {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
+      child:GestureDetector(
+        onTap: (){
+          this._dismissKeyboard(context);
+        },
       child: TextFormField(
         onSaved: (value) => _number = value.trim(),
         validator: (value) {
@@ -310,6 +323,7 @@ class _profilePage extends State<Profile>
         controller: _phoneNumber,
         decoration: _inputType("Phone Number"),
       ),
+      )
     );
   }
 
@@ -476,6 +490,12 @@ class _profilePage extends State<Profile>
   Padding _address() {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
+  
+        child: GestureDetector(
+          onTap: (){
+            print("We are here TAP FOR HIDE KEYBOARD");
+             this._dismissKeyboard(context);
+          },
       child: TextFormField(
         onSaved: (value) => _addr = value.trim(),
         validator: (value) {
@@ -487,12 +507,17 @@ class _profilePage extends State<Profile>
         controller: _addressValue,
         decoration: _inputType("Address"),
       ),
+ ),
     );
   }
 
   Padding _profileName() {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
+      child : GestureDetector(
+        onTap: (){
+           FocusScope.of(context).requestFocus(new FocusNode());
+        },
       child: TextFormField(
           controller: _nameValue,
           onSaved: (value) => _name = value.trim(),
@@ -505,6 +530,7 @@ class _profilePage extends State<Profile>
           decoration: _inputType(
             "Name",
           )),
+          )
     );
   }
 

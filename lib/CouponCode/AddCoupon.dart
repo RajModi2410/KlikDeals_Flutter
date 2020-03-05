@@ -200,6 +200,11 @@ class _CouponAdd extends State<AddCoupon>
   Padding _description() {
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
+      child:GestureDetector(
+        onTap: (){
+           FocusScope.of(context).requestFocus(FocusNode());
+        },
+      
       child: TextFormField(
           keyboardType: TextInputType.multiline,
           onSaved: (value) => _descValue = value.trim(),
@@ -209,11 +214,12 @@ class _CouponAdd extends State<AddCoupon>
               return 'Please enter coupon description';
             }
             return null;
-          },
+          },  
           style: TextStyle(color: Theme.of(context).primaryColor),
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
-          decoration: _inputType("Description", false)),
+          decoration: _inputType("Description", false))
+          ),
     );
   }
 

@@ -43,8 +43,17 @@ class _SelectAddressState extends State<SelectAddress> {
 
   @override
   void initState() {
-    latitude = double.parse(latitudeStr.toString());
-    longitude = double.parse(longitudeStr.toString());
+    if (latitudeStr != null && latitudeStr.isNotEmpty) {
+      latitude = double.parse(latitudeStr.toString());
+    } else {
+      latitude = 45.508888;
+    }
+
+    if (longitudeStr != null && longitudeStr.isNotEmpty) {
+      longitude = double.parse(longitudeStr.toString());
+    } else {
+      longitude = -73.561668;
+    }
     LatLng _kMapCenter = LatLng(latitude, longitude);
     _initialCamera = CameraPosition(
       target: _kMapCenter,

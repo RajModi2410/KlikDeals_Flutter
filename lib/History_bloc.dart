@@ -39,10 +39,17 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
 
   Stream<ApiBlocState> _mapCouponListResponseEvents(
       CouponListEvent event) async* {
-    yield ApiFetchingState();
+        final currentState = state;
+        if (event.currentPage == 1){
+          yield ApiFetchingState();
+        }
+
     try {
       final response = await playerRepository.coupon(event.toMap());
-      if (response.status) {
+      if (response.status ) {
+          if (currentState is CouponHistoryListFetchedState && event.currentPage != 1){
+            response.response.data = currentState.couponlist.response.data + response.response.data;
+          }
         yield CouponHistoryListFetchedState(response);
       } else {
         yield CouponHistoryErroState(response);
