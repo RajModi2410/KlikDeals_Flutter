@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
@@ -13,6 +12,7 @@ import 'package:klik_deals/mywidgets/ErrorDialog.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 
+import 'CouponBloc.dart';
 import 'CouponStates.dart';
 
 class EditCoupon extends StatefulWidget {
@@ -35,7 +35,7 @@ class _EditCoupon extends State<EditCoupon>
   File _imageBanner;
   bool isDirty = false;
   Data data;
-  ApiBlocBloc auth;
+  CouponBloc auth;
   RoundWidget round;
   String _couponCodeValue;
   String _startDateValue;
@@ -68,7 +68,7 @@ class _EditCoupon extends State<EditCoupon>
     _couponCodeController = TextEditingController(text: data.couponCode);
     _descriptionController = TextEditingController(text: data.description);
 
-    imagePicker = new ImagePickerHandler(this, _controller);
+    imagePicker = new ImagePickerHandler(this, _controller, maxWidth: 2000);
     imagePicker.init();
   }
 
@@ -77,7 +77,7 @@ class _EditCoupon extends State<EditCoupon>
 
   @override
   Widget build(BuildContext context) {
-    auth = BlocProvider.of<ApiBlocBloc>(context);
+    auth = BlocProvider.of<CouponBloc>(context);
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -86,7 +86,7 @@ class _EditCoupon extends State<EditCoupon>
         ),
         body: Stack(children: <Widget>[
           AddCouponDesign(context),
-          BlocListener<ApiBlocBloc, ApiBlocState>(
+          BlocListener<CouponBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is EditCouponApiErrorState) {
                   String error =
@@ -114,7 +114,7 @@ class _EditCoupon extends State<EditCoupon>
                   Navigator.pop(context, true);
                 }
               },
-              child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+              child: BlocBuilder<CouponBloc, ApiBlocState>(
                   bloc: auth,
                   builder: (
                     BuildContext context,

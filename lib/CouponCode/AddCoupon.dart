@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
@@ -13,6 +12,8 @@ import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/mywidgets/ErrorDialog.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
+
+import 'CouponBloc.dart';
 
 class AddCoupon extends StatefulWidget {
   static const String routeName = "/addCoupon";
@@ -27,7 +28,7 @@ class _CouponAdd extends State<AddCoupon>
   File _imageBanner;
   bool _isLoading;
   bool isDirty = false;
-  ApiBlocBloc auth;
+  CouponBloc auth;
   RoundWidget round;
   String _couponCodeValue;
   String _startDateValue;
@@ -56,7 +57,7 @@ class _CouponAdd extends State<AddCoupon>
     _couponCodeController = TextEditingController();
     _descriptionController = TextEditingController();
 
-    imagePicker = new ImagePickerHandler(this, _controller, maxWidth: 720);
+    imagePicker = new ImagePickerHandler(this, _controller, maxWidth: 1080);
     imagePicker.init();
   }
 
@@ -65,7 +66,7 @@ class _CouponAdd extends State<AddCoupon>
 
   @override
   Widget build(BuildContext context) {
-    auth = BlocProvider.of<ApiBlocBloc>(context);
+    auth = BlocProvider.of<CouponBloc>(context);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -76,7 +77,7 @@ class _CouponAdd extends State<AddCoupon>
       ),
       body: Stack(children: <Widget>[
         AddCouponDesign(context),
-        BlocListener<ApiBlocBloc, ApiBlocState>(
+        BlocListener<CouponBloc, ApiBlocState>(
             listener: (context, state) {
               // final snackBar = SnackBar(content: Text('Yay! A SnackBar!'));
               //     Scaffold.of(context).showSnackBar(snackBar);
@@ -107,7 +108,7 @@ class _CouponAdd extends State<AddCoupon>
                 Navigator.pop(context, true);
               }
             },
-            child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
+            child: BlocBuilder<CouponBloc, ApiBlocState>(
                 bloc: auth,
                 builder: (
                   BuildContext context,

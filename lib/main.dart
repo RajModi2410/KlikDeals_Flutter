@@ -4,15 +4,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:klik_deals/CouponCode/CouponBloc.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/commons/Auth/Auth_bloc.dart';
 import 'package:klik_deals/commons/Auth/index.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
+import 'package:klik_deals/commons/Routes.dart';
 import 'package:klik_deals/commons/locator.dart';
 import 'package:klik_deals/splash_screen/splashScreen.dart';
-import 'package:klik_deals/commons/Routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
@@ -48,6 +49,8 @@ void main() {
             builder: (context) => HistoryBloc(apiBlocRepo)),
         BlocProvider<ProfileBloc>(
             builder: (context) => ProfileBloc(apiBlocRepo)),
+        BlocProvider<CouponBloc>(
+            builder: (context) => CouponBloc(apiBlocRepo)),
         BlocProvider<AuthBloc>(builder: (context) => AuthBloc())
       ],
       child: MaterialApp(

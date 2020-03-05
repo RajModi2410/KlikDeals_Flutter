@@ -344,7 +344,7 @@ class _profilePage extends State<Profile>
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
                         forlogo = false;
-                        imagePicker.showDialog(context);
+                        imagePickerBanner.showDialog(context);
                       },
                     ),
                   ),

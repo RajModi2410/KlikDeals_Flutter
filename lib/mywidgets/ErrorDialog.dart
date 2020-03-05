@@ -60,7 +60,7 @@ class _ErrorDialogState extends State<ErrorDialog> {
                         left: MediaQuery.of(context).size.width * 0.05,
                         right: MediaQuery.of(context).size.width * 0.05),
                     child: Text(
-                      "Success!",
+                      "Alert!",
                       style: TextStyle(
                           fontSize: Dimence.fontSize16,
                           fontWeight: FontWeight.bold),

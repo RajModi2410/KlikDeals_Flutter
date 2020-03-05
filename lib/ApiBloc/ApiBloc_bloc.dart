@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
-import 'package:klik_deals/CouponCode/CouponStates.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/commons/AppExceptions.dart';
@@ -41,12 +40,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield ApiUninitializedState();
     } else if (event is CouponListEvent) {
       yield* _mapCouponListResponseEvents(event);
-    } else if (event is AddCouponEvent) {
-      yield* _mapAddCouponEventResponseEvents(event);
     } else if (event is CouponDeleteEvent) {
       yield* _mapDeleteCouponEventResponseEvents(event);
-    } else if (event is EditCouponEvent) {
-      yield* _mapEditCouponEventResponseEvents(event);
     } else if (event is ReloadEvent) {
       yield* _mapReloadResponseEvents();
     }
@@ -71,45 +66,6 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     }
   }
 
-  Stream<ApiBlocState> _mapAddCouponEventResponseEvents(
-      AddCouponEvent event) async* {
-    yield ApiFetchingState();
-    try {
-      final response = await playerRepository.addCoupon(event, event.image);
-      if (response.status) {
-        yield CouponAddFetchedState(response);
-      } else {
-        yield CouponAddErrorState(response);
-      }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
-      yield NoInternetState();
-    } catch (e, s) {
-      print("error $e");
-      print("stacktrace $s");
-      yield ApiErrorState();
-    }
-  }
-
-  Stream<ApiBlocState> _mapEditCouponEventResponseEvents(
-      EditCouponEvent event) async* {
-    yield ApiFetchingState();
-    try {
-      final response = await playerRepository.editCoupon(event, event.image);
-      if (response.status) {
-        yield EditCouponApiFetchedState(response);
-      } else {
-        yield EditCouponApiErrorState(response);
-      }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
-      yield NoInternetState();
-    } catch (e, s) {
-      print("error $e");
-      print("stacktrace $s");
-      yield ApiErrorState();
-    }
-  }
 
   Stream<ApiBlocState> _mapCouponListResponseEvents(
       CouponListEvent event) async* {
