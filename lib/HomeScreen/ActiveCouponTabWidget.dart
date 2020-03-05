@@ -7,6 +7,7 @@ import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
@@ -70,69 +71,66 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
             );
           } else if (state is CouponListFetchedState) {}
         },
-        child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-            bloc: apiBloc,
-            builder: (
-              BuildContext context,
-              ApiBlocState currentState,
-            ) {
-              inProcess = false;
-              if (currentState is ApiFetchingState) {
-                print("Home Page :: We are in fetching state.....");
-                 return CenterLoadingIndicator();
-                // return RoundWidget();
-              }
-              if (currentState is ApiReloadState) {
-                print("Home Page :: We are in reloading state.....");
-                getCouponList();
-               return CenterLoadingIndicator();
-                //  RoundWidget();
-              } else if (currentState is couponApiErrorState) {
-                print(
-                    "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                return CouponErrorWidget(
-                    errorMessage:
-                        currentState.couponlist.errorMessage.error.first);
-              } else if (currentState is CouponListFetchedState) {
-                CenterLoadingIndicator();
+        child: Stack(
+          children: <Widget>[
+            BackgroundWidget(),
+            BlocBuilder<ApiBlocBloc, ApiBlocState>(
+                bloc: apiBloc,
+                builder: (
+                  BuildContext context,
+                  ApiBlocState currentState,
+                ) {
+                  inProcess = false;
+                  if (currentState is ApiFetchingState) {
+                    print("Home Page :: We are in fetching state.....");
+                    return CenterLoadingIndicator();
+                    // return RoundWidget();
+                  }
+                  if (currentState is ApiReloadState) {
+                    print("Home Page :: We are in reloading state.....");
+                    getCouponList();
+                    return CenterLoadingIndicator();
+                    //  RoundWidget();
+                  } else if (currentState is couponApiErrorState) {
+                    print(
+                        "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                    return CouponErrorWidget(
+                        errorMessage:
+                            currentState.couponlist.errorMessage.error.first);
+                  } else if (currentState is CouponListFetchedState) {
+                    CenterLoadingIndicator();
 
-                return _couponList(currentState.couponlist.response);
-              } else if (currentState is ApiEmptyState) {
-                print("Home Page :: We got empty data.....");
-                return EmptyListWidget(
-                    emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
-              } else if (currentState is CouponDeleteFetchedState) {
-                getCouponList();
-                return CenterLoadingIndicator();
-              } else if (currentState is NoInternetState) {
-                return NoNetworkWidget(
-                  retry: () {
-                    retryCall();
-                  },
-                );
-              } else {
-                return EmptyListWidget(
-                    emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
-              }
-            }),
+                    return _couponList(currentState.couponlist.response);
+                  } else if (currentState is ApiEmptyState) {
+                    print("Home Page :: We got empty data.....");
+                    return EmptyListWidget(
+                        emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                  } else if (currentState is CouponDeleteFetchedState) {
+                    getCouponList();
+                    return CenterLoadingIndicator();
+                  } else if (currentState is NoInternetState) {
+                    return NoNetworkWidget(
+                      retry: () {
+                        retryCall();
+                      },
+                    );
+                  } else {
+                    return EmptyListWidget(
+                        emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                  }
+                }),
+          ],
+        ),
       ),
     );
     // return null;
   }
 
   Widget _couponList(Response data) {
-    return Stack(children: <Widget>[
-      Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
-                fit: BoxFit.cover)),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _gridView(data),
-      ),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: _gridView(data),
+    );
   }
 
   Widget _gridView(Response data) {
@@ -264,10 +262,11 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       apiBloc.add(lastEvent);
     }
   }
-Widget buildListView(BuildContext context) {
-  // return Container();
-  return CenterLoadingIndicator();
-}
+
+  Widget buildListView(BuildContext context) {
+    // return Container();
+    return CenterLoadingIndicator();
+  }
 
   void _showPopup(int id) {
     showDialog(

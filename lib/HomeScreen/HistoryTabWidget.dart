@@ -6,6 +6,7 @@ import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
 import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponHistoryItem.dart';
@@ -89,55 +90,52 @@ class _HistoryTabState extends State<HistoryTabWidget> {
             );
           } else if (state is CouponListFetchedState) {}
         },
-        child: BlocBuilder<HistoryBloc, ApiBlocState>(
-            bloc: auth,
-            builder: (
-              BuildContext context,
-              ApiBlocState currentState,
-            ) {
-              inProcess = false;
-              if (currentState is ApiFetchingState) {
-                print("Home Page :: We are in fetching state.....");
-                // return RoundWidget();
-                return CenterLoadingIndicator();
-              } else if (currentState is CouponHistoryErroState) {
-                print(
-                    "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                return CouponErrorWidget(
-                    errorMessage:
-                        currentState.couponlist.errorMessage.error.first);
-              } else if (currentState is CouponHistoryListFetchedState) {
-                return _couponList(currentState.couponlist.response);
-              } else if (currentState is ApiEmptyState) {
-                print("Home Page :: We got empty data.....");
-                return EmptyListWidget(
-                    emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
-              } else if (currentState is NoInternetState) {
-                return NoNetworkWidget(
-                  retry: () {
-                    retryCall();
-                  },
-                );
-              } else {
-                return EmptyListWidget(
-                    emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
-              }
-            }),
+        child: Stack(
+          children: <Widget>[
+            BackgroundWidget(),
+            BlocBuilder<HistoryBloc, ApiBlocState>(
+                bloc: auth,
+                builder: (
+                  BuildContext context,
+                  ApiBlocState currentState,
+                ) {
+                  inProcess = false;
+                  if (currentState is ApiFetchingState) {
+                    print("Home Page :: We are in fetching state.....");
+                    // return RoundWidget();
+                    return CenterLoadingIndicator();
+                  } else if (currentState is CouponHistoryErroState) {
+                    print(
+                        "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                    return CouponErrorWidget(
+                        errorMessage:
+                            currentState.couponlist.errorMessage.error.first);
+                  } else if (currentState is CouponHistoryListFetchedState) {
+                    return _couponList(currentState.couponlist.response);
+                  } else if (currentState is ApiEmptyState) {
+                    print("Home Page :: We got empty data.....");
+                    return EmptyListWidget(
+                        emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
+                  } else if (currentState is NoInternetState) {
+                    return NoNetworkWidget(
+                      retry: () {
+                        retryCall();
+                      },
+                    );
+                  } else {
+                    return EmptyListWidget(
+                        emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
+                  }
+                }),
+          ],
+        ),
       ),
     );
     // return null;
   }
 
   Widget _couponList(Response data) {
-    return Stack(children: <Widget>[
-      Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
-                fit: BoxFit.cover)),
-      ),
-      _gridView(data),
-    ]);
+    return _gridView(data);
   }
 
   Widget _gridView(Response data) {
