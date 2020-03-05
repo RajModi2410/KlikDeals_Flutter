@@ -8,6 +8,7 @@ import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:klik_deals/mywidgets/SuccessDialog.dart';
@@ -157,7 +158,8 @@ class _profilePage extends State<Profile>
                   ) {
                     if (currentState is ApiFetchingState) {
                       round = RoundWidget();
-                      return round;
+                      return CenterLoadingIndicator();
+                      // return round;
                     } else if (currentState is NoInternetState) {
                       return NoNetworkWidget(
                         retry: () {

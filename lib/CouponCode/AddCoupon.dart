@@ -9,6 +9,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/mywidgets/ErrorDialog.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/mywidgets/RoundWidget.dart';
@@ -114,7 +115,8 @@ class _CouponAdd extends State<AddCoupon>
                 ) {
                   if (currentState is ApiFetchingState) {
                     round = RoundWidget();
-                    return round;
+                    return CenterLoadingIndicator();
+                    // return round;
                   } else if (currentState is NoInternetState) {
                     return NoNetworkWidget(
                       retry: () {

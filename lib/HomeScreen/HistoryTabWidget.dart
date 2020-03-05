@@ -4,6 +4,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
@@ -97,7 +98,8 @@ class _HistoryTabState extends State<HistoryTabWidget> {
               inProcess = false;
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
-                return RoundWidget();
+                // return RoundWidget();
+                return CenterLoadingIndicator();
               } else if (currentState is CouponHistoryErroState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");

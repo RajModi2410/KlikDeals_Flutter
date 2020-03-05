@@ -5,13 +5,13 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/mywidgets/BottomLoader.dart';
 import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
 import 'package:klik_deals/mywidgets/CouponItem.dart';
 import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var token = "";
@@ -79,12 +79,14 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
               inProcess = false;
               if (currentState is ApiFetchingState) {
                 print("Home Page :: We are in fetching state.....");
-                return RoundWidget();
+                 return CenterLoadingIndicator();
+                // return RoundWidget();
               }
               if (currentState is ApiReloadState) {
                 print("Home Page :: We are in reloading state.....");
                 getCouponList();
-                return RoundWidget();
+               return CenterLoadingIndicator();
+                //  RoundWidget();
               } else if (currentState is couponApiErrorState) {
                 print(
                     "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
@@ -92,6 +94,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     errorMessage:
                         currentState.couponlist.errorMessage.error.first);
               } else if (currentState is CouponListFetchedState) {
+                CenterLoadingIndicator();
+
                 return _couponList(currentState.couponlist.response);
               } else if (currentState is ApiEmptyState) {
                 print("Home Page :: We got empty data.....");
@@ -99,7 +103,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
               } else if (currentState is CouponDeleteFetchedState) {
                 getCouponList();
-                return RoundWidget();
+                return CenterLoadingIndicator();
               } else if (currentState is NoInternetState) {
                 return NoNetworkWidget(
                   retry: () {
@@ -260,6 +264,10 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       apiBloc.add(lastEvent);
     }
   }
+Widget buildListView(BuildContext context) {
+  // return Container();
+  return CenterLoadingIndicator();
+}
 
   void _showPopup(int id) {
     showDialog(
