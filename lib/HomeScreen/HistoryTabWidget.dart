@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
@@ -78,59 +79,60 @@ class _HistoryTabState extends State<HistoryTabWidget> {
     print("we are build _HistoryTabState");
     auth = BlocProvider.of<HistoryBloc>(context);
     return Scaffold(
-      body: BlocListener<HistoryBloc, ApiBlocState>(
-        listener: (context, state) {
-          if (state is ApiErrorState) {
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text('error occurred during fetching history coupons..'),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-            );
-          } else if (state is CouponListFetchedState) {}
-        },
-        child: Stack(
-          children: <Widget>[
-            BackgroundWidget(),
-            BlocBuilder<HistoryBloc, ApiBlocState>(
-                bloc: auth,
-                builder: (
-                  BuildContext context,
-                  ApiBlocState currentState,
-                ) {
-                  inProcess = false;
-                  if (currentState is ApiFetchingState) {
-                    print("Home Page :: We are in fetching state.....");
-                    // return RoundWidget();
-                    return CenterLoadingIndicator();
-                  } else if (currentState is CouponHistoryErroState) {
-                    print(
-                        "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
-                    return CouponErrorWidget(
-                        errorMessage:
-                            currentState.couponlist.errorMessage.error.first);
-                  } else if (currentState is CouponHistoryListFetchedState) {
-                    return _couponList(currentState.couponlist.response);
-                  } else if (currentState is ApiEmptyState) {
-                    print("Home Page :: We got empty data.....");
-                    return EmptyListWidget(
-                        emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
-                  } else if (currentState is NoInternetState) {
-                    return NoNetworkWidget(
-                      retry: () {
-                        retryCall();
-                      },
-                    );
-                  } else {
-                    return EmptyListWidget(
-                        emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
-                  }
-                }),
-          ],
-        ),
-      ),
-    );
+        body: BlocListener<HistoryBloc, ApiBlocState>(
+            listener: (context, state) {
+              if (state is ApiErrorState) {
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)
+                        .translate("error_fetching_coupon_history")),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  ),
+                );
+              } else if (state is CouponListFetchedState) {}
+            },
+            child: Stack(
+              children: <Widget>[
+                BackgroundWidget(),
+                BlocBuilder<HistoryBloc, ApiBlocState>(
+                    bloc: auth,
+                    builder: (
+                      BuildContext context,
+                      ApiBlocState currentState,
+                    ) {
+                      inProcess = false;
+                      if (currentState is ApiFetchingState) {
+                        print("Home Page :: We are in fetching state.....");
+                        // return RoundWidget();
+                        return CenterLoadingIndicator();
+                      } else if (currentState is CouponHistoryErroState) {
+                        print(
+                            "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                        return CouponErrorWidget(
+                            errorMessage: currentState
+                                .couponlist.errorMessage.error.first);
+                      } else if (currentState
+                          is CouponHistoryListFetchedState) {
+                        return _couponList(currentState.couponlist.response);
+                      } else if (currentState is ApiEmptyState) {
+                        print("Home Page :: We got empty data.....");
+                        return EmptyListWidget(
+                            emptyMessage: AppLocalizations.of(context)
+                                .translate("error_no_coupon_history"));
+                      } else if (currentState is NoInternetState) {
+                        return NoNetworkWidget(
+                          retry: () {
+                            retryCall();
+                          },
+                        );
+                      } else {
+                        return EmptyListWidget(
+                            emptyMessage: AppLocalizations.of(context)
+                                .translate("error_no_coupon_history"));
+                      }
+                    }),
+              ],
+            )));
     // return null;
   }
 

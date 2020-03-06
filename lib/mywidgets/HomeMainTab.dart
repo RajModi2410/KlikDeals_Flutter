@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:klik_deals/ApiBloc/models/DrawerItem.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/CouponCode/AddCoupon.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/HomeScreen/HistoryTabWidget.dart';
@@ -57,7 +58,7 @@ class _MyDetailsList extends State<HomeMainTab>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "KLIK DEALS",
+          AppLocalizations.of(context).translate("title_appname"),
           style: Theme.of(context).textTheme.title,
         ),
         bottom: TabBar(
@@ -79,7 +80,14 @@ class _MyDetailsList extends State<HomeMainTab>
               });
             }
           },
-          tabs: <Widget>[Tab(text: "Active Coupons"), Tab(text: "History")],
+          tabs: <Widget>[
+            Tab(
+                text: AppLocalizations.of(context)
+                    .translate("title_active_coupon")),
+            Tab(
+                text:
+                    AppLocalizations.of(context).translate("title _historytab"))
+          ],
         ),
       ),
       drawer: new Drawer(
@@ -161,17 +169,18 @@ class _MyDetailsList extends State<HomeMainTab>
     return showDialog(
         context: context,
         child: AlertDialog(
-            title: new Text("Warning"),
-            content: new Text("Are you sure want to Logout?"),
+            title: new Text(AppLocalizations.of(context).translate("label_warning")),
+            content: new Text(AppLocalizations.of(context).translate("error_message_logout")
+),
             actions: <Widget>[
               FlatButton(
-                child: const Text('No, Thanks'),
+                child:  Text(AppLocalizations.of(context).translate("label_no_thanks")),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child: const Text("Yes, I'm"),
+                child:  Text(AppLocalizations.of(context).translate("label_yes_i'm")),
                 onPressed: () {
                   Navigator.of(context).pop();
                   clearDataAndRedirectLoginScreen(context);

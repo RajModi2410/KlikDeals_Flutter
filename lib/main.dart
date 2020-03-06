@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:klik_deals/CouponCode/CouponBloc.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
@@ -18,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
 import 'ApiBloc/repositories/ApiBloc_repository.dart';
+import 'AppLocalizations.dart';
 import 'commons/NavigationService.dart';
 
 // Must be top-level function
@@ -41,6 +43,8 @@ void main() {
     // authBloc?.add(TokenExpiredEvent());
   });
 
+  // var GlobalMaterialLocalizations;
+  // var GlobalWidgetsLocalizations;
   runApp(MultiBlocProvider(
       providers: [
         BlocProvider<ApiBlocBloc>(
@@ -49,8 +53,7 @@ void main() {
             builder: (context) => HistoryBloc(apiBlocRepo)),
         BlocProvider<ProfileBloc>(
             builder: (context) => ProfileBloc(apiBlocRepo)),
-        BlocProvider<CouponBloc>(
-            builder: (context) => CouponBloc(apiBlocRepo)),
+        BlocProvider<CouponBloc>(builder: (context) => CouponBloc(apiBlocRepo)),
         BlocProvider<AuthBloc>(builder: (context) => AuthBloc())
       ],
       child: MaterialApp(
@@ -74,6 +77,34 @@ void main() {
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                 ))),
+        supportedLocales: [
+          Locale('en', 'US'),
+        ],
+        localizationsDelegates: [
+          // THIS CLASS WILL BE ADDED LATER
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          if (locale == null) {
+            print("*language locale is null!!!");
+            return  Locale('en', 'US');//supportedLocales.first;
+          }
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
         home: Stack(
           children: <Widget>[
             AuthPage(simples: (AuthBloc _authBloc) {

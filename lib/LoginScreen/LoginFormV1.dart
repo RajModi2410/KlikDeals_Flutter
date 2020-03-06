@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/LoginScreen/LoginBloc.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
@@ -271,7 +272,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                       borderRadius: BorderRadius.circular(30.0)),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-                  hintText: "Password",
+                  hintText: AppLocalizations.of(context).translate("label_password"),
                 ),
               ),
             ),
@@ -302,7 +303,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 children: <Widget>[
                   new Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: Text("LOGIN",
+                    child: Text(AppLocalizations.of(context).translate("label_login"),
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
@@ -320,7 +321,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       return SnackBar(
         content: Text(_errorMessage),
         action: SnackBarAction(
-          label: 'Undo',
+          label: AppLocalizations.of(context).translate("label_undo"),
           onPressed: () {},
         ),
       );

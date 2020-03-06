@@ -15,6 +15,8 @@ import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
 import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../AppLocalizations.dart';
+
 var token = "";
 SharedPreferences sharedPreferences;
 
@@ -65,7 +67,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text('error occurred during fetching coupons..'),
+                content: Text(AppLocalizations.of(context).translate("error_fetching_coupon"),
+),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
             );
@@ -104,7 +107,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
                     return EmptyListWidget(
-                        emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                        emptyMessage: AppLocalizations.of(context).translate("error_no_coupon_active"));
+
                   } else if (currentState is CouponDeleteFetchedState) {
                     getCouponList();
                     return CenterLoadingIndicator();
@@ -116,7 +120,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     );
                   } else {
                     return EmptyListWidget(
-                        emptyMessage: KeyConstant.ERROR_NO_COUPON_ACTIVE);
+                      emptyMessage: AppLocalizations.of(context).translate("error_no_coupon_active"));
                   }
                 }),
           ],
@@ -274,8 +278,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Warning"),
-          content: new Text("Are you sure want to delete this coupon?"),
+          title: new Text(AppLocalizations.of(context).translate("label_warning")),
+          content: new Text(AppLocalizations.of(context).translate("message_confirm_delete")),
           actions: <Widget>[
             FlatButton(
               child: const Text('CANCEL'),

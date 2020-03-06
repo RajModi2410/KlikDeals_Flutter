@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 
 import '../commons/Dimence.dart';
 
@@ -23,6 +24,8 @@ class _SuccessDialogState extends State<SuccessDialog> {
 
   @override
   Widget build(BuildContext context) {
+    message = (message != null ? message: AppLocalizations.of(context).translate("message_saved"));
+    okButtonText= (okButtonText != null ? okButtonText: AppLocalizations.of(context).translate("label_ok"));
     return Center(
       child: Stack(
         alignment: Alignment.topCenter,
@@ -59,7 +62,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                         left: MediaQuery.of(context).size.width * 0.05,
                         right: MediaQuery.of(context).size.width * 0.05),
                     child: Text(
-                      "Success!",
+                      AppLocalizations.of(context).translate("label_success"),
                       style: TextStyle(
                           fontSize: Dimence.fontSize16,
                           fontWeight: FontWeight.bold),

@@ -1,3 +1,5 @@
+
+
 class KeyConstant {
   static const String ERROR_GENERAL = "error";
   static const String ERROR_LAT = "map_lat";
@@ -14,8 +16,7 @@ class KeyConstant {
   static const String ERROR_CONNECTION_TIMEOUT =
       "Please check your connection and try again!";
 
-  static const String ERROR_NO_COUPON_ACTIVE =
-      "You don't have any active coupons!";
+  // static const String ERROR_NO_COUPON_ACTIVE = AppLocalizations.of(context).translate("error_no_coupon_active");
 
   static const String ERROR_NO_COUPON_HISTORY =
       "You don't have any grabbed or redeem coupon yet!";
