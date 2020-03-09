@@ -221,13 +221,10 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           apiBloc.add(lastEvent);
           break;
         case AppLifecycleState.inactive:
-          
           break;
         case AppLifecycleState.paused:
-          
           break;
         case AppLifecycleState.detached:
-          
           break;
       }
     });

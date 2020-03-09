@@ -35,6 +35,7 @@ class _CouponAdd extends State<AddCoupon>
   String _endDateValue;
   String _descValue;
   ApiBlocEvent lastEvent;
+  bool needToReload = false;
 
   TextEditingController _startDateController,
       _endDateController,
@@ -68,68 +69,73 @@ class _CouponAdd extends State<AddCoupon>
   @override
   Widget build(BuildContext context) {
     auth = BlocProvider.of<CouponBloc>(context);
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context).translate("label_addcoupon"),
-          style: Theme.of(context).textTheme.title,
+    return WillPopScope(
+      onWillPop: () async {
+//        if (needToReload) {
+////          BlocProvider.of<ApiBlocBloc>(context).add(ReloadEvent(true));
+//        }
+        Navigator.of(context).pop(needToReload);
+        return false;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context).translate("label_addcoupon"),
+            style: Theme
+                .of(context)
+                .textTheme
+                .title,
+          ),
         ),
-      ),
-      body: Stack(children: <Widget>[
-        addCouponDesign(context),
-        BlocListener<CouponBloc, ApiBlocState>(
-            listener: (context, state) {
-              // final snackBar = SnackBar(content: Text('Yay! A SnackBar!'));
-              //     Scaffold.of(context).showSnackBar(snackBar);
-              if (state is CouponAddErrorState) {
-                String error =
-                    state.addCouponResponse.errorMessage.getCommonError();
-                if (error != null) {
-                  //ErrorDialog
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => ErrorDialog(
-                      mainMessage: error,
-                      okButtonText: AppLocalizations.of(context).translate("label_ok"),
-                    ),
-                  ).then((isConfirm) {
-                    print("we got isConfirm $isConfirm");
-                  });
-                  // Scaffold.of(context).showSnackBar(
-                  //   SnackBar(
-                  //     content: Text(error),
-                  //     backgroundColor: Theme.of(context).primaryColor,
-                  //   ),
-                  // );
-                }
-              } else if (state is CouponAddFetchedState) {
-                lastEvent = ReloadEvent(true);
-                auth.add(lastEvent);
-                Navigator.pop(context, true);
-              }
-            },
-            child: BlocBuilder<CouponBloc, ApiBlocState>(
-                bloc: auth,
-                builder: (
-                  BuildContext context,
-                  ApiBlocState currentState,
-                ) {
-                  if (currentState is ApiFetchingState) {
-                    round = RoundWidget();
-                    return CenterLoadingIndicator();
-                    // return round;
-                  } else if (currentState is NoInternetState) {
-                    return NoNetworkWidget(
-                      retry: () {
-                        retryCall();
-                      },
-                    );
-                  } else {
-                    return Container();
+        body: Stack(children: <Widget>[
+          addCouponDesign(context),
+          BlocListener<CouponBloc, ApiBlocState>(
+              listener: (context, state) {
+                if (state is CouponAddErrorState) {
+                  String error =
+                  state.addCouponResponse.errorMessage.getCommonError();
+                  if (error != null) {
+                    //ErrorDialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          ErrorDialog(
+                            mainMessage: error,
+                            okButtonText: AppLocalizations.of(context)
+                                .translate("label_ok"),
+                          ),
+                    ).then((isConfirm) {
+                      print("we got isConfirm $isConfirm");
+                    });
                   }
-                }))
-      ]),
+                } else if (state is CouponAddFetchedState) {
+                  needToReload = true;
+                  lastEvent = ReloadEvent(true);
+                  auth.add(lastEvent);
+                  Navigator.pop(context, true);
+                }
+              },
+              child: BlocBuilder<CouponBloc, ApiBlocState>(
+                  bloc: auth,
+                  builder: (BuildContext context,
+                      ApiBlocState currentState,) {
+                    if (currentState is ApiFetchingState) {
+                      round = RoundWidget();
+                      return CenterLoadingIndicator();
+                      // return round;
+                    } else if (currentState is NoInternetState) {
+                      return NoNetworkWidget(
+                        retry: () {
+                          retryCall();
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }))
+        ]),
+      ),
     );
   }
 
