@@ -6,6 +6,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
@@ -68,7 +69,7 @@ class _CouponAdd extends State<AddCoupon>
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          "Add Coupon",
+          AppLocalizations.of(context).translate("label_addcoupon"),
           style: Theme.of(context).textTheme.title,
         ),
       ),
@@ -87,7 +88,7 @@ class _CouponAdd extends State<AddCoupon>
                     context: context,
                     builder: (BuildContext context) => ErrorDialog(
                       mainMessage: error,
-                      okButtonText: "Okay!",
+                      okButtonText: AppLocalizations.of(context).translate("label_ok"),
                     ),
                   ).then((isConfirm) {
                     print("we got isConfirm $isConfirm");
@@ -173,7 +174,7 @@ class _CouponAdd extends State<AddCoupon>
         },
         color: Theme.of(context).primaryColor,
         textColor: Colors.white,
-        child: Text("ADD COUPON".toUpperCase(), style: TextStyle(fontSize: 14)),
+        child: Text(AppLocalizations.of(context).translate("label_addcoupon").toUpperCase(), style: TextStyle(fontSize: 14)),
       ),
     );
   }
@@ -192,14 +193,15 @@ class _CouponAdd extends State<AddCoupon>
           controller: _descriptionController,
           validator: (value) {
             if (value.isEmpty || value == null) {
-              return 'Please enter coupon description';
+              return AppLocalizations.of(context).translate("error_message_coupon");
+;
             }
             return null;
           },  
           style: TextStyle(color: Theme.of(context).primaryColor),
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
-          decoration: _inputType("Description", false))
+          decoration: _inputType(AppLocalizations.of(context).translate("label_description"), false))
           ),
     );
   }
@@ -221,7 +223,7 @@ class _CouponAdd extends State<AddCoupon>
               Row(
                 children: <Widget>[
                   Text(
-                    "Upload Coupon Image",
+                    AppLocalizations.of(context).translate("title_upload_image"),
                     style: TextStyle(
                         fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
@@ -269,7 +271,8 @@ class _CouponAdd extends State<AddCoupon>
           onSaved: (value) => _endDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please select expiry date';
+              return AppLocalizations.of(context).translate("error_message_expirydate");
+;
             }
             return null;
           },
@@ -282,12 +285,12 @@ class _CouponAdd extends State<AddCoupon>
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                content: Text("Please select start date first"),
+                content: Text(AppLocalizations.of(context).translate("error_message_startdate")),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
             }
           },
-          decoration: _forSearchInputType("Expiry Date", true)),
+          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_expirydate"), true)),
     );
   }
 
@@ -298,7 +301,7 @@ class _CouponAdd extends State<AddCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please select start date';
+              return AppLocalizations.of(context).translate("error_message_startdate");
             }
             return null;
           },
@@ -308,7 +311,7 @@ class _CouponAdd extends State<AddCoupon>
             FocusScope.of(context).requestFocus(new FocusNode());
             _showStartDatePicker(context);
           },
-          decoration: _forSearchInputType("Start Date", true)),
+          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_startdate"), true)),
     );
   }
 
@@ -318,13 +321,14 @@ class _CouponAdd extends State<AddCoupon>
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
           if (value.isEmpty) {
-            return 'Please enter coupon code';
+            return AppLocalizations.of(context).translate("error_message_couponcode");
+;
           }
           return null;
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         cursorColor: Theme.of(context).primaryColor,
-        decoration: _inputType("Coupon Code", false));
+        decoration: _inputType(AppLocalizations.of(context).translate("label_couponCode"), false));
   }
 
   InputDecoration _inputType(String hintText, bool isForImageUpload) {

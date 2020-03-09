@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/commons/Dimence.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
 
@@ -55,7 +56,7 @@ class NoNetworkWidget extends StatelessWidget {
                         left: MediaQuery.of(context).size.width * 0.05,
                         right: MediaQuery.of(context).size.width * 0.05),
                     child: Text(
-                      KeyConstant.ERROR_CONNECTION_TIMEOUT,
+                      AppLocalizations.of(context).translate("error_connection_timeout"),
                       style: TextStyle(
                           fontSize: Dimence.fontSize14,
                           fontWeight: FontWeight.normal),
@@ -88,7 +89,7 @@ class NoNetworkWidget extends StatelessWidget {
                             child: new Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text("Retry",
+                                Text(AppLocalizations.of(context).translate("label_retry"),
                                     style: TextStyle(
                                       color: Colors.red,
                                     )),

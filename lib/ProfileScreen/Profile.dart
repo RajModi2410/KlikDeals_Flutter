@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
@@ -95,7 +96,7 @@ class _ProfilePage extends State<Profile>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Edit Profile', style: Theme.of(context).textTheme.title),
+          title: Text(AppLocalizations.of(context).translate("title_edit_profile"), style: Theme.of(context).textTheme.title),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
@@ -106,7 +107,7 @@ class _ProfilePage extends State<Profile>
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content:
-                          Text("Something went to wrong. Please try again"),
+                          Text(AppLocalizations.of(context).translate("common_error")),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                   );
@@ -121,7 +122,7 @@ class _ProfilePage extends State<Profile>
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                            "Unable to complete profile update due to $error"),
+                            AppLocalizations.of(context).translate("error_update_profile $error")),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
@@ -139,8 +140,8 @@ class _ProfilePage extends State<Profile>
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => SuccessDialog(
-                      mainMessage: "Profile Updated successfully",
-                      okButtonText: "Okay!",
+                      mainMessage: AppLocalizations.of(context).translate("message_profile_success"),
+                      okButtonText: AppLocalizations.of(context).translate("label_ok"),
                     ),
                   ).then((isConfirm) {
                     print("we got isConfirm $isConfirm");
@@ -231,7 +232,7 @@ class _ProfilePage extends State<Profile>
           children: <Widget>[
             new Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Text("SAVE",
+              child: Text(AppLocalizations.of(context).translate("label_save"),
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold)),
             ),
@@ -254,14 +255,14 @@ class _ProfilePage extends State<Profile>
           controller: _descValue,
           validator: (value) {
             if (value.isEmpty || value == null) {
-              return 'Please enter some text';
+              return AppLocalizations.of(context).translate("error_add_text");
             }
             return null;
           },
           style: TextStyle(color: Theme.of(context).primaryColor),
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
-          decoration: _inputType("About Vendor")),
+          decoration: _inputType(AppLocalizations.of(context).translate("title_venoor"))),
       )
     );
     
@@ -274,13 +275,13 @@ class _ProfilePage extends State<Profile>
         onSaved: (value) => _website = value.trim(),
         validator: (value) {
           if (value.isEmpty || value == null) {
-            return 'Please enter some text';
+            return AppLocalizations.of(context).translate("error_add_text");
           }
           return null;
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _websiteValue,
-        decoration: _inputType("Website"),
+        decoration: _inputType( AppLocalizations.of(context).translate("title_website")),
       ),
     );
   }
@@ -293,7 +294,7 @@ class _ProfilePage extends State<Profile>
         validator: emailValidator,
         keyboardType: TextInputType.emailAddress,
         controller: _emailAddressValue,
-        decoration: _inputType("Email Address"),
+        decoration: _inputType(AppLocalizations.of(context).translate("title_email")),
         style: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
@@ -312,16 +313,16 @@ _dismissKeyboard(BuildContext context) {
         onSaved: (value) => _number = value.trim(),
         validator: (value) {
           if (value.isEmpty || value == null) {
-            return 'Please enter some text';
+            return AppLocalizations.of(context).translate("error_add_text");
           } else if (value.length != 10) {
-            return 'Please enter valid mobile number';
+            return AppLocalizations.of(context).translate("error_message_phonenumber");
           }
           return null;
         },
         keyboardType: TextInputType.number,
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _phoneNumber,
-        decoration: _inputType("Phone Number"),
+        decoration: _inputType(AppLocalizations.of(context).translate("title_phonenumber")),
       ),
       )
     );
@@ -343,7 +344,7 @@ _dismissKeyboard(BuildContext context) {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Text("Banner",
+                  Text(AppLocalizations.of(context).translate("label_banner"),
                       style: TextStyle(
                           fontSize: 16, color: Theme.of(context).primaryColor)),
                   Spacer(),
@@ -353,7 +354,7 @@ _dismissKeyboard(BuildContext context) {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(18.0),
                           side: BorderSide(color: Colors.red)),
-                      child: Text("Browse",
+                      child: Text(AppLocalizations.of(context).translate("title_browse"),
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
@@ -409,7 +410,7 @@ _dismissKeyboard(BuildContext context) {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Logo",
+                    child: Text(AppLocalizations.of(context).translate("title_logo"),
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor)),
@@ -421,7 +422,7 @@ _dismissKeyboard(BuildContext context) {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(18.0),
                           side: BorderSide(color: Colors.red)),
-                      child: Text("Browse",
+                      child: Text(AppLocalizations.of(context).translate("title_browse"),
                           style: TextStyle(fontSize: 12, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
@@ -477,7 +478,7 @@ _dismissKeyboard(BuildContext context) {
           children: <Widget>[
             new Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Text("SELECT ADDRESS",
+              child: Text(AppLocalizations.of(context).translate("title_address"),
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold)),
             ),
@@ -500,13 +501,13 @@ _dismissKeyboard(BuildContext context) {
         onSaved: (value) => _addr = value.trim(),
         validator: (value) {
           if (value.trim() == null || value.trim().isEmpty) {
-            return "Please enter Address";
+            return AppLocalizations.of(context).translate("error_message_address");
           }
           return null;
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _addressValue,
-        decoration: _inputType("Address"),
+        decoration: _inputType(AppLocalizations.of(context).translate("title _address_field")),
       ),
  ),
     );
@@ -573,12 +574,12 @@ _dismissKeyboard(BuildContext context) {
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
       RegExp exp = new RegExp(pattern);
       if (!exp.hasMatch(value.trim())) {
-        return 'Please enter valid email.';
+        return AppLocalizations.of(context).translate("error_message_email");
       } else {
         return null;
       }
     } else {
-      return 'Please enter email address.';
+      return AppLocalizations.of(context).translate("error_message_email_valid");
     }
   }
 

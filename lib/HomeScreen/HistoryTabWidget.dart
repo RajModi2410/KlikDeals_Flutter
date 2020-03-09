@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
@@ -80,8 +81,8 @@ class _HistoryTabState extends State<HistoryTabWidget> {
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content:
-                    Text('error occurred during fetching history coupons..'),
+                content: Text(AppLocalizations.of(context)
+                    .translate("error_fetching_coupon_history")),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
             );
@@ -112,7 +113,8 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
                     return EmptyListWidget(
-                        emptyMessage: KeyConstant.ERROR_NO_COUPON_HISTORY);
+                        emptyMessage: AppLocalizations.of(context)
+                            .translate("error_no_coupon_history"));
                   } else if (currentState is NoInternetState) {
                     return NoNetworkWidget(
                       retry: () {
