@@ -41,7 +41,10 @@ class _CouponAdd extends State<AddCoupon>
       _couponCodeController,
       _descriptionController;
 
-  _CouponAdd();
+  _CouponAdd(){
+    _startDateValue=new DateFormat('yyyy/MM/dd').format(DateTime.now());
+    _endDateValue=new DateFormat('yyyy/MM/dd').format(DateTime.now().add(Duration(days: 18250)));
+  }
 
   @override
   void initState() {
@@ -148,8 +151,8 @@ class _CouponAdd extends State<AddCoupon>
             child: ListView(
               children: <Widget>[
                 _couponCode(),
-                _startDate(context),
-                _expiryDate(context),
+                // _startDate(context),
+                // _expiryDate(context),
                 _uploadImage(context),
                 _description(),
                 _addCouponButton(),

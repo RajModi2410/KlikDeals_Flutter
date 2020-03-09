@@ -6,7 +6,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
 import 'package:klik_deals/myWidgets/BottomLoader.dart';
 import 'package:klik_deals/myWidgets/CouponErrorWidget.dart';
@@ -101,7 +100,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                         errorMessage:
                             currentState.couponList.errorMessage.error.first);
                   } else if (currentState is CouponListFetchedState) {
-                    CenterLoadingIndicator();
+                    CenterLoadingIndicator(message: "Fetching active deals....",);
 
                     return _couponList(currentState.couponList.response);
                   } else if (currentState is ApiEmptyState) {
@@ -111,7 +110,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
                   } else if (currentState is CouponDeleteFetchedState) {
                     getCouponList();
-                    return CenterLoadingIndicator();
+                    return CenterLoadingIndicator(message: "Refreshing active deals....",);
                   } else if (currentState is NoInternetState) {
                     return NoNetworkWidget(
                       retry: () {
@@ -213,6 +212,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   @override
   bool get wantKeepAlive => true;
 
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
       switch (state) {

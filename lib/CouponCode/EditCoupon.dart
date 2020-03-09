@@ -48,14 +48,19 @@ class _EditCoupon extends State<EditCoupon>
       _couponCodeController,
       _descriptionController;
 
-  _EditCoupon(this.mapData);
+  _EditCoupon(this.mapData) {
+    data = Data.fromJson(mapData);
+    _dateStart = new DateFormat("yyyy/MM/dd").parse(data.startDate);
+    print("We are getting $_dateStart and ${data.startDate}");
+    _startDateValue = new DateFormat('yyyy/MM/dd').format(DateTime.now());
+    _endDateValue = new DateFormat('yyyy/MM/dd')
+        .format(DateTime.now().add(Duration(days: 18250)));
+  }
 
   @override
   void initState() {
     super.initState();
-    data = Data.fromJson(mapData);
-    _dateStart = new DateFormat("yyyy/MM/dd").parse(data.startDate);
-    print("We are getting $_dateStart and ${data.startDate}");
+
     // _endDateValue= new DateFormat("yyyy/MM/dd").parse(data.startDate);
     // print("We are getting $_Startdate and ${data.startDate}");
     _controller = new AnimationController(
@@ -80,7 +85,9 @@ class _EditCoupon extends State<EditCoupon>
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).translate("title_editCoupon"), style: Theme.of(context).textTheme.title),
+          title: Text(
+              AppLocalizations.of(context).translate("title_editCoupon"),
+              style: Theme.of(context).textTheme.title),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
@@ -96,7 +103,8 @@ class _EditCoupon extends State<EditCoupon>
                       context: context,
                       builder: (BuildContext context) => ErrorDialog(
                         mainMessage: error,
-                        okButtonText: AppLocalizations.of(context).translate("label_ok"),
+                        okButtonText:
+                            AppLocalizations.of(context).translate("label_ok"),
                       ),
                     ).then((isConfirm) {
                       print("we got isConfirm $isConfirm");
@@ -151,8 +159,8 @@ class _EditCoupon extends State<EditCoupon>
             child: ListView(
               children: <Widget>[
                 _couponCode(),
-                _startDate(context),
-                _expiryDate(context),
+                // _startDate(context),
+                // _expiryDate(context),
                 _uploadImage(context),
                 _description(),
                 _addCouponButton(),
@@ -177,7 +185,9 @@ class _EditCoupon extends State<EditCoupon>
         },
         color: Theme.of(context).primaryColor,
         textColor: Colors.white,
-        child: Text(AppLocalizations.of(context).translate("label_save").toUpperCase(), style: TextStyle(fontSize: 14)),
+        child: Text(
+            AppLocalizations.of(context).translate("label_save").toUpperCase(),
+            style: TextStyle(fontSize: 14)),
       ),
     );
   }
@@ -197,7 +207,9 @@ class _EditCoupon extends State<EditCoupon>
           style: TextStyle(color: Theme.of(context).primaryColor),
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
-          decoration: _inputType(AppLocalizations.of(context).translate("label_description"), false)),
+          decoration: _inputType(
+              AppLocalizations.of(context).translate("label_description"),
+              false)),
     );
   }
 
@@ -218,7 +230,8 @@ class _EditCoupon extends State<EditCoupon>
               Row(
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context).translate("title_upload_image"),
+                    AppLocalizations.of(context)
+                        .translate("title_upload_image"),
                     style: TextStyle(
                         fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
@@ -240,7 +253,7 @@ class _EditCoupon extends State<EditCoupon>
                           height: 160.0,
                           width: 360.0,
                           decoration: new BoxDecoration(
-                            image: _CouponImage(isDirty, _imageBanner, null),
+                            image: _couponImage(isDirty, _imageBanner, null),
                             border: Border.all(color: Colors.white, width: 0.5),
                           ),
                         )
@@ -248,7 +261,7 @@ class _EditCoupon extends State<EditCoupon>
                           height: 160.0,
                           width: 360.0,
                           decoration: new BoxDecoration(
-                            image: _CouponImage(
+                            image: _couponImage(
                                 isDirty, _imageBanner, data.couponImage),
                             border: Border.all(color: Colors.white, width: 0.5),
                           ),
@@ -267,7 +280,8 @@ class _EditCoupon extends State<EditCoupon>
           onSaved: (value) => _endDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_expiry_date");
+              return AppLocalizations.of(context)
+                  .translate("error_message_expiry_date");
             }
             return null;
           },
@@ -280,12 +294,15 @@ class _EditCoupon extends State<EditCoupon>
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                content: Text(AppLocalizations.of(context).translate("error_message_start_date")),
+                content: Text(AppLocalizations.of(context)
+                    .translate("error_message_start_date")),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
             }
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_expiry_date"), true)),
+          decoration: _forSearchInputType(
+              AppLocalizations.of(context).translate("title_expiry_date"),
+              true)),
     );
   }
 
@@ -296,7 +313,8 @@ class _EditCoupon extends State<EditCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_start_date");
+              return AppLocalizations.of(context)
+                  .translate("error_message_start_date");
             }
             return null;
           },
@@ -306,7 +324,9 @@ class _EditCoupon extends State<EditCoupon>
             FocusScope.of(context).requestFocus(new FocusNode());
             _showStartDatePicker(context);
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_start_date"), true)),
+          decoration: _forSearchInputType(
+              AppLocalizations.of(context).translate("title_start_date"),
+              true)),
     );
   }
 
@@ -322,7 +342,8 @@ class _EditCoupon extends State<EditCoupon>
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         cursorColor: Theme.of(context).primaryColor,
-        decoration: _inputType(AppLocalizations.of(context).translate("label_couponCode"), false));
+        decoration: _inputType(
+            AppLocalizations.of(context).translate("label_couponCode"), false));
   }
 
   InputDecoration _inputType(String hintText, bool isForImageUpload) {
@@ -347,7 +368,7 @@ class _EditCoupon extends State<EditCoupon>
       fillColor: Color(0xB3FFFFFF),
       filled: true,
       hintStyle: TextStyle(color: Theme.of(context).primaryColor),
-      suffixIcon: _inputsuffixIcon(isForCal),
+      suffixIcon: _inputSuffixIcon(isForCal),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
@@ -360,7 +381,7 @@ class _EditCoupon extends State<EditCoupon>
     );
   }
 
-  _inputsuffixIcon(bool isForCal) {
+  _inputSuffixIcon(bool isForCal) {
     if (isForCal) {
       return new Icon(
         Icons.calendar_today,
@@ -382,7 +403,8 @@ class _EditCoupon extends State<EditCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(now.year, now.month, now.day),
-        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day),
+        onChanged: (date) {
       _endDateController.clear();
       print('change $date');
     }, onConfirm: (date) {
@@ -402,7 +424,8 @@ class _EditCoupon extends State<EditCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(startDate.year, startDate.month, startDate.day + 1),
-        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day),
+        onChanged: (date) {
       print('change $date');
     }, onConfirm: (date) {
       var formatter = new DateFormat('yyyy/MM/dd');
@@ -436,8 +459,7 @@ class _EditCoupon extends State<EditCoupon>
             _endDateValue, _descValue, data.id.toString(), _imageBanner);
         auth.add(lastEvent);
 
-        setState(() {
-        });
+        setState(() {});
       } catch (e) {
         print('Error: $e');
       }
@@ -463,7 +485,7 @@ class _EditCoupon extends State<EditCoupon>
   }
 }
 
-_CouponImage(bool isDirty, File imageBanner, String couponImage) {
+_couponImage(bool isDirty, File imageBanner, String couponImage) {
   if (isDirty) {
     return new DecorationImage(
       image: new FileImage(imageBanner),
