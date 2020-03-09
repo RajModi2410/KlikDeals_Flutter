@@ -12,7 +12,6 @@ import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/myWidgets/ErrorDialog.dart';
 import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/myWidgets/RoundWidget.dart';
 
 import 'CouponBloc.dart';
 
@@ -29,7 +28,6 @@ class _CouponAdd extends State<AddCoupon>
   File _imageBanner;
   bool isDirty = false;
   CouponBloc auth;
-  RoundWidget round;
   String _couponCodeValue;
   String _startDateValue;
   String _endDateValue;
@@ -121,9 +119,7 @@ class _CouponAdd extends State<AddCoupon>
                   builder: (BuildContext context,
                       ApiBlocState currentState,) {
                     if (currentState is ApiFetchingState) {
-                      round = RoundWidget();
-                      return CenterLoadingIndicator();
-                      // return round;
+                      return CenterLoadingIndicator(message: "Saving deals...",);
                     } else if (currentState is NoInternetState) {
                       return NoNetworkWidget(
                         retry: () {

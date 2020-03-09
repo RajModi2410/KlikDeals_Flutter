@@ -9,9 +9,9 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/myWidgets/ErrorDialog.dart';
 import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/myWidgets/RoundWidget.dart';
 
 import 'CouponBloc.dart';
 import 'CouponStates.dart';
@@ -36,7 +36,6 @@ class _EditCoupon extends State<EditCoupon>
   bool isDirty = false;
   Data data;
   CouponBloc auth;
-  RoundWidget round;
   String _couponCodeValue;
   String _startDateValue;
   String _endDateValue;
@@ -121,8 +120,7 @@ class _EditCoupon extends State<EditCoupon>
                     ApiBlocState currentState,
                   ) {
                     if (currentState is ApiFetchingState) {
-                      round = RoundWidget();
-                      return round;
+                      return CenterLoadingIndicator();
                     } else if (currentState is NoInternetState) {
                       return NoNetworkWidget(
                         retry: () {

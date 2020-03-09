@@ -97,7 +97,7 @@ class _MyDetailsList extends State<HomeMainTab>
             child: new Image.asset('assets/images/logo.png'),
           ),
           new Container(
-            height: double.maxFinite,
+            height: double.infinity,
             child: ListView.builder(
                 itemCount: sideMenu.length,
                 itemBuilder: (context, index) {
@@ -162,7 +162,7 @@ class _MyDetailsList extends State<HomeMainTab>
         context.widget.hashCode.toString());
     Navigator.pop(context);
     var shouldReload =
-    await Navigator.of(context).pushNamed(AddCoupon.routeName);
+        await Navigator.of(context).pushNamed(AddCoupon.routeName);
     if (shouldReload is bool && shouldReload) {
       BlocProvider.of<ApiBlocBloc>(context).add(ReloadEvent(true));
     }

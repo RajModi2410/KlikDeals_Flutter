@@ -8,6 +8,7 @@ import 'package:klik_deals/LoginScreen/LoginBloc.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/myWidgets/HomeMainTab.dart';
 import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
 import 'package:klik_deals/myWidgets/RoundWidget.dart';
@@ -60,7 +61,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
   String _errorMessage;
   ApiBlocBloc auth;
   var loginBloc = LoginBloc();
-  RoundWidget round;
   final ClickCallback callback;
   ApiBlocEvent lastEvent;
 
@@ -131,8 +131,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 ApiBlocState currentState,
               ) {
                 if (currentState is ApiFetchingState) {
-                  round = RoundWidget();
-                  return round;
+                  return CenterLoadingIndicator();
                 } else if (currentState is NoInternetState) {
                   return NoNetworkWidget(
                     retry: () {

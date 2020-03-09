@@ -4,6 +4,7 @@ import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:klik_deals/CouponCode/EditCoupon.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
@@ -66,8 +67,10 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           if (state is ApiErrorState) {
             Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppLocalizations.of(context).translate("error_fetching_coupon"),
-),
+                content: Text(
+                  AppLocalizations.of(context)
+                      .translate("error_fetching_coupon"),
+                ),
                 backgroundColor: Theme.of(context).primaryColor,
               ),
             );
@@ -86,13 +89,11 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                   if (currentState is ApiFetchingState) {
                     print("Home Page :: We are in fetching state.....");
                     return CenterLoadingIndicator();
-                    // return RoundWidget();
                   }
                   if (currentState is ApiReloadState) {
                     print("Home Page :: We are in reloading state.....");
                     getCouponList();
                     return CenterLoadingIndicator();
-                    //  RoundWidget();
                   } else if (currentState is CouponApiErrorState) {
                     print(
                         "Home Page :: We got error.....${currentState.couponList.errorMessage.error[0]}");
@@ -100,17 +101,21 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                         errorMessage:
                             currentState.couponList.errorMessage.error.first);
                   } else if (currentState is CouponListFetchedState) {
-                    CenterLoadingIndicator(message: "Fetching active deals....",);
+                    CenterLoadingIndicator(
+                      message: "Fetching active deals....",
+                    );
 
                     return _couponList(currentState.couponList.response);
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
                     return EmptyListWidget(
-                        emptyMessage: AppLocalizations.of(context).translate("error_no_coupon_active"));
-
+                        emptyMessage: AppLocalizations.of(context)
+                            .translate("error_no_coupon_active"));
                   } else if (currentState is CouponDeleteFetchedState) {
                     getCouponList();
-                    return CenterLoadingIndicator(message: "Refreshing active deals....",);
+                    return CenterLoadingIndicator(
+                      message: "Refreshing active deals....",
+                    );
                   } else if (currentState is NoInternetState) {
                     return NoNetworkWidget(
                       retry: () {
@@ -119,7 +124,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     );
                   } else {
                     return EmptyListWidget(
-                      emptyMessage: AppLocalizations.of(context).translate("error_no_coupon_active"));
+                        emptyMessage: AppLocalizations.of(context)
+                            .translate("error_no_coupon_active"));
                   }
                 }),
           ],
@@ -140,7 +146,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     return CustomScrollView(controller: _scrollController, slivers: <Widget>[
       new SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 8.0 / 10.0,
+            childAspectRatio: 1,//8.0 / 10.0,
             crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
@@ -150,11 +156,15 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
             listData.isFromHistory = isForHistory;
             // return GridTile(child: null)
             return CouponItem(
-                data: listData,
-                isForHistory: false,
-                onDeleteClick: (id) {
-                  _showPopup(id);
-                });
+              data: listData,
+              isForHistory: false,
+              onDeleteClick: (id) {
+                _showPopup(id);
+              },
+              onEditClick: (data) {
+                _goToEditScreen(data.toJson());
+              },
+            );
           },
           childCount: getTotalCount(data),
         ),
@@ -163,6 +173,14 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
         child: hasReachedEnd ? Container() : BottomLoader(),
       )
     ]);
+  }
+
+  void _goToEditScreen(Map<String, dynamic> data) async {
+    var result = await Navigator.of(context)
+        .pushNamed(EditCoupon.routeName, arguments: data);
+    if (result!= null && result) {
+      apiBloc.add(ReloadEvent(true));
+    }
   }
 
   int getTotalCount(Response vendorList) {
@@ -247,8 +265,10 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate("label_warning")),
-          content: new Text(AppLocalizations.of(context).translate("message_confirm_delete")),
+          title:
+              new Text(AppLocalizations.of(context).translate("label_warning")),
+          content: new Text(
+              AppLocalizations.of(context).translate("message_confirm_delete")),
           actions: <Widget>[
             FlatButton(
               child: const Text('CANCEL'),

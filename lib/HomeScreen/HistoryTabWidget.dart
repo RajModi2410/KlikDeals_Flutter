@@ -100,7 +100,6 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                   inProcess = false;
                   if (currentState is ApiFetchingState) {
                     print("Home Page :: We are in fetching state.....");
-                    // return RoundWidget();
                     return CenterLoadingIndicator();
                   } else if (currentState is CouponHistoryErrorState) {
                     print(

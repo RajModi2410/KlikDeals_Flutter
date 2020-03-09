@@ -8,55 +8,24 @@ import 'package:klik_deals/ApiBloc/index.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/CouponCode/EditCoupon.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
+import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 
 import 'RoundWidget.dart';
 
 class CouponItem extends StatelessWidget {
   final Data data;
   bool isForHistory = false;
-  ApiBlocBloc auth;
-  RoundWidget round;
   // final GestureTapCallback onDeleteClick;
   final Function(int) onDeleteClick;
+  final Function(Data) onEditClick;
 
-  CouponItem({@required this.data, this.isForHistory, this.onDeleteClick});
+  CouponItem({@required this.data, this.isForHistory, this.onDeleteClick, this.onEditClick});
 
   @override
   Widget build(BuildContext context) {
     String date;
     date = dateFormatter(data.startDate, data.endDate, isForHistory, "");
-    auth = BlocProvider.of<ApiBlocBloc>(context);
-    return Stack(children: <Widget>[
-      couponList(context, date),
-      BlocListener<ApiBlocBloc, ApiBlocState>(
-          listener: (context, state) {
-            if (state is CouponDeleteErrorState) {
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content:
-                      Text(state.deleteCouponResponse.errorMessage.toString()),
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              );
-            } else if (state is CouponDeleteFetchedState) {
-              print(
-                  "Delete coupon successfully :: ${state.deleteCouponResponse.message}");
-            }
-          },
-          child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
-              bloc: auth,
-              builder: (
-                BuildContext context,
-                ApiBlocState currentState,
-              ) {
-                if (currentState is ApiFetchingState) {
-                  round = RoundWidget();
-                  return round;
-                } else {
-                  return Container();
-                }
-              }))
-    ]);
+    return couponList(context, date);
   }
 
   Widget couponList(BuildContext context, String date) {
@@ -129,21 +98,25 @@ class CouponItem extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-            child: Text(
-              date,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 12.0,
-              ),
-            ),
-          ),
+          // showDate(date),
         ],
       ),
     );
+  }
+
+  Padding showDate(String date) {
+    return Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+          child: Text(
+            date,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 12.0,
+            ),
+          ),
+        );
   }
 
   Row getActions(BuildContext context) {
@@ -152,7 +125,8 @@ class CouponItem extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              _goToEditScreen(context, data.toJson(), auth);
+              // _goToEditScreen(context, data.toJson(), auth);
+              onEditClick(data);
             },
             child: SizedBox(
                 height: 16,
@@ -215,15 +189,5 @@ String dateFormatter(
         " To ";
     endFormattedDate = convertFormat.format(originalFormat.parse(endDate));
     return startFormattedDate + endFormattedDate;
-  }
-}
-
-void _goToEditScreen(
-    BuildContext context, Map<String, dynamic> data, ApiBlocBloc auth) async {
-  var result = await Navigator.of(context)
-      .pushNamed(EditCoupon.routeName, arguments: data);
-
-  if (result) {
-    auth.add(ReloadEvent(true));
   }
 }
