@@ -42,7 +42,7 @@ class EditCouponResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return errorMessage.isTokenError();
   }
 }
@@ -117,7 +117,7 @@ class ErrorMessage extends ApiError {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return super.checkTokenError(error);
   }
 
@@ -133,7 +133,7 @@ class ErrorMessage extends ApiError {
       returnError = endDate.first;
     } else if (couponImage != null && couponImage.length > 0) {
       returnError = couponImage.first;
-      print("We got the error in Coupoon image::$returnError");
+      print("We got the error in Coupon image::$returnError");
     } else if (description != null && description.length > 0) {
       returnError = description.first;
     } else if (error != null && error.length > 0) {

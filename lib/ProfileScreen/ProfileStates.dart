@@ -8,7 +8,7 @@ class GetProfileApiFetchedState extends ApiBlocState {
   GetProfileApiFetchedState(this.getProfileResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [getProfileResponse];
 }
 
@@ -18,7 +18,7 @@ class GetProfileApiErrorState extends ApiBlocState {
   GetProfileApiErrorState(this.getProfileResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [getProfileResponse];
 }
 
@@ -28,7 +28,7 @@ class UpdateProfileSuccessState extends ApiBlocState {
   UpdateProfileSuccessState(this.updateProfileResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [updateProfileResponse];
 }
 
@@ -39,13 +39,13 @@ class UpdateProfileApiErrorState extends ApiBlocState {
   UpdateProfileApiErrorState(this.updateProfileResponse, this.error);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [updateProfileResponse];
 }
 
 class NoProfileFoundState extends ApiBlocState{
   @override
-  // TODO: implement props
+  
   List<Object> get props => [];
 
 }

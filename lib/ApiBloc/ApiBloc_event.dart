@@ -2,12 +2,8 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import 'repositories/ApiBloc_repository.dart';
-
 @immutable
-abstract class ApiBlocEvent extends Equatable {
-  final ApiBlocRepository _apiBlocRepository = ApiBlocRepository();
-}
+abstract class ApiBlocEvent extends Equatable {}
 
 class TokenGenerateEvent extends ApiBlocEvent {
   final String token;
@@ -15,7 +11,6 @@ class TokenGenerateEvent extends ApiBlocEvent {
   TokenGenerateEvent(this.token);
 
   @override
-  // TODO: implement props
   List<Object> get props => [token];
 }
 
@@ -25,7 +20,6 @@ class ReloadEvent extends ApiBlocEvent {
   ReloadEvent(this.isReload);
 
   @override
-  // TODO: implement props
   List<Object> get props => [isReload];
 }
 
@@ -44,7 +38,6 @@ class LoginEvent extends ApiBlocEvent {
   LoginEvent(this.email, this.pass);
 
   @override
-  // TODO: implement props
   List<Object> get props => [this.email, this.pass];
 }
 
@@ -68,7 +61,6 @@ class CouponListEvent extends ApiBlocEvent {
     return map;
   }
 
-  // TODO: implement props
   List<Object> get props => [this.perPage, this.action];
 }
 
@@ -93,11 +85,11 @@ class GetProfileEvent extends ApiBlocEvent {
 }
 
 class AddCouponEvent extends ApiBlocEvent {
-  String couponCodeValue;
-  String startDateValue;
-  String endDateValue;
-  String descValue;
-  File image;
+  final String couponCodeValue;
+  final String startDateValue;
+  final String endDateValue;
+  final String descValue;
+  final File image;
 
   AddCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
       this.descValue, this.image);
@@ -112,7 +104,6 @@ class AddCouponEvent extends ApiBlocEvent {
     return map;
   }
 
-  // TODO: implement props
   List<Object> get props => [
         this.couponCodeValue,
         this.startDateValue,
@@ -123,12 +114,12 @@ class AddCouponEvent extends ApiBlocEvent {
 }
 
 class EditCouponEvent extends ApiBlocEvent {
-  String couponCodeValue;
-  String startDateValue;
-  String endDateValue;
-  String descValue;
-  String id;
-  File image;
+  final String couponCodeValue;
+  final String startDateValue;
+  final String endDateValue;
+  final String descValue;
+  final String id;
+  final File image;
 
   EditCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
       this.descValue, this.id, this.image);
@@ -144,7 +135,6 @@ class EditCouponEvent extends ApiBlocEvent {
     return map;
   }
 
-  // TODO: implement props
   List<Object> get props => [
         this.couponCodeValue,
         this.startDateValue,
@@ -155,24 +145,24 @@ class EditCouponEvent extends ApiBlocEvent {
       ];
 }
 
-class UpdatePofileEvent extends ApiBlocEvent {
-  String name;
-  String address;
-  String map_lat;
-  String map_log;
-  String phone_number;
-  String email;
-  String website;
-  String about;
-  File logo;
-  File banner;
+class UpdateProfileEvent extends ApiBlocEvent {
+  final String name;
+  final String address;
+  final String mapLat;
+  final String mapLog;
+  final String phoneNumber;
+  final String email;
+  final String website;
+  final String about;
+  final File logo;
+  final File banner;
 
-  UpdatePofileEvent(
+  UpdateProfileEvent(
       this.name,
       this.address,
-      this.map_lat,
-      this.map_log,
-      this.phone_number,
+      this.mapLat,
+      this.mapLog,
+      this.phoneNumber,
       this.email,
       this.website,
       this.about,
@@ -183,9 +173,9 @@ class UpdatePofileEvent extends ApiBlocEvent {
     var map = new Map<String, dynamic>();
     map["name"] = name;
     map["address"] = address;
-    map["map_lat"] = map_lat;
-    map["map_log"] = map_log;
-    map["phone_number"] = phone_number;
+    map["map_lat"] = mapLat;
+    map["map_log"] = mapLog;
+    map["phone_number"] = phoneNumber;
     map["email"] = email;
     map["website"] = website;
     map["about"] = about;
@@ -193,13 +183,12 @@ class UpdatePofileEvent extends ApiBlocEvent {
     return map;
   }
 
-  // TODO: implement props
   List<Object> get props => [
         this.name,
         this.address,
-        this.map_lat,
-        this.map_log,
-        this.phone_number,
+        this.mapLat,
+        this.mapLog,
+        this.phoneNumber,
         this.email,
         this.website,
         this.about,

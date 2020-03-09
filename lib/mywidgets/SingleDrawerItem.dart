@@ -59,7 +59,7 @@ class SingleDrawerItem1 extends StatelessWidget {
                       
                         getImage() {
                           if(selectedIndex == currentIndex){
-return Image.asset(item.selecteImage);
+return Image.asset(item.selectedImage);
                           }else{
                           return Image.asset(item.imagePath);
                           }

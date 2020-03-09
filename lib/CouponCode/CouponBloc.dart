@@ -52,8 +52,8 @@ class CouponBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield CouponAddErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("error $e");
@@ -72,8 +72,8 @@ class CouponBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield EditCouponApiErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("error $e");

@@ -1,6 +1,6 @@
-class ErroGen{
+class ErrorGen{
   final bool isError;
   final String value;
 
-  const ErroGen({this.isError, this.value});
+  const ErrorGen({this.isError, this.value});
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
@@ -33,7 +32,7 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   Stream<ApiBlocState> mapEventToState(
     ApiBlocEvent event,
   ) async* {
-    if (event is UpdatePofileEvent) {
+    if (event is UpdateProfileEvent) {
       yield* _mapUpdateProfileEventResponseEvents(event);
     } else if (event is GetProfileEvent) {
       yield* _mapGetProfileEventResponseEvents(event);
@@ -41,7 +40,7 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   }
 
   Stream<ApiBlocState> _mapUpdateProfileEventResponseEvents(
-      UpdatePofileEvent event) async* {
+      UpdateProfileEvent event) async* {
     yield ApiFetchingState();
     try {
       final response =
@@ -52,8 +51,8 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
         String error = getError(response.errorMessage);
         yield UpdateProfileApiErrorState(response, error);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("error $e");
@@ -91,8 +90,8 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield GetProfileApiErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");

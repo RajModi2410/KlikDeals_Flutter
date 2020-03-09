@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
-import 'package:klik_deals/ApiBloc/index.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/CouponCode/EditCoupon.dart';
 
 class CouponHistoryItem extends StatelessWidget {
   final Data data;
@@ -67,7 +64,7 @@ class CouponHistoryItem extends StatelessWidget {
           getRedeemDate(date),
           Padding(
             padding: EdgeInsets.only(top: 8.0, left: 8.0),
-            child: _staus(),
+            child: _status(),
           ),
         ],
       ),
@@ -130,7 +127,7 @@ class CouponHistoryItem extends StatelessWidget {
     }
   }
 
-  Widget _staus() {
+  Widget _status() {
     return Text(
       "Status: ${data.statusName}",
       overflow: TextOverflow.ellipsis,
@@ -168,15 +165,5 @@ String dateFormatter(String startDate, String endDate, String grabDate) {
     return "Redeem at: $grabDateFormat";
   } else {
     return null;
-  }
-}
-
-void _goToEditScreen(
-    BuildContext context, Map<String, dynamic> data, ApiBlocBloc auth) async {
-  var result = await Navigator.of(context)
-      .pushNamed(EditCoupon.routeName, arguments: data);
-
-  if (result) {
-    auth.add(ReloadEvent(true));
   }
 }

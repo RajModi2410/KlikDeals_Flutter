@@ -17,15 +17,6 @@ class ApiFetchingState extends ApiBlocState {
   List<Object> get props => [];
 }
 
-class ApiFetchedState extends ApiBlocState {
-  final SearchResponse searchResult;
-
-  ApiFetchedState({this.searchResult});
-
-  @override
-  List<Object> get props => [searchResult];
-}
-
 class ApiErrorState extends ApiBlocState {
   @override
   List<Object> get props => [];

@@ -4,13 +4,13 @@ import 'package:klik_deals/CouponCode/EditCoupon.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/ProfileScreen/Profile.dart';
-import 'package:klik_deals/mywidgets/HomeMainTab.dart';
+import 'package:klik_deals/myWidgets/HomeMainTab.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     // Getting arguments passed in while calling Navigator.pushNamed
     final args = settings.arguments;
-    print("let's got this rounte => : " + settings.name);
+    print("let's got this route => : " + settings.name);
     switch (settings.name) {
       case LoginPage.routeName:
         return MaterialPageRoute(builder: (context) => new LoginPage());
@@ -30,7 +30,7 @@ class RouteGenerator {
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
-        print("default we got rounte : " + settings.name);
+        print("default we got route : " + settings.name);
         return _errorRoute();
     }
   }

@@ -8,7 +8,7 @@ class LoginApiFetchedState extends ApiBlocState {
   LoginApiFetchedState(this.loginResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [loginResponse];
 }
 
@@ -18,6 +18,6 @@ class LoginApiErrorState extends ApiBlocState{
   LoginApiErrorState(this.loginResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [loginResponse];
 }

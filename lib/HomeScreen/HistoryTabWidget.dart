@@ -6,14 +6,12 @@ import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/History_bloc.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
-import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
-import 'package:klik_deals/mywidgets/BottomLoader.dart';
-import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
-import 'package:klik_deals/mywidgets/CouponHistoryItem.dart';
-import 'package:klik_deals/mywidgets/CouponItem.dart';
-import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
+import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
+import 'package:klik_deals/myWidgets/BottomLoader.dart';
+import 'package:klik_deals/myWidgets/CouponErrorWidget.dart';
+import 'package:klik_deals/myWidgets/CouponHistoryItem.dart';
+import 'package:klik_deals/myWidgets/EmptyListWidget.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'HomeState.dart';
@@ -22,7 +20,7 @@ var token = "";
 SharedPreferences sharedPreferences;
 
 class HistoryTabWidget extends StatefulWidget {
-  bool isForHistory;
+  final bool isForHistory;
 
   HistoryTabWidget(this.isForHistory);
 
@@ -32,9 +30,8 @@ class HistoryTabWidget extends StatefulWidget {
 
 class _HistoryTabState extends State<HistoryTabWidget> {
   // with AutomaticKeepAliveClientMixin<HistoryTabWidget>{
-  bool _isLoading;
   HistoryBloc auth;
-  int _perpage = 10;
+  int _perPage = 10;
   var choices;
   bool isForHistory;
   ApiBlocEvent lastEvent;
@@ -68,7 +65,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
         print("current page : $currentPage");
         getCouponList();
       } else {
-        // print("limit reahed : " + hasReachedEnd.toString());
+        // print("limit reached : " + hasReachedEnd.toString());
       }
     }
   }
@@ -104,14 +101,14 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                     print("Home Page :: We are in fetching state.....");
                     // return RoundWidget();
                     return CenterLoadingIndicator();
-                  } else if (currentState is CouponHistoryErroState) {
+                  } else if (currentState is CouponHistoryErrorState) {
                     print(
-                        "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                        "Home Page :: We got error.....${currentState.couponList.errorMessage.error[0]}");
                     return CouponErrorWidget(
                         errorMessage:
-                            currentState.couponlist.errorMessage.error.first);
+                            currentState.couponList.errorMessage.error.first);
                   } else if (currentState is CouponHistoryListFetchedState) {
-                    return _couponList(currentState.couponlist.response);
+                    return _couponList(currentState.couponList.response);
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
                     return EmptyListWidget(
@@ -167,7 +164,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
         "CategoriesListScreen We need Data ::: $hasReachedEnd :: ${responseData.currentPage} :: ${responseData.lastPage}");
     // BottomLoader();
     // print("CategoriesListScreen we are in bottom of::$BottomLoader()");
-    // return vendorList == null ? 0 : resppnse.data.length + (hasReachedEnd? 0 : 1);
+    // return vendorList == null ? 0 : response.data.length + (hasReachedEnd? 0 : 1);
     var totalLength = responseData.data.length; // + (hasReachedEnd ? 0 : 1);
     print("We are returning totalLength : $totalLength");
     return totalLength;
@@ -184,7 +181,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
 
   void getCouponList() {
     try {
-      lastEvent = CouponListEvent(_perpage, "history", currentPage);
+      lastEvent = CouponListEvent(_perPage, "history", currentPage);
       auth.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");

@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
-import 'package:klik_deals/mywidgets/HomeMainTab.dart';
+import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
+import 'package:klik_deals/myWidgets/HomeMainTab.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {

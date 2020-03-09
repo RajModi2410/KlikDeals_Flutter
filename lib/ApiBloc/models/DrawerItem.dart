@@ -2,9 +2,9 @@ class DrawerItem {
     final String imagePath;
     final String title;
     bool isSelected = false;
-    String selecteImage;
+    String selectedImage;
 
-  DrawerItem(this.imagePath, this.title, {String selecteImage}){
-  this.selecteImage= selecteImage!=null? selecteImage: this.imagePath;
+  DrawerItem(this.imagePath, this.title, {String selectedImage}){
+  this.selectedImage= selectedImage!=null? selectedImage: this.imagePath;
   }
 }

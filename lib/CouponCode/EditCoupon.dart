@@ -8,9 +8,9 @@ import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
-import 'package:klik_deals/mywidgets/ErrorDialog.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
+import 'package:klik_deals/myWidgets/ErrorDialog.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
+import 'package:klik_deals/myWidgets/RoundWidget.dart';
 
 import 'CouponBloc.dart';
 import 'CouponStates.dart';
@@ -27,10 +27,9 @@ class EditCoupon extends StatefulWidget {
 
 class _EditCoupon extends State<EditCoupon>
     with TickerProviderStateMixin, ImagePickerListener {
-  DateTime _Startdate;
+  DateTime _dateStart;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
-  bool _isLoading;
   Map<String, dynamic> mapData;
   File _imageBanner;
   bool isDirty = false;
@@ -54,11 +53,10 @@ class _EditCoupon extends State<EditCoupon>
   void initState() {
     super.initState();
     data = Data.fromJson(mapData);
-    _Startdate = new DateFormat("yyyy/MM/dd").parse(data.startDate);
-    print("We are getting $_Startdate and ${data.startDate}");
+    _dateStart = new DateFormat("yyyy/MM/dd").parse(data.startDate);
+    print("We are getting $_dateStart and ${data.startDate}");
     // _endDateValue= new DateFormat("yyyy/MM/dd").parse(data.startDate);
     // print("We are getting $_Startdate and ${data.startDate}");
-    _isLoading = false;
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -85,7 +83,7 @@ class _EditCoupon extends State<EditCoupon>
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
-          AddCouponDesign(context),
+          addCouponDesign(context),
           BlocListener<CouponBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is EditCouponApiErrorState) {
@@ -136,7 +134,7 @@ class _EditCoupon extends State<EditCoupon>
         ]));
   }
 
-  Widget AddCouponDesign(BuildContext context) {
+  Widget addCouponDesign(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -276,8 +274,8 @@ class _EditCoupon extends State<EditCoupon>
           controller: _endDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
-            if (_Startdate != null && _Startdate != "") {
-              _showEndDatePicker(context, _Startdate);
+            if (_dateStart != null && _dateStart != "") {
+              _showEndDatePicker(context, _dateStart);
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
@@ -297,7 +295,7 @@ class _EditCoupon extends State<EditCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please selecct start date';
+              return 'Please select start date';
             }
             return null;
           },
@@ -348,7 +346,7 @@ class _EditCoupon extends State<EditCoupon>
       fillColor: Color(0xB3FFFFFF),
       filled: true,
       hintStyle: TextStyle(color: Theme.of(context).primaryColor),
-      suffixIcon: _InputsuffixIcon(isForCal),
+      suffixIcon: _inputsuffixIcon(isForCal),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
@@ -361,7 +359,7 @@ class _EditCoupon extends State<EditCoupon>
     );
   }
 
-  _InputsuffixIcon(bool isForCal) {
+  _inputsuffixIcon(bool isForCal) {
     if (isForCal) {
       return new Icon(
         Icons.calendar_today,
@@ -382,12 +380,12 @@ class _EditCoupon extends State<EditCoupon>
     final now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
-        minTime: DateTime(now.year, now.month, now.day + 1),
-        maxTime: DateTime(now.year + 1, now.month, now.day), onChanged: (date) {
+        minTime: DateTime(now.year, now.month, now.day),
+        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
       _endDateController.clear();
       print('change $date');
     }, onConfirm: (date) {
-      _Startdate = date;
+      _dateStart = date;
       var formatter = new DateFormat('yyyy/MM/dd');
       String formatted = formatter.format(date);
       print('confirm $date');
@@ -403,7 +401,7 @@ class _EditCoupon extends State<EditCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(startDate.year, startDate.month, startDate.day + 1),
-        maxTime: DateTime(now.year + 1, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
       print('change $date');
     }, onConfirm: (date) {
       var formatter = new DateFormat('yyyy/MM/dd');
@@ -438,7 +436,6 @@ class _EditCoupon extends State<EditCoupon>
         auth.add(lastEvent);
 
         setState(() {
-          _isLoading = false;
         });
       } catch (e) {
         print('Error: $e');

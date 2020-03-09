@@ -56,8 +56,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield LoginApiErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("error $e");
@@ -79,16 +79,16 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       if (response.status) {
         if (currentState is CouponListFetchedState && event.currentPage != 1) {
           response.response.data =
-              currentState.couponlist.response.data + response.response.data;
+              currentState.couponList.response.data + response.response.data;
         } else {
           print("state not matched");
         }
         yield CouponListFetchedState(response);
       } else {
-        yield couponApiErrorState(response);
+        yield CouponApiErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
@@ -108,8 +108,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield CouponDeleteErrorState(response);
       }
-    } on NoInternetException catch (e) {
-      print("No Intenet exception");
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
       yield NoInternetState();
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
@@ -31,7 +30,7 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
 
   @override
   Stream<ApiBlocState> mapEventToState(ApiBlocEvent event) async* {
-    // TODO: implement mapEventToState
+    
     if (event is CouponListEvent) {
       yield* _mapCouponListResponseEvents(event);
     }
@@ -48,13 +47,13 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status ) {
           if (currentState is CouponHistoryListFetchedState && event.currentPage != 1){
-            response.response.data = currentState.couponlist.response.data + response.response.data;
+            response.response.data = currentState.couponList.response.data + response.response.data;
           }
         yield CouponHistoryListFetchedState(response);
       } else {
-        yield CouponHistoryErroState(response);
+        yield CouponHistoryErrorState(response);
       }
-    } on NoInternetException catch (e) {
+    } on NoInternetException catch (_) {
       print("No Intenet exception");
       yield NoInternetState();
     } catch (e, s) {

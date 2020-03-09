@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:klik_deals/commons/Auth/index.dart';
 import 'package:meta/meta.dart';

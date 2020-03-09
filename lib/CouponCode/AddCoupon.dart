@@ -9,9 +9,9 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/mywidgets/ErrorDialog.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
+import 'package:klik_deals/myWidgets/ErrorDialog.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
+import 'package:klik_deals/myWidgets/RoundWidget.dart';
 
 import 'CouponBloc.dart';
 
@@ -22,11 +22,10 @@ class AddCoupon extends StatefulWidget {
 
 class _CouponAdd extends State<AddCoupon>
     with TickerProviderStateMixin, ImagePickerListener {
-  DateTime _Startdate;
+  DateTime _dateStart;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   File _imageBanner;
-  bool _isLoading;
   bool isDirty = false;
   CouponBloc auth;
   RoundWidget round;
@@ -34,7 +33,6 @@ class _CouponAdd extends State<AddCoupon>
   String _startDateValue;
   String _endDateValue;
   String _descValue;
-  String _errorMessage;
   ApiBlocEvent lastEvent;
 
   TextEditingController _startDateController,
@@ -47,7 +45,6 @@ class _CouponAdd extends State<AddCoupon>
   @override
   void initState() {
     super.initState();
-    _isLoading = false;
     _controller = new AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -76,7 +73,7 @@ class _CouponAdd extends State<AddCoupon>
         ),
       ),
       body: Stack(children: <Widget>[
-        AddCouponDesign(context),
+        addCouponDesign(context),
         BlocListener<CouponBloc, ApiBlocState>(
             listener: (context, state) {
               // final snackBar = SnackBar(content: Text('Yay! A SnackBar!'));
@@ -132,23 +129,7 @@ class _CouponAdd extends State<AddCoupon>
     );
   }
 
-  Widget _ShowerrorMessages() {
-    if (_errorMessage != null && _errorMessage.length > 0) {
-      return SnackBar(
-        content: Text(_errorMessage),
-        action: SnackBarAction(
-          label: 'Undo',
-          onPressed: () {},
-        ),
-      );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
-  }
-
-  Widget AddCouponDesign(BuildContext context) {
+  Widget addCouponDesign(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -262,7 +243,7 @@ class _CouponAdd extends State<AddCoupon>
                           height: 160.0,
                           width: 360.0,
                           decoration: new BoxDecoration(
-                            image: _CouponImage(isDirty, _imageBanner),
+                            image: _couponImage(isDirty, _imageBanner),
                             border: Border.all(color: Colors.white, width: 0.5),
                           ),
                         )
@@ -270,7 +251,7 @@ class _CouponAdd extends State<AddCoupon>
                           height: 160.0,
                           width: 360.0,
                           decoration: new BoxDecoration(
-                            image: _CouponImage(isDirty, null),
+                            image: _couponImage(isDirty, null),
                             border: Border.all(color: Colors.white, width: 0.5),
                           ),
                         )),
@@ -296,8 +277,8 @@ class _CouponAdd extends State<AddCoupon>
           controller: _endDateController,
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
-            if (_Startdate != null && _Startdate != "") {
-              _showEndDatePicker(context, _Startdate);
+            if (_dateStart != null && _dateStart != "") {
+              _showEndDatePicker(context, _dateStart);
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
@@ -317,7 +298,7 @@ class _CouponAdd extends State<AddCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please selecct start date';
+              return 'Please select start date';
             }
             return null;
           },
@@ -368,7 +349,7 @@ class _CouponAdd extends State<AddCoupon>
       fillColor: Color(0xB3FFFFFF),
       filled: true,
       hintStyle: TextStyle(color: Theme.of(context).primaryColor),
-      suffixIcon: _InputsuffixIcon(isForCal),
+      suffixIcon: _inputSuffixIcon(isForCal),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),
@@ -381,7 +362,7 @@ class _CouponAdd extends State<AddCoupon>
     );
   }
 
-  _InputsuffixIcon(bool isForCal) {
+  _inputSuffixIcon(bool isForCal) {
     if (isForCal) {
       return new Icon(
         Icons.calendar_today,
@@ -402,12 +383,12 @@ class _CouponAdd extends State<AddCoupon>
     final now = DateTime.now();
     DatePicker.showDatePicker(context,
         showTitleActions: true,
-        minTime: DateTime(now.year, now.month, now.day + 1),
-        maxTime: DateTime(now.year + 1, now.month, now.day), onChanged: (date) {
+        minTime: DateTime(now.year, now.month, now.day),
+        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
       _endDateController.clear();
       print('change $date');
     }, onConfirm: (date) {
-      _Startdate = date;
+      _dateStart = date;
       var formatter = new DateFormat('yyyy/MM/dd');
       String formatted = formatter.format(date);
       print('confirm $date');
@@ -423,7 +404,7 @@ class _CouponAdd extends State<AddCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(startDate.year, startDate.month, startDate.day + 1),
-        maxTime: DateTime(now.year + 1, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
       print('change $date');
     }, onConfirm: (date) {
       var formatter = new DateFormat('yyyy/MM/dd');
@@ -457,7 +438,6 @@ class _CouponAdd extends State<AddCoupon>
             _endDateValue, _descValue, _imageBanner);
         auth.add(lastEvent);
         setState(() {
-          _isLoading = false;
         });
       } catch (e) {
         print('Error: $e');
@@ -484,7 +464,7 @@ class _CouponAdd extends State<AddCoupon>
   }
 }
 
-_CouponImage(bool isDirty, File imageBanner) {
+_couponImage(bool isDirty, File imageBanner) {
   if (isDirty) {
     return new DecorationImage(
       image: new FileImage(imageBanner),

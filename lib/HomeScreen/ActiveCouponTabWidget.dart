@@ -7,12 +7,12 @@ import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
 import 'package:klik_deals/commons/KeyConstant.dart';
-import 'package:klik_deals/mywidgets/BackgroundWidget.dart';
-import 'package:klik_deals/mywidgets/BottomLoader.dart';
-import 'package:klik_deals/mywidgets/CouponErrorWidget.dart';
-import 'package:klik_deals/mywidgets/CouponItem.dart';
-import 'package:klik_deals/mywidgets/EmptyListWidget.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
+import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
+import 'package:klik_deals/myWidgets/BottomLoader.dart';
+import 'package:klik_deals/myWidgets/CouponErrorWidget.dart';
+import 'package:klik_deals/myWidgets/CouponItem.dart';
+import 'package:klik_deals/myWidgets/EmptyListWidget.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var token = "";
@@ -20,7 +20,7 @@ SharedPreferences sharedPreferences;
 
 class ActiveCouponTabWidget extends StatefulWidget {
   static const String routeName = "/active_coupon";
-  bool isForHistory;
+  final bool isForHistory;
 
   ActiveCouponTabWidget(this.isForHistory);
 
@@ -30,9 +30,8 @@ class ActiveCouponTabWidget extends StatefulWidget {
 
 class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     with AutomaticKeepAliveClientMixin<ActiveCouponTabWidget> {
-  bool _isLoading;
   ApiBlocBloc apiBloc;
-  int _perpage = 10;
+  int _perPage = 10;
   var choices;
   bool isForHistory;
   ApiBlocEvent lastEvent;
@@ -57,6 +56,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print("build initstate");
     apiBloc = BlocProvider.of<ApiBlocBloc>(context);
     return Scaffold(
@@ -91,16 +91,16 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     getCouponList();
                     return CenterLoadingIndicator();
                     //  RoundWidget();
-                  } else if (currentState is couponApiErrorState) {
+                  } else if (currentState is CouponApiErrorState) {
                     print(
-                        "Home Page :: We got error.....${currentState.couponlist.errorMessage.error[0]}");
+                        "Home Page :: We got error.....${currentState.couponList.errorMessage.error[0]}");
                     return CouponErrorWidget(
                         errorMessage:
-                            currentState.couponlist.errorMessage.error.first);
+                            currentState.couponList.errorMessage.error.first);
                   } else if (currentState is CouponListFetchedState) {
                     CenterLoadingIndicator();
 
-                    return _couponList(currentState.couponlist.response);
+                    return _couponList(currentState.couponList.response);
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
                     return EmptyListWidget(
@@ -160,34 +160,6 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
         child: hasReachedEnd ? Container() : BottomLoader(),
       )
     ]);
-
-    //       child: GridView.builder(
-    //       controller: _scrollController,
-    //       physics: const AlwaysScrollableScrollPhysics(),
-    //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //           childAspectRatio: 8.0 / 10.0,
-    //           crossAxisCount: 2,
-    //           mainAxisSpacing: 4.0,
-    //           crossAxisSpacing: 4.0),
-    //       itemCount: getTotalCount(data),
-    //       itemBuilder: (BuildContext context, int index) {
-    //         if (index == data.data.length) {
-    //           print(
-    //               "we are getting bottom at $index and total is: ${data.data.length}");
-    //           return BottomLoader();
-    //         } else {
-    //           var listData = data.data[index];
-    //           listData.isFromHistory = isForHistory;
-    //           // return GridTile(child: null)
-    //           return CouponItem(
-    //               data: listData,
-    //               isForHistory: false,
-    //               onDeleteClick: (id) {
-    //                 _showPopup(id);
-    //               });
-    //         }
-    //       }),
-    // );
   }
 
   int getTotalCount(Response vendorList) {
@@ -211,7 +183,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
         print("current page : $currentPage");
         getCouponList();
       } else {
-        // print("limit reahed : " + hasReachedEnd.toString());
+        // print("limit reached : " + hasReachedEnd.toString());
       }
     }
   }
@@ -227,7 +199,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   void getCouponList() {
     try {
-      lastEvent = CouponListEvent(_perpage, null, currentPage);
+      lastEvent = CouponListEvent(_perPage, null, currentPage);
       apiBloc.add(lastEvent);
     } catch (e) {
       print("Home Page :: We got error in catch.....${e.toString()}");
@@ -245,13 +217,13 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           apiBloc.add(lastEvent);
           break;
         case AppLifecycleState.inactive:
-          // Handle this case
+          
           break;
         case AppLifecycleState.paused:
-          // Handle this case
+          
           break;
         case AppLifecycleState.detached:
-          // TODO: Handle this case.
+          
           break;
       }
     });
@@ -287,7 +259,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
               child: const Text('ACCEPT'),
               onPressed: () {
                 Navigator.of(context).pop();
-                RemoveCouponApi(id);
+                removeCouponApi(id);
               },
             )
           ],
@@ -296,7 +268,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     );
   }
 
-  void RemoveCouponApi(int couponId) {
+  void removeCouponApi(int couponId) {
     lastEvent = CouponDeleteEvent(couponId.toString());
     apiBloc.add(lastEvent);
   }

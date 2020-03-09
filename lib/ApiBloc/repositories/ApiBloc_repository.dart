@@ -88,7 +88,6 @@ class ApiBlocRepository {
 
   Future<CouponListResponse> coupon(Map map) async {
     print(baseUrl + "listcouponbyvendor:" + map.toString());
-    Dio.FormData formData = new Dio.FormData.fromMap(map);
     try {
       Dio.Response response = await dio.get(baseUrl + "listcouponbyvendor",
           queryParameters: map,
@@ -118,7 +117,7 @@ class ApiBlocRepository {
 
   Future<AddCouponResponse> addCoupon(AddCouponEvent map, File image) async {
     print(baseUrl + "addcoupon:" + map.toMap().toString());
-    Dio.FormData formData = null;
+    Dio.FormData formData;
     if (image != null) {
       String fileName = basename(image.path);
       print("File base name: $fileName");
@@ -195,7 +194,7 @@ class ApiBlocRepository {
   }
 
   Future<UpdateProfileResponse> updateProfile(
-      UpdatePofileEvent map, File logo, File banner) async {
+      UpdateProfileEvent map, File logo, File banner) async {
     print(baseUrl + "vendorprofile:" + map.toString());
     String logoFileName;
     String bannerFileName;
@@ -210,9 +209,9 @@ class ApiBlocRepository {
     Dio.FormData formData = FormData.fromMap({
       "name": map.name,
       "address": map.name,
-      "map_lat": map.map_lat,
-      "map_log": map.map_log,
-      "phone_number": map.phone_number,
+      "map_lat": map.mapLat,
+      "map_log": map.mapLog,
+      "phone_number": map.phoneNumber,
       "email": map.email,
       "website": map.website,
       "about": map.about,
@@ -355,5 +354,5 @@ class ApiBlocRepository {
 class UnauthorizedException extends DioError {
   Dio.DioError dioError;
 
-  UnauthorizedException(this.dioError) : super() {}
+  UnauthorizedException(this.dioError) : super();
 }

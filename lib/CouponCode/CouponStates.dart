@@ -8,7 +8,7 @@ class CouponApiFetchedState extends ApiBlocState {
   CouponApiFetchedState(this.addCouponResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [CouponApiErrorState];
 }
 
@@ -18,7 +18,7 @@ class CouponApiErrorState extends ApiBlocState {
   CouponApiErrorState(this.addCouponResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [CouponApiErrorState];
 }
 
@@ -28,7 +28,7 @@ class EditCouponApiFetchedState extends ApiBlocState {
   EditCouponApiFetchedState(this.editCouponResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [editCouponResponse];
 }
 
@@ -38,6 +38,6 @@ class EditCouponApiErrorState extends ApiBlocState {
   EditCouponApiErrorState(this.editCouponResponse);
 
   @override
-  // TODO: implement props
+  
   List<Object> get props => [editCouponResponse];
 }

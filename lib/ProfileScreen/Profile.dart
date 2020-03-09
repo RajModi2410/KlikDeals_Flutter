@@ -9,9 +9,9 @@ import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
 import 'package:klik_deals/SelectAddress/SelectAddress.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
-import 'package:klik_deals/mywidgets/SuccessDialog.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
+import 'package:klik_deals/myWidgets/RoundWidget.dart';
+import 'package:klik_deals/myWidgets/SuccessDialog.dart';
 
 import 'ProfileStates.dart';
 
@@ -20,15 +20,15 @@ class Profile extends StatefulWidget {
   Profile({Key key, this.title}) : super(key: key);
   final String title;
 
-  _profilePage createState() => _profilePage();
+  _ProfilePage createState() => _ProfilePage();
 }
 
-class _profilePage extends State<Profile>
+class _ProfilePage extends State<Profile>
     with TickerProviderStateMixin, ImagePickerListener {
   final _formKey = GlobalKey<FormState>();
   File _image;
   File _imageBanner;
-  bool forlogo = false;
+  bool forLogo = false;
   bool isDirty = false;
   Response data;
   ProfileBloc auth;
@@ -357,7 +357,7 @@ _dismissKeyboard(BuildContext context) {
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        forlogo = false;
+                        forLogo = false;
                         imagePickerBanner.showDialog(context);
                       },
                     ),
@@ -425,7 +425,7 @@ _dismissKeyboard(BuildContext context) {
                           style: TextStyle(fontSize: 12, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
-                        forlogo = true;
+                        forLogo = true;
                         imagePicker.showDialog(context);
                       },
                     ),
@@ -439,7 +439,7 @@ _dismissKeyboard(BuildContext context) {
                         height: 160.0,
                         width: 360.0,
                         decoration: new BoxDecoration(
-                          image: _LogoImage(
+                          image: _logoImage(
                               isDirty, data != null ? data.logo : null, _image),
 //                              image: new NetworkImage(_image.path),
                         ))
@@ -447,7 +447,7 @@ _dismissKeyboard(BuildContext context) {
                         height: 160.0,
                         width: 360.0,
                         decoration: new BoxDecoration(
-                          image: _LogoImage(
+                          image: _logoImage(
                               isDirty, data != null ? data.logo : null, _image),
 //                            image: new NetworkImage(_image.path),
                           border: Border.all(color: Colors.white, width: 0.5),
@@ -502,6 +502,7 @@ _dismissKeyboard(BuildContext context) {
           if (value.trim() == null || value.trim().isEmpty) {
             return "Please enter Address";
           }
+          return null;
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _addressValue,
@@ -525,6 +526,7 @@ _dismissKeyboard(BuildContext context) {
             if (value.trim() == null || value.trim().isEmpty) {
               return "Please enter name";
             }
+            return null;
           },
           style: TextStyle(color: Theme.of(context).primaryColor),
           decoration: _inputType(
@@ -539,7 +541,7 @@ _dismissKeyboard(BuildContext context) {
     if (_image != null) {
       setState(() {
         isDirty = true;
-        if (forlogo == true) {
+        if (forLogo == true) {
           this._image = _image;
         } else {
           this._imageBanner = _image;
@@ -576,7 +578,7 @@ _dismissKeyboard(BuildContext context) {
         return null;
       }
     } else {
-      return 'Please enter email adderess.';
+      return 'Please enter email address.';
     }
   }
 
@@ -594,7 +596,7 @@ _dismissKeyboard(BuildContext context) {
       print("_imageBanner $_imageBanner");
       print("_imageLogo $_image");
       try {
-        lastEvent = UpdatePofileEvent(_name, _addr, _lat, _long, _number,
+        lastEvent = UpdateProfileEvent(_name, _addr, _lat, _long, _number,
             _email, _website, _desc, _image, _imageBanner);
         auth.add(lastEvent);
       } catch (e) {
@@ -640,7 +642,7 @@ _dismissKeyboard(BuildContext context) {
       _addressString = data[2].toString();
       _addressValue = TextEditingController(text: data[2].toString());
       print(
-          "We got selected latlong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
+          "We got selected latLong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
     }
   }
 }
@@ -667,7 +669,7 @@ _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
   }
 }
 
-_LogoImage(bool isDirty, String oldLogo, File imageLogo) {
+_logoImage(bool isDirty, String oldLogo, File imageLogo) {
   print("We got null banner file :: $isDirty :: $oldLogo :: $imageLogo");
   if (isDirty && imageLogo != null) {
     return new DecorationImage(

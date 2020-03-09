@@ -36,7 +36,7 @@ class SearchResponse extends ApiResponse{
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return false;
   }
 }
@@ -171,7 +171,7 @@ class Location {
   int cityId;
   String latitude;
   String longitude;
-  String zipcode;
+  String zipCode;
   int countryId;
   String localityVerbose;
 
@@ -181,7 +181,7 @@ class Location {
     this.cityId,
     this.latitude,
     this.longitude,
-    this.zipcode,
+    this.zipCode,
     this.countryId,
     this.localityVerbose});
 
@@ -192,7 +192,7 @@ class Location {
     cityId = json['city_id'];
     latitude = json['latitude'];
     longitude = json['longitude'];
-    zipcode = json['zipcode'];
+    zipCode = json['zipcode'];
     countryId = json['country_id'];
     localityVerbose = json['locality_verbose'];
   }
@@ -205,7 +205,7 @@ class Location {
     data['city_id'] = this.cityId;
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
-    data['zipcode'] = this.zipcode;
+    data['zipcode'] = this.zipCode;
     data['country_id'] = this.countryId;
     data['locality_verbose'] = this.localityVerbose;
     return data;

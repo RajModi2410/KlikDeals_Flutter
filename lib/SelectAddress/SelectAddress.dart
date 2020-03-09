@@ -33,7 +33,7 @@ class _SelectAddressState extends State<SelectAddress> {
   CameraPosition _initialCamera;
 
   Completer<GoogleMapController> _mapController = Completer();
-  String API_KEY = "AIzaSyCRYvqSRrhfWyH7JHKSgnakK-dV8bUIcA8";
+   static const String API_KEY = "AIzaSyCRYvqSRrhfWyH7JHKSgnakK-dV8bUIcA8";
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   BitmapDescriptor _markerIcon;
@@ -43,6 +43,7 @@ class _SelectAddressState extends State<SelectAddress> {
 
   @override
   void initState() {
+    super.initState();
     if (latitudeStr != null && latitudeStr.isNotEmpty) {
       latitude = double.parse(latitudeStr.toString());
     } else {
@@ -82,14 +83,13 @@ class _SelectAddressState extends State<SelectAddress> {
   }
 
   void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
-    final Marker tappedMarker = markers[markerId];
+    // final Marker tappedMarker = markers[markerId];
     selectedLatitude = newPosition.latitude.toString();
     selectedLongitude = newPosition.longitude.toString();
   }
 
   Set<Marker> _createMarker() {
     print("we got _createMarker");
-    // TODO(iskakaushik): Remove this when collection literals makes it to stable.
     // https://github.com/flutter/flutter/issues/28312
     // ignore: prefer_collection_literals
     return <Marker>[
@@ -155,20 +155,20 @@ class _SelectAddressState extends State<SelectAddress> {
             onSelected: (place) async {
               print("Selected Place name ::: ${place.description}");
               selectedAddress = place.description;
-              final geolocation = await place.geolocation;
+              final geoLocation = await place.geolocation;
 
               final GoogleMapController controller =
                   await _mapController.future;
 
-              final latLong = geolocation.coordinates as LatLng;
+              final latLong = geoLocation.coordinates as LatLng;
               print(
-                  "selected latlong :: ${latLong.latitude} :: ${latLong.longitude}");
+                  "selected latLong :: ${latLong.latitude} :: ${latLong.longitude}");
               selectedLatitude = latLong.latitude.toString();
               selectedLongitude = latLong.longitude.toString();
               controller.animateCamera(
-                  CameraUpdate.newLatLng(geolocation.coordinates));
+                  CameraUpdate.newLatLng(geoLocation.coordinates));
               controller.animateCamera(
-                  CameraUpdate.newLatLngBounds(geolocation.bounds, 0));
+                  CameraUpdate.newLatLngBounds(geoLocation.bounds, 0));
               markers.remove(markerId);
               createMarker(latLong);
             },

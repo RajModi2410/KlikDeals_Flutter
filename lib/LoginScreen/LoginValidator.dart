@@ -3,7 +3,7 @@ import 'dart:async';
 import 'ErrorGen.dart';
 
 mixin LoginValidator {
-  var emailValidator = StreamTransformer<ErroGen, String>.fromHandlers(
+  var emailValidator = StreamTransformer<ErrorGen, String>.fromHandlers(
       handleData: (errorGen, sink) {
     var email = errorGen.value;
     Pattern pattern =
@@ -18,7 +18,7 @@ mixin LoginValidator {
     }
   });
 
-  var passwordValidator = StreamTransformer<ErroGen, String>.fromHandlers(
+  var passwordValidator = StreamTransformer<ErrorGen, String>.fromHandlers(
       handleData: (errorGen, sink) {
     var password = errorGen.value;
     if (errorGen.isError) {

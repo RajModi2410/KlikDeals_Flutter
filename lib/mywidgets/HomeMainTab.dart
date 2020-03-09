@@ -4,10 +4,9 @@ import 'package:klik_deals/CouponCode/AddCoupon.dart';
 import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:klik_deals/HomeScreen/HistoryTabWidget.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/MyThemeData.dart';
 import 'package:klik_deals/ProfileScreen/Profile.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/mywidgets/SingleDrawerItem.dart';
+import 'package:klik_deals/myWidgets/SingleDrawerItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMainTab extends StatefulWidget {
@@ -27,7 +26,7 @@ class _MyDetailsList extends State<HomeMainTab>
   TabController _controller;
   List<DrawerItem> sideMenu = [
     DrawerItem("assets/images/home_menu.png", "HOME",
-        selecteImage: "assets/images/home_white.png"),
+        selectedImage: "assets/images/home_white.png"),
     DrawerItem("assets/images/user_profile.png", "PROFILE"),
     DrawerItem("assets/images/voucher.png", "ADD COUPON"),
     DrawerItem("assets/images/logout.png", "LOGOUT")
@@ -50,7 +49,6 @@ class _MyDetailsList extends State<HomeMainTab>
     super.dispose();
   }
 
-  GlobalKey<ScaffoldState> _key = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +180,8 @@ class _MyDetailsList extends State<HomeMainTab>
 }
 
 Future<void> clearDataAndRedirectLoginScreen(BuildContext context) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool removed = await prefs.remove(AuthUtils.authTokenKey);
-  print("reved the token : $removed");
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  bool removed = await pref.remove(AuthUtils.authTokenKey);
+  print("removed the token : $removed");
   Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
 }

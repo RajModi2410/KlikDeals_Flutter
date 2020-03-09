@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
@@ -8,9 +7,9 @@ import 'package:klik_deals/LoginScreen/LoginBloc.dart';
 import 'package:klik_deals/LoginScreen/LoginPage.dart';
 import 'package:klik_deals/LoginScreen/LoginStates.dart';
 import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/mywidgets/HomeMainTab.dart';
-import 'package:klik_deals/mywidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/mywidgets/RoundWidget.dart';
+import 'package:klik_deals/myWidgets/HomeMainTab.dart';
+import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
+import 'package:klik_deals/myWidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,7 +54,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   TextEditingController emailInputController;
   TextEditingController pwdInputController;
-  bool _isLoading;
   String _email;
   String _password;
   String _errorMessage;
@@ -74,7 +72,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
     pwdInputController = new TextEditingController(text: "12345678");
     emailInputController.addListener(_printEmailValue);
     pwdInputController.addListener(_printPasswordValue);
-    _isLoading = false;
     _errorMessage = "";
     super.initState();
 
@@ -98,15 +95,15 @@ class _LoginFormV1State extends State<LoginFormV1> {
           listener: (context, state) {
             if (state is LoginApiErrorState) {
               String error = "";
-              if (state.loginResponse.errorMessage.general_error.length > 0) {
-                error = state.loginResponse.errorMessage.general_error.first;
-                print("We got the ERRR in LOGIN VALUE::$error");
-              } else if (state.loginResponse.errorMessage.user_error.length >
+              if (state.loginResponse.errorMessage.generalError.length > 0) {
+                error = state.loginResponse.errorMessage.generalError.first;
+                print("We got the error in LOGIN VALUE::$error");
+              } else if (state.loginResponse.errorMessage.userError.length >
                   0) {
                 // error = state.loginResponse.errorMessage.user_error.first;
-                this.loginBloc.emailChanged(ErroGen(
+                this.loginBloc.emailChanged(ErrorGen(
                     isError: true,
-                    value: state.loginResponse.errorMessage.user_error.first));
+                    value: state.loginResponse.errorMessage.userError.first));
                 print("We got the error in LOGIN VALUE::$error");
                 error = null;
               }
@@ -122,7 +119,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               token = state.loginResponse.token.toString();
               lastEvent = TokenGenerateEvent(token);
               auth.add(lastEvent);
-              _onSetOnShredPrefe(token);
+              _onSetOnShredPref(token);
               _goToHomePage();
             }
           },
@@ -202,7 +199,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                       child: TextFormField(
                         style: TextStyle(color: Theme.of(context).primaryColor),
                         onChanged: (value) => loginBloc.emailChanged(
-                            ErroGen(isError: false, value: value)),
+                            ErrorGen(isError: false, value: value)),
                         keyboardType: TextInputType.emailAddress,
                         autofocus: false,
                         // initialValue: "testing9@webdesksolution.com",
@@ -347,7 +344,6 @@ class _LoginFormV1State extends State<LoginFormV1> {
         lastEvent = LoginEvent(_email, _password);
         auth.add(lastEvent);
         setState(() {
-          _isLoading = false;
         });
       } catch (e) {
         print('Error: $e');
@@ -367,28 +363,28 @@ class _LoginFormV1State extends State<LoginFormV1> {
     });
   }
 
-  void _onSetOnShredPrefe(String token) async {
+  void _onSetOnShredPref(String token) async {
     sharedPreferences.setString("token", token);
   }
 
   void _printEmailValue() {
     print("Email text field: ${emailInputController.text}");
     loginBloc.emailChanged(
-        ErroGen(isError: false, value: emailInputController.text));
+        ErrorGen(isError: false, value: emailInputController.text));
   }
 
   void _printPasswordValue() {
     print("Password text field: ${pwdInputController.text}");
     loginBloc.passwordChanged(
-        ErroGen(isError: false, value: pwdInputController.text));
+        ErrorGen(isError: false, value: pwdInputController.text));
   }
 
   void displayErrorInEmailValue(String value) {
-    loginBloc.emailChanged(ErroGen(isError: true, value: value));
+    loginBloc.emailChanged(ErrorGen(isError: true, value: value));
   }
 
   void displayErrorInPasswordValue(String value) {
-    loginBloc.passwordChanged(ErroGen(isError: true, value: value));
+    loginBloc.passwordChanged(ErrorGen(isError: true, value: value));
   }
 
   void fetchSessionAndNavigate() async {

@@ -48,7 +48,7 @@ class GetProfileResponse   extends ApiResponse{
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return errorMessage.isTokenError();
   }
 }

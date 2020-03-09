@@ -53,7 +53,7 @@ class UpdateProfileResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return errorMessage.isTokenError();
   }
 }
@@ -137,7 +137,7 @@ class ErrorMessage extends ApiError {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return super.checkTokenError(error);
   }
 }

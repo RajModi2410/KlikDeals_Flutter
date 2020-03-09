@@ -48,46 +48,46 @@ class LoginResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return errorMessage.isTokenError();
   }
 }
 
 class ErrorMessage extends ApiError {
-  List<String> general_error;
-  List<String> user_error;
+  List<String> generalError;
+  List<String> userError;
 
-  ErrorMessage({this.general_error, this.user_error});
+  ErrorMessage({this.generalError, this.userError});
 
   ErrorMessage.error(String error) {
-    this.general_error = [error];
+    this.generalError = [error];
   }
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
     var keys = json.keys;
     if (keys.contains(KeyConstant.ERROR_GENERAL)) {
-      this.general_error = json[KeyConstant.ERROR_GENERAL].cast<String>();
+      this.generalError = json[KeyConstant.ERROR_GENERAL].cast<String>();
     } else {
-      this.general_error = [];
+      this.generalError = [];
     }
 
     if (keys.contains(KeyConstant.ERROR_KEY_USER)) {
-      this.user_error = json[KeyConstant.ERROR_KEY_USER].cast<String>();
+      this.userError = json[KeyConstant.ERROR_KEY_USER].cast<String>();
     } else {
-      this.user_error = [];
+      this.userError = [];
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[KeyConstant.ERROR_GENERAL] = this.general_error;
-    data[KeyConstant.ERROR_KEY_USER] = this.user_error;
+    data[KeyConstant.ERROR_GENERAL] = this.generalError;
+    data[KeyConstant.ERROR_KEY_USER] = this.userError;
     return data;
   }
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
-    return super.checkTokenError(general_error);
+    
+    return super.checkTokenError(generalError);
   }
 }

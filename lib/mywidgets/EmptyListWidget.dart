@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class EmptyListWidget extends StatelessWidget {
-  String emptyMessage;
+  final String emptyMessage;
   
-  EmptyListWidget({Key key,@required emptyMessage}) : super(key: key);
+  EmptyListWidget({Key key,@required this.emptyMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

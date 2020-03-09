@@ -43,7 +43,7 @@ class AddCouponResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    // TODO: implement isTokenError
+    
     return errorMessage.isTokenError();
   }
 }
@@ -123,22 +123,22 @@ class ErrorMessage extends ApiError {
 
   @override
   String getCommonError() {
-    String returnErro = "";
+    String returnError = "";
     if (couponCode != null && couponCode.length > 0) {
-      returnErro = couponCode.first;
-      print("We got the error in Coupon Code::$returnErro");
+      returnError = couponCode.first;
+      print("We got the error in Coupon Code::$returnError");
     } else if (startDate != null && startDate.length > 0) {
-      returnErro = startDate.first;
+      returnError = startDate.first;
     } else if (endDate != null && endDate.length > 0) {
-      returnErro = endDate.first;
+      returnError = endDate.first;
     } else if (couponImage != null && couponImage.length > 0) {
-      returnErro = couponImage.first;
-      print("We got the error in Coupoon image::$returnErro");
+      returnError = couponImage.first;
+      print("We got the error in Coupon image::$returnError");
     } else if (description != null && description.length > 0) {
-      returnErro = description.first;
+      returnError = description.first;
     } else if (error != null && error.length > 0) {
-      returnErro = error.first;
+      returnError = error.first;
     }
-    return returnErro;
+    return returnError;
   }
 }
