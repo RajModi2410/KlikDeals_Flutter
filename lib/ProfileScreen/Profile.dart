@@ -262,7 +262,7 @@ class _ProfilePage extends State<Profile>
           style: TextStyle(color: Theme.of(context).primaryColor),
           cursorColor: Theme.of(context).primaryColor,
           maxLines: 6,
-          decoration: _inputType(AppLocalizations.of(context).translate("title_venoor"))),
+          decoration: _inputType(AppLocalizations.of(context).translate("title_vendor"))),
       )
     );
     
@@ -315,14 +315,14 @@ _dismissKeyboard(BuildContext context) {
           if (value.isEmpty || value == null) {
             return AppLocalizations.of(context).translate("error_add_text");
           } else if (value.length != 10) {
-            return AppLocalizations.of(context).translate("error_message_phonenumber");
+            return AppLocalizations.of(context).translate("error_message_phone_number");
           }
           return null;
         },
         keyboardType: TextInputType.number,
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _phoneNumber,
-        decoration: _inputType(AppLocalizations.of(context).translate("title_phonenumber")),
+        decoration: _inputType(AppLocalizations.of(context).translate("title_phone_number")),
       ),
       )
     );

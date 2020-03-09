@@ -56,7 +56,7 @@ class _MyDetailsList extends State<HomeMainTab>
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate("title_appname"),
+          AppLocalizations.of(context).translate("title_app_name"),
           style: Theme.of(context).textTheme.title,
         ),
         bottom: TabBar(
@@ -84,7 +84,7 @@ class _MyDetailsList extends State<HomeMainTab>
                     .translate("title_active_coupon")),
             Tab(
                 text:
-                    AppLocalizations.of(context).translate("title _historytab"))
+                    AppLocalizations.of(context).translate("title_history_tab"))
           ],
         ),
       ),

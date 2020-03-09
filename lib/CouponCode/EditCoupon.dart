@@ -267,7 +267,7 @@ class _EditCoupon extends State<EditCoupon>
           onSaved: (value) => _endDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_expirydate");
+              return AppLocalizations.of(context).translate("error_message_expiry_date");
             }
             return null;
           },
@@ -280,12 +280,12 @@ class _EditCoupon extends State<EditCoupon>
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                content: Text(AppLocalizations.of(context).translate("error_message_startdate")),
+                content: Text(AppLocalizations.of(context).translate("error_message_start_date")),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
             }
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_expirydate"), true)),
+          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_expiry_date"), true)),
     );
   }
 
@@ -296,7 +296,7 @@ class _EditCoupon extends State<EditCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_startdate");
+              return AppLocalizations.of(context).translate("error_message_start_date");
             }
             return null;
           },
@@ -306,7 +306,7 @@ class _EditCoupon extends State<EditCoupon>
             FocusScope.of(context).requestFocus(new FocusNode());
             _showStartDatePicker(context);
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_startdate"), true)),
+          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_start_date"), true)),
     );
   }
 
