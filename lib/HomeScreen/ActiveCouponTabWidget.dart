@@ -6,7 +6,6 @@ import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
 import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
 import 'package:klik_deals/HomeScreen/HomeState.dart';
 import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/commons/KeyConstant.dart';
 import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
 import 'package:klik_deals/myWidgets/BottomLoader.dart';
 import 'package:klik_deals/myWidgets/CouponErrorWidget.dart';
@@ -213,6 +212,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   @override
   bool get wantKeepAlive => true;
 
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
       switch (state) {
@@ -221,13 +221,10 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           apiBloc.add(lastEvent);
           break;
         case AppLifecycleState.inactive:
-          
           break;
         case AppLifecycleState.paused:
-          
           break;
         case AppLifecycleState.detached:
-          
           break;
       }
     });

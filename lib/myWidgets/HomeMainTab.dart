@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
+import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
 import 'package:klik_deals/ApiBloc/models/DrawerItem.dart';
 import 'package:klik_deals/AppLocalizations.dart';
 import 'package:klik_deals/CouponCode/AddCoupon.dart';
@@ -49,7 +52,6 @@ class _MyDetailsList extends State<HomeMainTab>
     _controller?.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,34 +153,41 @@ class _MyDetailsList extends State<HomeMainTab>
     Navigator.of(context).pushNamed(Profile.routeName);
   }
 
-  void _goToAddCoupon() {
+  void _goToAddCoupon() async {
     isHomeScreen = false;
-    setState(() {
-      print("_goToAddCoupon " +
-          context.widget.toStringShort() +
-          "::" +
-          context.widget.hashCode.toString());
-      Navigator.pop(context);
-      Navigator.of(context).pushNamed(AddCoupon.routeName);
-    });
+//    setState(() {
+    print("_goToAddCoupon " +
+        context.widget.toStringShort() +
+        "::" +
+        context.widget.hashCode.toString());
+    Navigator.pop(context);
+    var shouldReload =
+    await Navigator.of(context).pushNamed(AddCoupon.routeName);
+    if (shouldReload is bool && shouldReload) {
+      BlocProvider.of<ApiBlocBloc>(context).add(ReloadEvent(true));
+    }
+//    });
   }
 
   Future<bool> _logOut() {
     return showDialog(
         context: context,
         child: AlertDialog(
-            title: new Text(AppLocalizations.of(context).translate("label_warning")),
-            content: new Text(AppLocalizations.of(context).translate("error_message_logout")
-),
+            title: new Text(
+                AppLocalizations.of(context).translate("label_warning")),
+            content: new Text(
+                AppLocalizations.of(context).translate("error_message_logout")),
             actions: <Widget>[
               FlatButton(
-                child:  Text(AppLocalizations.of(context).translate("label_no_thanks")),
+                child: Text(
+                    AppLocalizations.of(context).translate("label_no_thanks")),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
-                child:  Text(AppLocalizations.of(context).translate("label_yes_i'm")),
+                child: Text(
+                    AppLocalizations.of(context).translate("label_yes_i'm")),
                 onPressed: () {
                   Navigator.of(context).pop();
                   clearDataAndRedirectLoginScreen(context);

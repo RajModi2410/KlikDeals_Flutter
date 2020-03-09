@@ -101,13 +101,6 @@ class _EditCoupon extends State<EditCoupon>
                     ).then((isConfirm) {
                       print("we got isConfirm $isConfirm");
                     });
-                    // if (error != null) {
-                    //   Scaffold.of(context).showSnackBar(
-                    //     SnackBar(
-                    //       content: Text(error),
-                    //       backgroundColor: Theme.of(context).errorColor,
-                    //     ),
-                    //   );
                   }
                 } else if (state is EditCouponApiFetchedState) {
                   Navigator.pop(context, true);
