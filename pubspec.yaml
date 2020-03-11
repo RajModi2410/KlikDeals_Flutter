@@ -34,6 +34,8 @@ dependencies:
   search_map_place: ^0.1.1
   # get it
   get_it: ^3.0.0+1
+  firebase_messaging: ^6.0.12
+
 
   flutter_localizations:
     sdk: flutter
