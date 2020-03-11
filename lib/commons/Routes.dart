@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/CouponCode/AddCoupon.dart';
-import 'package:klik_deals/CouponCode/EditCoupon.dart';
-import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
-import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/ProfileScreen/Profile.dart';
-import 'package:klik_deals/myWidgets/HomeMainTab.dart';
+import 'package:vendor/CouponCode/AddCoupon.dart';
+import 'package:vendor/CouponCode/EditCoupon.dart';
+import 'package:vendor/HomeScreen/ActiveCouponTabWidget.dart';
+import 'package:vendor/LoginScreen/LoginPage.dart';
+import 'package:vendor/ProfileScreen/Profile.dart';
+import 'package:vendor/myWidgets/HomeMainTab.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

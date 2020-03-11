@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/commons/Auth/index.dart';
+import 'package:vendor/LoginScreen/LoginPage.dart';
+import 'package:vendor/commons/Auth/index.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({

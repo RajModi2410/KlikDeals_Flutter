@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
-import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
-import 'package:klik_deals/ProfileScreen/ProfileStates.dart';
-import 'package:klik_deals/commons/AppExceptions.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/models/UpdateProfileResponse.dart';
+import 'package:vendor/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:vendor/ProfileScreen/ProfileStates.dart';
+import 'package:vendor/commons/AppExceptions.dart';
 
 class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   ApiBlocRepository playerRepository;

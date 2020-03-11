@@ -1,7 +1,7 @@
 
 
 import 'package:get_it/get_it.dart';
-import 'package:klik_deals/commons/NavigationService.dart';
+import 'package:vendor/commons/NavigationService.dart';
 
 GetIt locator = GetIt.instance;
 

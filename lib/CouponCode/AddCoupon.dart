@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/AppLocalizations.dart';
-import 'package:klik_deals/HomeScreen/HomeState.dart';
-import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
-import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/myWidgets/ErrorDialog.dart';
-import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/HomeScreen/HomeState.dart';
+import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/myWidgets/ErrorDialog.dart';
+import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 
 import 'CouponBloc.dart';
 
@@ -246,22 +246,26 @@ class _CouponAdd extends State<AddCoupon>
               Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: isDirty
-                      ? new Container(
-                          height: 160.0,
-                          width: 360.0,
-                          decoration: new BoxDecoration(
-                            image: _couponImage(isDirty, _imageBanner),
-                            border: Border.all(color: Colors.white, width: 0.5),
+                      ? Center(
+                        child: new Container(
+                            height: 160.0,
+                            width: 360.0,
+                            decoration: new BoxDecoration(
+                              image: _couponImage(isDirty, _imageBanner),
+                              border: Border.all(color: Colors.white, width: 0.5),
+                            ),
                           ),
-                        )
-                      : new Container(
-                          height: 160.0,
-                          width: 360.0,
-                          decoration: new BoxDecoration(
-                            image: _couponImage(isDirty, null),
-                            border: Border.all(color: Colors.white, width: 0.5),
+                      )
+                      : Center(
+                        child: new Container(
+                            height: 160.0,
+                            width: 360.0,
+                            decoration: new BoxDecoration(
+                              image: _couponImage(isDirty, null),
+                              border: Border.all(color: Colors.white, width: 0.5),
+                            ),
                           ),
-                        )),
+                      )),
             ],
           ),
         ),
@@ -329,7 +333,7 @@ class _CouponAdd extends State<AddCoupon>
           }
           return null;
         },
-        style: TextStyle(color: Theme.of(context).primaryColor),
+        style: TextStyle(color: Theme.of(context).primaryColor,),
         cursorColor: Theme.of(context).primaryColor,
         decoration: _inputType(AppLocalizations.of(context).translate("label_couponCode"), false));
   }
@@ -338,7 +342,7 @@ class _CouponAdd extends State<AddCoupon>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
+      hintStyle: TextStyle(color: Theme.of(context).hintColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),

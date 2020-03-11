@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/LoginScreen/LoginFormV1.dart';
-import 'package:klik_deals/myWidgets/HomeMainTab.dart';
+import 'package:vendor/LoginScreen/LoginFormV1.dart';
+import 'package:vendor/myWidgets/HomeMainTab.dart';
 
 typedef ClickCallback = void Function();
 

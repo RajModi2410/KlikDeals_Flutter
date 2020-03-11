@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
-import 'package:klik_deals/HomeScreen/HomeState.dart';
-import 'package:klik_deals/LoginScreen/LoginStates.dart';
-import 'package:klik_deals/commons/AppExceptions.dart';
+import 'package:vendor/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:vendor/HomeScreen/HomeState.dart';
+import 'package:vendor/LoginScreen/LoginStates.dart';
+import 'package:vendor/commons/AppExceptions.dart';
 
 import 'ApiBloc_event.dart';
 import 'ApiBloc_state.dart';

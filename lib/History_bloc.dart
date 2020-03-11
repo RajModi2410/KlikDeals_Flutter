@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/repositories/ApiBloc_repository.dart';
-import 'package:klik_deals/HomeScreen/HomeState.dart';
-import 'package:klik_deals/commons/AppExceptions.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:vendor/HomeScreen/HomeState.dart';
+import 'package:vendor/commons/AppExceptions.dart';
 
 class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
   final ApiBlocRepository playerRepository;

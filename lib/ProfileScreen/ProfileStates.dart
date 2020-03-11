@@ -1,6 +1,6 @@
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
-import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
+import 'package:vendor/ApiBloc/models/UpdateProfileResponse.dart';
 
 class GetProfileApiFetchedState extends ApiBlocState {
   final GetProfileResponse getProfileResponse;

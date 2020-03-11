@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:klik_deals/LoginScreen/LoginValidator.dart';
+import 'package:vendor/LoginScreen/LoginValidator.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'ErrorGen.dart';

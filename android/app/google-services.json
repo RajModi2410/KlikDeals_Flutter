@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "563335564452",
+    "firebase_url": "https://klik-deals.firebaseio.com",
+    "project_id": "klik-deals",
+    "storage_bucket": "klik-deals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563335564452:android:2d454b192f2b79798f2a31",
+        "android_client_info": {
+          "package_name": "com.klikvendor.vendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563335564452-t45b0chjb9fk2hmlil5ngso3jvd3q3v8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.klikvendor.vendor",
+            "certificate_hash": "6fc7ba8e545625f03ed5823354720ae780219863"
+          }
+        },
+        {
+          "client_id": "563335564452-e9lue2p8maj7v32sikftoau2con77v57.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4Fht6lBY0LCZSahgWwM08rqEj-T0-uKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563335564452-e9lue2p8maj7v32sikftoau2con77v57.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

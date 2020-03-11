@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
   ImagePickerHandler _listener;

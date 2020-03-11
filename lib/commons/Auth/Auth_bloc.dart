@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
-import 'package:klik_deals/commons/Auth/index.dart';
+import 'package:vendor/commons/Auth/index.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // todo: check singleton for logic in project

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
+import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
 
 class CouponHistoryItem extends StatelessWidget {
   final Data data;

@@ -1,7 +1,7 @@
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/models/AddCouponResponse.dart';
-import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/ApiBloc/models/DeleteCouponResponse.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/models/AddCouponResponse.dart';
+import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
+import 'package:vendor/ApiBloc/models/DeleteCouponResponse.dart';
 
 class CouponListFetchedState extends ApiBlocState{
   final CouponListResponse couponList;

@@ -2,17 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/models/GetProfileResponse.dart';
-import 'package:klik_deals/AppLocalizations.dart';
-import 'package:klik_deals/ImagePickerFiles/Image_picker_handler.dart';
-import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
-import 'package:klik_deals/SelectAddress/SelectAddress.dart';
-import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
-import 'package:klik_deals/myWidgets/NoNetworkWidget.dart';
-import 'package:klik_deals/myWidgets/RoundWidget.dart';
-import 'package:klik_deals/myWidgets/SuccessDialog.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
+import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
+import 'package:vendor/ProfileScreen/Profile_bloc.dart';
+import 'package:vendor/SelectAddress/SelectAddress.dart';
+import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/myWidgets/NoNetworkWidget.dart';
+import 'package:vendor/myWidgets/RoundWidget.dart';
+import 'package:vendor/myWidgets/SuccessDialog.dart';
 
 import 'ProfileStates.dart';
 

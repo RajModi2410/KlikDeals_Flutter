@@ -1,4 +1,4 @@
-import 'package:klik_deals/commons/AppExceptions.dart';
+import 'package:vendor/commons/AppExceptions.dart';
 
 abstract class ApiResponse {
   ApiStatus apiStatus;

@@ -1,6 +1,6 @@
-import 'package:klik_deals/commons/ApiError.dart';
-import 'package:klik_deals/commons/ApiResponse.dart';
-import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:vendor/commons/ApiError.dart';
+import 'package:vendor/commons/ApiResponse.dart';
+import 'package:vendor/commons/KeyConstant.dart';
 
 class LoginResponse extends ApiResponse {
   bool status;

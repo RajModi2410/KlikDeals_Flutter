@@ -1,6 +1,6 @@
 
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/models/LoginResponse.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/models/LoginResponse.dart';
 
 class LoginApiFetchedState extends ApiBlocState {
   final LoginResponse loginResponse;

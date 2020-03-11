@@ -2,13 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_state.dart';
-import 'package:klik_deals/ApiBloc/index.dart';
-import 'package:klik_deals/ApiBloc/models/CouponListResponse.dart';
-import 'package:klik_deals/CouponCode/EditCoupon.dart';
-import 'package:klik_deals/HomeScreen/HomeState.dart';
-import 'package:klik_deals/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/index.dart';
+import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
+import 'package:vendor/CouponCode/EditCoupon.dart';
+import 'package:vendor/HomeScreen/HomeState.dart';
+import 'package:vendor/commons/CenterLoadingIndicator.dart';
 
 import 'RoundWidget.dart';
 

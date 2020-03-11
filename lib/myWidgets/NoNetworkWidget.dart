@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/AppLocalizations.dart';
-import 'package:klik_deals/commons/Dimence.dart';
+import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/commons/Dimence.dart';
 
 class NoNetworkWidget extends StatelessWidget {
   final VoidCallback retry;

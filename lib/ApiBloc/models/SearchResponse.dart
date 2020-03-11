@@ -1,4 +1,4 @@
-import 'package:klik_deals/commons/ApiResponse.dart';
+import 'package:vendor/commons/ApiResponse.dart';
 
 class SearchResponse extends ApiResponse{
   int resultsFound;

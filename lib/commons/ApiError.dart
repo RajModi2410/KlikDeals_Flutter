@@ -1,4 +1,4 @@
-import 'package:klik_deals/commons/KeyConstant.dart';
+import 'package:vendor/commons/KeyConstant.dart';
 
 abstract class ApiError {
   bool isTokenError();

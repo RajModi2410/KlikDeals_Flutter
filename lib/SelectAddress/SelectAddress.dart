@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:klik_deals/ApiBloc/models/UpdateProfileResponse.dart';
+import 'package:vendor/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:search_map_place/search_map_place.dart';
 
 class SelectAddress extends StatefulWidget {

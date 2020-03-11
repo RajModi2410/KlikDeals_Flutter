@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/ApiBloc/models/DrawerItem.dart';
-import 'package:klik_deals/AppLocalizations.dart';
-import 'package:klik_deals/CouponCode/AddCoupon.dart';
-import 'package:klik_deals/HomeScreen/ActiveCouponTabWidget.dart';
-import 'package:klik_deals/HomeScreen/HistoryTabWidget.dart';
-import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/ProfileScreen/Profile.dart';
-import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/myWidgets/SingleDrawerItem.dart';
+import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/ApiBloc/models/DrawerItem.dart';
+import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/CouponCode/AddCoupon.dart';
+import 'package:vendor/HomeScreen/ActiveCouponTabWidget.dart';
+import 'package:vendor/HomeScreen/HistoryTabWidget.dart';
+import 'package:vendor/LoginScreen/LoginPage.dart';
+import 'package:vendor/ProfileScreen/Profile.dart';
+import 'package:vendor/commons/AuthUtils.dart';
+import 'package:vendor/myWidgets/SingleDrawerItem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeMainTab extends StatefulWidget {

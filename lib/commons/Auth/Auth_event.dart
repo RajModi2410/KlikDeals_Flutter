@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:klik_deals/commons/Auth/index.dart';
+import 'package:vendor/commons/Auth/index.dart';
 import 'package:meta/meta.dart';
 
 @immutable

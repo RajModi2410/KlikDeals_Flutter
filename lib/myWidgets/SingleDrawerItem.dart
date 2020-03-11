@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:klik_deals/ApiBloc/models/DrawerItem.dart';
+import 'package:vendor/ApiBloc/models/DrawerItem.dart';
 
 typedef ClickCallback = void Function(int index);
 

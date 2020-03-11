@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/commons/Auth/index.dart';
+import 'package:vendor/commons/Auth/index.dart';
 
 class AuthPage extends StatelessWidget {
   static const String routeName = '/auth';

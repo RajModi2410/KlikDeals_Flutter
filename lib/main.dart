@@ -5,16 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:klik_deals/CouponCode/CouponBloc.dart';
-import 'package:klik_deals/History_bloc.dart';
-import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/ProfileScreen/Profile_bloc.dart';
-import 'package:klik_deals/commons/Auth/Auth_bloc.dart';
-import 'package:klik_deals/commons/Auth/index.dart';
-import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/commons/Routes.dart';
-import 'package:klik_deals/commons/locator.dart';
-import 'package:klik_deals/splash_screen/splashScreen.dart';
+import 'package:vendor/CouponCode/CouponBloc.dart';
+import 'package:vendor/History_bloc.dart';
+import 'package:vendor/LoginScreen/LoginPage.dart';
+import 'package:vendor/ProfileScreen/Profile_bloc.dart';
+import 'package:vendor/commons/Auth/Auth_bloc.dart';
+import 'package:vendor/commons/Auth/index.dart';
+import 'package:vendor/commons/AuthUtils.dart';
+import 'package:vendor/commons/Routes.dart';
+import 'package:vendor/commons/locator.dart';
+import 'package:vendor/splash_screen/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
@@ -34,6 +34,7 @@ parseJson(String text) {
 AuthBloc authBloc;
 
 void main() {
+
   setupLocator();
   var dio = Dio();
   (dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
@@ -64,6 +65,7 @@ void main() {
             cursorColor: Colors.black,
             fontFamily: "Montserrat",
             primaryColor: Color(0xffAF201A),
+            hintColor: Colors.grey,
             errorColor: Color(0xffAF201A),
             buttonColor: Color(0xffAF201A),
             textTheme: TextTheme(
@@ -120,6 +122,8 @@ void main() {
         //   '/HomeScreen': (BuildContext context) => new LoginPage(),
         // }
       )));
+
+
 }
 
 void clearThings() async {
@@ -128,3 +132,4 @@ void clearThings() async {
   print("reved the token : $removed");
   locator<NavigationService>().navigateTo(LoginPage.routeName);
 }
+

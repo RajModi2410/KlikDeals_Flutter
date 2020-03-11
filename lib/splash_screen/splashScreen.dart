@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_bloc.dart';
-import 'package:klik_deals/ApiBloc/ApiBloc_event.dart';
-import 'package:klik_deals/LoginScreen/LoginPage.dart';
-import 'package:klik_deals/commons/AuthUtils.dart';
-import 'package:klik_deals/myWidgets/BackgroundWidget.dart';
-import 'package:klik_deals/myWidgets/HomeMainTab.dart';
+import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
+import 'package:vendor/ApiBloc/ApiBloc_event.dart';
+import 'package:vendor/LoginScreen/LoginPage.dart';
+import 'package:vendor/commons/AuthUtils.dart';
+import 'package:vendor/commons/FirebaseNotifications.dart';
+import 'package:vendor/myWidgets/BackgroundWidget.dart';
+import 'package:vendor/myWidgets/HomeMainTab.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    new FirebaseNotifications().setUpFirebase();
     startTime();
     fetchSessionAndNavigate();
   }
