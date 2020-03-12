@@ -77,6 +77,7 @@ void main() {
             primaryColor: Color(0xffAF201A)
           ),
             cursorColor: Colors.black,
+            textSelectionHandleColor: Colors.black,
             fontFamily: "Montserrat",
             primaryColor: Color(0xffAF201A),
             hintColor: Colors.grey,
