@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>563335564452-rblk7r9mrtbepq4877vbkl8rij78b8so.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.563335564452-rblk7r9mrtbepq4877vbkl8rij78b8so</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>563335564452-t45b0chjb9fk2hmlil5ngso3jvd3q3v8.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBMhE9C0t79NjZeOJ8B4AmF9Jr1JVm9IA4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>563335564452</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.tvc.app</string>
+	<key>PROJECT_ID</key>
+	<string>klik-deals</string>
+	<key>STORAGE_BUCKET</key>
+	<string>klik-deals.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:563335564452:ios:561e456abd6db0508f2a31</string>
+	<key>DATABASE_URL</key>
+	<string>https://klik-deals.firebaseio.com</string>
+</dict>
+</plist>
