@@ -11,7 +11,6 @@ import 'package:vendor/commons/AuthUtils.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
 import 'package:vendor/myWidgets/HomeMainTab.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
-import 'package:vendor/myWidgets/RoundWidget.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -292,6 +291,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               ),
               color: Theme.of(context).primaryColor,
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 validateAndSubmit();
               },
               child: new Row(

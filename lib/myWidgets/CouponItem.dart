@@ -160,13 +160,13 @@ class CouponItem extends StatelessWidget {
         height: 100,
         width: 100,
         errorWidget: (context, url, error) => Image.asset(
-          'assets/images/kfc.png',
+          'assets/images/logo.png',
           fit: BoxFit.cover,
         ),
       );
     } else {
       return Image.asset(
-        'assets/images/kfc.png',
+        'assets/images/logo.png',
         fit: BoxFit.cover,
       );
     }

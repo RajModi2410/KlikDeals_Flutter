@@ -13,7 +13,10 @@ class EmptyListWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          child: Text("Oh ho! $emptyMessage"),
+          child: Text("Oh ho! $emptyMessage", style: 
+          TextStyle(
+            color: Theme.of(context).primaryColor
+          ),),
         ),
       ],
     );

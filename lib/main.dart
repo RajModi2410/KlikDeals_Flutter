@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ import 'ApiBloc/ApiBloc_bloc.dart';
 import 'ApiBloc/repositories/ApiBloc_repository.dart';
 import 'AppLocalizations.dart';
 import 'commons/NavigationService.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // Must be top-level function
 _parseAndDecode(String response) {
@@ -40,6 +42,15 @@ void main() {
   (dio.transformer as DefaultTransformer).jsonDecodeCallback = parseJson;
   ApiBlocRepository apiBlocRepo = ApiBlocRepository(onRevoke: () {
     print("we are here 32 ${authBloc == null}");
+    Fluttertoast.showToast(
+        msg: "Your session is expired. Please try again.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
     clearThings();
     // authBloc?.add(TokenExpiredEvent());
   });
@@ -62,6 +73,9 @@ void main() {
         navigatorKey: locator<NavigationService>().navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          cupertinoOverrideTheme: CupertinoThemeData(
+            primaryColor: Color(0xffAF201A)
+          ),
             cursorColor: Colors.black,
             fontFamily: "Montserrat",
             primaryColor: Color(0xffAF201A),
@@ -127,9 +141,9 @@ void main() {
 }
 
 void clearThings() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool removed = await prefs.remove(AuthUtils.authTokenKey);
-  print("reved the token : $removed");
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  bool removed = await pref.remove(AuthUtils.authTokenKey);
+  print("removed the token : $removed");
   locator<NavigationService>().navigateTo(LoginPage.routeName);
 }
 

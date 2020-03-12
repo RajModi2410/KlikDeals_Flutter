@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
@@ -96,7 +97,9 @@ class _ProfilePage extends State<Profile>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).translate("title_edit_profile"), style: Theme.of(context).textTheme.title),
+          title: Text(
+              AppLocalizations.of(context).translate("title_edit_profile"),
+              style: Theme.of(context).textTheme.title),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: Stack(children: <Widget>[
@@ -106,8 +109,8 @@ class _ProfilePage extends State<Profile>
                 if (state is GetProfileApiErrorState) {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
-                      content:
-                          Text(AppLocalizations.of(context).translate("common_error")),
+                      content: Text(AppLocalizations.of(context)
+                          .translate("common_error")),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                   );
@@ -121,8 +124,8 @@ class _ProfilePage extends State<Profile>
                   if (error != null) {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                            AppLocalizations.of(context).translate("error_update_profile $error")),
+                        content: Text(AppLocalizations.of(context)
+                            .translate("error_update_profile $error")),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
@@ -140,8 +143,10 @@ class _ProfilePage extends State<Profile>
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => SuccessDialog(
-                      mainMessage: AppLocalizations.of(context).translate("message_profile_success"),
-                      okButtonText: AppLocalizations.of(context).translate("label_ok"),
+                      mainMessage: AppLocalizations.of(context)
+                          .translate("message_profile_success"),
+                      okButtonText:
+                          AppLocalizations.of(context).translate("label_ok"),
                     ),
                   ).then((isConfirm) {
                     print("we got isConfirm $isConfirm");
@@ -244,28 +249,27 @@ class _ProfilePage extends State<Profile>
 
   Padding desc() {
     return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-
-      child : GestureDetector(
-        onTap: (){
-          this._dismissKeyboard(context);
-        },
-      child: TextFormField(
-          onSaved: (value) => _desc = value.trim(),
-          controller: _descValue,
-          validator: (value) {
-            if (value.isEmpty || value == null) {
-              return AppLocalizations.of(context).translate("error_add_text");
-            }
-            return null;
+        padding: const EdgeInsets.only(top: 24.0),
+        child: GestureDetector(
+          onTap: () {
+            this._dismissKeyboard(context);
           },
-          style: TextStyle(color: Theme.of(context).primaryColor),
-          cursorColor: Theme.of(context).primaryColor,
-          maxLines: 6,
-          decoration: _inputType(AppLocalizations.of(context).translate("title_vendor"))),
-      )
-    );
-    
+          child: TextFormField(
+              onSaved: (value) => _desc = value.trim(),
+              controller: _descValue,
+              validator: (value) {
+                if (value.isEmpty || value == null) {
+                  return AppLocalizations.of(context)
+                      .translate("error_add_text");
+                }
+                return null;
+              },
+              style: TextStyle(color: Theme.of(context).primaryColor),
+              cursorColor: Theme.of(context).primaryColor,
+              maxLines: 6,
+              decoration: _inputType(
+                  AppLocalizations.of(context).translate("title_vendor"))),
+        ));
   }
 
   Padding website() {
@@ -281,7 +285,8 @@ class _ProfilePage extends State<Profile>
         },
         style: TextStyle(color: Theme.of(context).primaryColor),
         controller: _websiteValue,
-        decoration: _inputType( AppLocalizations.of(context).translate("title_website")),
+        decoration:
+            _inputType(AppLocalizations.of(context).translate("title_website")),
       ),
     );
   }
@@ -294,38 +299,42 @@ class _ProfilePage extends State<Profile>
         validator: emailValidator,
         keyboardType: TextInputType.emailAddress,
         controller: _emailAddressValue,
-        decoration: _inputType(AppLocalizations.of(context).translate("title_email")),
+        decoration:
+            _inputType(AppLocalizations.of(context).translate("title_email")),
         style: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
   }
-_dismissKeyboard(BuildContext context) {
-  FocusScope.of(context).requestFocus(new FocusNode());
-}
+
+  _dismissKeyboard(BuildContext context) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
+
   Padding phoneNumber() {
     return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child:GestureDetector(
-        onTap: (){
-          this._dismissKeyboard(context);
-        },
-      child: TextFormField(
-        onSaved: (value) => _number = value.trim(),
-        validator: (value) {
-          if (value.isEmpty || value == null) {
-            return AppLocalizations.of(context).translate("error_add_text");
-          } else if (value.length != 10) {
-            return AppLocalizations.of(context).translate("error_message_phone_number");
-          }
-          return null;
-        },
-        keyboardType: TextInputType.number,
-        style: TextStyle(color: Theme.of(context).primaryColor),
-        controller: _phoneNumber,
-        decoration: _inputType(AppLocalizations.of(context).translate("title_phone_number")),
-      ),
-      )
-    );
+        padding: const EdgeInsets.only(top: 24.0),
+        child: GestureDetector(
+          onTap: () {
+            this._dismissKeyboard(context);
+          },
+          child: TextFormField(
+            onSaved: (value) => _number = value.trim(),
+            validator: (value) {
+              if (value.isEmpty || value == null) {
+                return AppLocalizations.of(context).translate("error_add_text");
+              } else if (value.length != 10) {
+                return AppLocalizations.of(context)
+                    .translate("error_message_phone_number");
+              }
+              return null;
+            },
+            keyboardType: TextInputType.number,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+            controller: _phoneNumber,
+            decoration: _inputType(
+                AppLocalizations.of(context).translate("title_phone_number")),
+          ),
+        ));
   }
 
   Padding selectBanner() {
@@ -354,7 +363,9 @@ _dismissKeyboard(BuildContext context) {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(18.0),
                           side: BorderSide(color: Colors.red)),
-                      child: Text(AppLocalizations.of(context).translate("title_browse"),
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate("title_browse"),
                           style: TextStyle(fontSize: 14, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
@@ -371,18 +382,14 @@ _dismissKeyboard(BuildContext context) {
                     ? new Container(
                         height: 160.0,
                         width: 360.0,
-                        decoration: new BoxDecoration(
-                          image: _bannerImage(isDirty,
-                              data != null ? data.banner : null, _imageBanner),
-                        ),
+                        child: _bannerImage(isDirty,
+                            data != null ? data.banner : null, _imageBanner),
                       )
                     : new Container(
                         height: 160.0,
                         width: 360.0,
-                        decoration: new BoxDecoration(
-                          image: _bannerImage(isDirty,
-                              data != null ? data.banner : null, _imageBanner),
-                        ),
+                        child: _bannerImage(isDirty,
+                            data != null ? data.banner : null, _imageBanner),
                       ),
               ),
             ],
@@ -410,7 +417,8 @@ _dismissKeyboard(BuildContext context) {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(AppLocalizations.of(context).translate("title_logo"),
+                    child: Text(
+                        AppLocalizations.of(context).translate("title_logo"),
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).primaryColor)),
@@ -422,7 +430,9 @@ _dismissKeyboard(BuildContext context) {
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(18.0),
                           side: BorderSide(color: Colors.red)),
-                      child: Text(AppLocalizations.of(context).translate("title_browse"),
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate("title_browse"),
                           style: TextStyle(fontSize: 12, color: Colors.white)),
                       color: Theme.of(context).primaryColor,
                       onPressed: () {
@@ -439,18 +449,17 @@ _dismissKeyboard(BuildContext context) {
                     ? new Container(
                         height: 160.0,
                         width: 360.0,
-                        decoration: new BoxDecoration(
-                          image: _logoImage(
-                              isDirty, data != null ? data.logo : null, _image),
+                        child: _logoImage(
+                            isDirty, data != null ? data.logo : null, _image),
 //                              image: new NetworkImage(_image.path),
-                        ))
+                      )
                     : new Container(
                         height: 160.0,
                         width: 360.0,
-                        decoration: new BoxDecoration(
-                          image: _logoImage(
-                              isDirty, data != null ? data.logo : null, _image),
+                        child: _logoImage(
+                            isDirty, data != null ? data.logo : null, _image),
 //                            image: new NetworkImage(_image.path),
+                        decoration: new BoxDecoration(
                           border: Border.all(color: Colors.white, width: 0.5),
                         ),
                       ),
@@ -478,7 +487,8 @@ _dismissKeyboard(BuildContext context) {
           children: <Widget>[
             new Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Text(AppLocalizations.of(context).translate("title_address"),
+              child: Text(
+                  AppLocalizations.of(context).translate("title_address"),
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold)),
             ),
@@ -491,50 +501,50 @@ _dismissKeyboard(BuildContext context) {
   Padding _address() {
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
-  
-        child: GestureDetector(
-          onTap: (){
-            print("We are here TAP FOR HIDE KEYBOARD");
-             this._dismissKeyboard(context);
-          },
-      child: TextFormField(
-        onSaved: (value) => _addr = value.trim(),
-        validator: (value) {
-          if (value.trim() == null || value.trim().isEmpty) {
-            return AppLocalizations.of(context).translate("error_message_address");
-          }
-          return null;
+      child: GestureDetector(
+        onTap: () {
+          print("We are here TAP FOR HIDE KEYBOARD");
+          this._dismissKeyboard(context);
         },
-        style: TextStyle(color: Theme.of(context).primaryColor),
-        controller: _addressValue,
-        decoration: _inputType(AppLocalizations.of(context).translate("title _address_field")),
+        child: TextFormField(
+          onSaved: (value) => _addr = value.trim(),
+          validator: (value) {
+            if (value.trim() == null || value.trim().isEmpty) {
+              return AppLocalizations.of(context)
+                  .translate("error_message_address");
+            }
+            return null;
+          },
+          style: TextStyle(color: Theme.of(context).primaryColor),
+          controller: _addressValue,
+          decoration: _inputType(
+              AppLocalizations.of(context).translate("title _address_field")),
+        ),
       ),
- ),
     );
   }
 
   Padding _profileName() {
     return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child : GestureDetector(
-        onTap: (){
-           FocusScope.of(context).requestFocus(new FocusNode());
-        },
-      child: TextFormField(
-          controller: _nameValue,
-          onSaved: (value) => _name = value.trim(),
-          validator: (value) {
-            if (value.trim() == null || value.trim().isEmpty) {
-              return "Please enter name";
-            }
-            return null;
+        padding: const EdgeInsets.only(top: 24.0),
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
           },
-          style: TextStyle(color: Theme.of(context).primaryColor),
-          decoration: _inputType(
-            "Name",
-          )),
-          )
-    );
+          child: TextFormField(
+              controller: _nameValue,
+              onSaved: (value) => _name = value.trim(),
+              validator: (value) {
+                if (value.trim() == null || value.trim().isEmpty) {
+                  return "Please enter name";
+                }
+                return null;
+              },
+              style: TextStyle(color: Theme.of(context).primaryColor),
+              decoration: _inputType(
+                "Name",
+              )),
+        ));
   }
 
   @override
@@ -579,7 +589,8 @@ _dismissKeyboard(BuildContext context) {
         return null;
       }
     } else {
-      return AppLocalizations.of(context).translate("error_message_email_valid");
+      return AppLocalizations.of(context)
+          .translate("error_message_email_valid");
     }
   }
 
@@ -648,46 +659,57 @@ _dismissKeyboard(BuildContext context) {
   }
 }
 
-_bannerImage(bool isDirty, String oldBanner, File imageBanner) {
+Widget _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
   print("We got null banner file :: $isDirty :: $oldBanner :: $imageBanner");
   if (isDirty && imageBanner != null) {
-    return new DecorationImage(
-      image: new FileImage(imageBanner),
+    return new Image.file(
+      imageBanner,
       fit: BoxFit.scaleDown,
     );
   } else if (oldBanner != null) {
-    return new DecorationImage(
-      image: new NetworkImage(oldBanner),
+    return new CachedNetworkImage(
+      imageUrl: oldBanner,
       fit: BoxFit.scaleDown,
+      errorWidget: (context, url, error) => Image.asset(
+        'assets/images/logo.png',
+        fit: BoxFit.scaleDown,
+        color: Colors.white.withOpacity(0.2),
+        colorBlendMode: BlendMode.dstATop,
+      ),
     );
   } else {
-    return new DecorationImage(
-      colorFilter: new ColorFilter.mode(
-          Colors.white.withOpacity(0.2), BlendMode.dstATop),
-      image: new AssetImage('assets/images/logo.png'),
+    return Image.asset(
+      'assets/images/logo.png',
       fit: BoxFit.scaleDown,
+      color: Colors.white.withOpacity(0.2),
+      colorBlendMode: BlendMode.dstATop,
     );
   }
 }
 
-_logoImage(bool isDirty, String oldLogo, File imageLogo) {
+Widget _logoImage(bool isDirty, String oldLogo, File imageLogo) {
   print("We got null banner file :: $isDirty :: $oldLogo :: $imageLogo");
   if (isDirty && imageLogo != null) {
-    return new DecorationImage(
-      image: new FileImage(imageLogo),
+    return Image.file(
+      imageLogo,
       fit: BoxFit.scaleDown,
     );
   } else if (oldLogo != null) {
-    return new DecorationImage(
-      image: new NetworkImage(oldLogo),
-      fit: BoxFit.scaleDown,
-    );
+    return CachedNetworkImage(
+        imageUrl: oldLogo,
+        fit: BoxFit.scaleDown,
+        errorWidget: (context, url, error) => Image.asset(
+              'assets/images/logo.png',
+              fit: BoxFit.scaleDown,
+              color: Colors.white.withOpacity(0.2),
+              colorBlendMode: BlendMode.dstATop,
+            ));
   } else {
-    return new DecorationImage(
-      colorFilter: new ColorFilter.mode(
-          Colors.white.withOpacity(0.2), BlendMode.dstATop),
-      image: new AssetImage('assets/images/logo.png'),
+    return Image.asset(
+      'assets/images/logo.png',
       fit: BoxFit.scaleDown,
+      color: Colors.white.withOpacity(0.2),
+      colorBlendMode: BlendMode.dstATop,
     );
   }
 }

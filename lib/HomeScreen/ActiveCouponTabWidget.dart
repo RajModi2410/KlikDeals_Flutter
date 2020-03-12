@@ -146,7 +146,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     return CustomScrollView(controller: _scrollController, slivers: <Widget>[
       new SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 1,//8.0 / 10.0,
+            childAspectRatio: 1, //8.0 / 10.0,
             crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
@@ -178,7 +178,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   void _goToEditScreen(Map<String, dynamic> data) async {
     var result = await Navigator.of(context)
         .pushNamed(EditCoupon.routeName, arguments: data);
-    if (result!= null && result) {
+    if (result != null && result) {
       apiBloc.add(ReloadEvent(true));
     }
   }
