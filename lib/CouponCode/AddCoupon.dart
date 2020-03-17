@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/CouponCode/CouponPreview.dart';
 import 'package:vendor/HomeScreen/HomeState.dart';
 import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
@@ -40,9 +41,10 @@ class _CouponAdd extends State<AddCoupon>
       _couponCodeController,
       _descriptionController;
 
-  _CouponAdd(){
-    _startDateValue=new DateFormat('yyyy/MM/dd').format(DateTime.now());
-    _endDateValue=new DateFormat('yyyy/MM/dd').format(DateTime.now().add(Duration(days: 18250)));
+  _CouponAdd() {
+    _startDateValue = new DateFormat('yyyy/MM/dd').format(DateTime.now());
+    _endDateValue = new DateFormat('yyyy/MM/dd')
+        .format(DateTime.now().add(Duration(days: 18250)));
   }
 
   @override
@@ -80,10 +82,7 @@ class _CouponAdd extends State<AddCoupon>
         appBar: AppBar(
           title: Text(
             AppLocalizations.of(context).translate("label_addcoupon"),
-            style: Theme
-                .of(context)
-                .textTheme
-                .title,
+            style: Theme.of(context).textTheme.title,
           ),
         ),
         body: Stack(children: <Widget>[
@@ -92,17 +91,16 @@ class _CouponAdd extends State<AddCoupon>
               listener: (context, state) {
                 if (state is CouponAddErrorState) {
                   String error =
-                  state.addCouponResponse.errorMessage.getCommonError();
+                      state.addCouponResponse.errorMessage.getCommonError();
                   if (error != null) {
                     //ErrorDialog
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) =>
-                          ErrorDialog(
-                            mainMessage: error,
-                            okButtonText: AppLocalizations.of(context)
-                                .translate("label_ok"),
-                          ),
+                      builder: (BuildContext context) => ErrorDialog(
+                        mainMessage: error,
+                        okButtonText:
+                            AppLocalizations.of(context).translate("label_ok"),
+                      ),
                     ).then((isConfirm) {
                       print("we got isConfirm $isConfirm");
                     });
@@ -116,10 +114,14 @@ class _CouponAdd extends State<AddCoupon>
               },
               child: BlocBuilder<CouponBloc, ApiBlocState>(
                   bloc: auth,
-                  builder: (BuildContext context,
-                      ApiBlocState currentState,) {
+                  builder: (
+                    BuildContext context,
+                    ApiBlocState currentState,
+                  ) {
                     if (currentState is ApiFetchingState) {
-                      return CenterLoadingIndicator(message: "Saving deals...",);
+                      return CenterLoadingIndicator(
+                        message: "Saving deals...",
+                      );
                     } else if (currentState is NoInternetState) {
                       return NoNetworkWidget(
                         retry: () {
@@ -158,6 +160,7 @@ class _CouponAdd extends State<AddCoupon>
                 _uploadImage(context),
                 _description(),
                 _addCouponButton(),
+                _showPreviewButton(),
               ],
             ),
           ),
@@ -179,7 +182,34 @@ class _CouponAdd extends State<AddCoupon>
         },
         color: Theme.of(context).primaryColor,
         textColor: Colors.white,
-        child: Text(AppLocalizations.of(context).translate("label_addcoupon").toUpperCase(), style: TextStyle(fontSize: 14)),
+        child: Text(
+            AppLocalizations.of(context)
+                .translate("label_addcoupon")
+                .toUpperCase(),
+            style: TextStyle(fontSize: 14)),
+      ),
+    );
+  }
+
+  Padding _showPreviewButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.0, bottom: 16),
+      child: RaisedButton(
+        padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0),
+            side: BorderSide(color: Theme.of(context).primaryColor)),
+        onPressed: () {
+          // _validateRequiredFields();
+          Navigator.of(context).push(PageRouteBuilder(
+              opaque: false,
+              pageBuilder: (BuildContext context, _, __) => CouponPreview(
+                    item: SingleDetails.staticReport(),
+                  )));
+        },
+        color: Theme.of(context).primaryColor,
+        textColor: Colors.white,
+        child: Text("Preview".toUpperCase(), style: TextStyle(fontSize: 14)),
       ),
     );
   }
@@ -187,27 +217,28 @@ class _CouponAdd extends State<AddCoupon>
   Padding _description() {
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
-      child:GestureDetector(
-        onTap: (){
-           FocusScope.of(context).requestFocus(FocusNode());
-        },
-      
-      child: TextFormField(
-          keyboardType: TextInputType.multiline,
-          onSaved: (value) => _descValue = value.trim(),
-          controller: _descriptionController,
-          validator: (value) {
-            if (value.isEmpty || value == null) {
-              return AppLocalizations.of(context).translate("error_message_coupon");
-;
-            }
-            return null;
-          },  
-          style: TextStyle(color: Theme.of(context).primaryColor),
-          cursorColor: Theme.of(context).primaryColor,
-          maxLines: 6,
-          decoration: _inputType(AppLocalizations.of(context).translate("label_description"), false))
-          ),
+      child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: TextFormField(
+              keyboardType: TextInputType.multiline,
+              onSaved: (value) => _descValue = value.trim(),
+              controller: _descriptionController,
+              validator: (value) {
+                if (value.isEmpty || value == null) {
+                  return AppLocalizations.of(context)
+                      .translate("error_message_coupon");
+                  ;
+                }
+                return null;
+              },
+              style: TextStyle(color: Theme.of(context).primaryColor),
+              cursorColor: Theme.of(context).primaryColor,
+              maxLines: 6,
+              decoration: _inputType(
+                  AppLocalizations.of(context).translate("label_description"),
+                  false))),
     );
   }
 
@@ -228,7 +259,8 @@ class _CouponAdd extends State<AddCoupon>
               Row(
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context).translate("title_upload_image"),
+                    AppLocalizations.of(context)
+                        .translate("title_upload_image"),
                     style: TextStyle(
                         fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
@@ -247,25 +279,27 @@ class _CouponAdd extends State<AddCoupon>
                   padding: const EdgeInsets.only(top: 8.0),
                   child: isDirty
                       ? Center(
-                        child: new Container(
+                          child: new Container(
                             height: 160.0,
                             width: 360.0,
                             decoration: new BoxDecoration(
                               image: _couponImage(isDirty, _imageBanner),
-                              border: Border.all(color: Colors.white, width: 0.5),
+                              border:
+                                  Border.all(color: Colors.white, width: 0.5),
                             ),
                           ),
-                      )
+                        )
                       : Center(
-                        child: new Container(
+                          child: new Container(
                             height: 160.0,
                             width: 360.0,
                             decoration: new BoxDecoration(
                               image: _couponImage(isDirty, null),
-                              border: Border.all(color: Colors.white, width: 0.5),
+                              border:
+                                  Border.all(color: Colors.white, width: 0.5),
                             ),
                           ),
-                      )),
+                        )),
             ],
           ),
         ),
@@ -280,7 +314,8 @@ class _CouponAdd extends State<AddCoupon>
           onSaved: (value) => _endDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_expiry_date");
+              return AppLocalizations.of(context)
+                  .translate("error_message_expiry_date");
             }
             return null;
           },
@@ -293,12 +328,15 @@ class _CouponAdd extends State<AddCoupon>
             } else {
               final snackBar = SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                content: Text(AppLocalizations.of(context).translate("error_message_start_date")),
+                content: Text(AppLocalizations.of(context)
+                    .translate("error_message_start_date")),
               );
               _scaffoldKey.currentState.showSnackBar(snackBar);
             }
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_expiry_date"), true)),
+          decoration: _forSearchInputType(
+              AppLocalizations.of(context).translate("title_expiry_date"),
+              true)),
     );
   }
 
@@ -309,7 +347,8 @@ class _CouponAdd extends State<AddCoupon>
           onSaved: (value) => _startDateValue = value.trim(),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return AppLocalizations.of(context).translate("error_message_start_date");
+              return AppLocalizations.of(context)
+                  .translate("error_message_start_date");
             }
             return null;
           },
@@ -319,7 +358,9 @@ class _CouponAdd extends State<AddCoupon>
             FocusScope.of(context).requestFocus(new FocusNode());
             _showStartDatePicker(context);
           },
-          decoration: _forSearchInputType(AppLocalizations.of(context).translate("title_start_date"), true)),
+          decoration: _forSearchInputType(
+              AppLocalizations.of(context).translate("title_start_date"),
+              true)),
     );
   }
 
@@ -329,13 +370,17 @@ class _CouponAdd extends State<AddCoupon>
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
           if (value.isEmpty) {
-            return AppLocalizations.of(context).translate("error_message_coupon_code");
+            return AppLocalizations.of(context)
+                .translate("error_message_coupon_code");
           }
           return null;
         },
-        style: TextStyle(color: Theme.of(context).primaryColor,),
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+        ),
         cursorColor: Theme.of(context).primaryColor,
-        decoration: _inputType(AppLocalizations.of(context).translate("label_couponCode"), false));
+        decoration: _inputType(
+            AppLocalizations.of(context).translate("label_couponCode"), false));
   }
 
   InputDecoration _inputType(String hintText, bool isForImageUpload) {
@@ -395,7 +440,8 @@ class _CouponAdd extends State<AddCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(now.year, now.month, now.day),
-        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day),
+        onChanged: (date) {
       _endDateController.clear();
       print('change $date');
     }, onConfirm: (date) {
@@ -415,7 +461,8 @@ class _CouponAdd extends State<AddCoupon>
     DatePicker.showDatePicker(context,
         showTitleActions: true,
         minTime: DateTime(startDate.year, startDate.month, startDate.day + 1),
-        maxTime: DateTime(now.year + 50, now.month, now.day), onChanged: (date) {
+        maxTime: DateTime(now.year + 50, now.month, now.day),
+        onChanged: (date) {
       print('change $date');
     }, onConfirm: (date) {
       var formatter = new DateFormat('yyyy/MM/dd');
@@ -448,8 +495,7 @@ class _CouponAdd extends State<AddCoupon>
         lastEvent = AddCouponEvent(_couponCodeValue, _startDateValue,
             _endDateValue, _descValue, _imageBanner);
         auth.add(lastEvent);
-        setState(() {
-        });
+        setState(() {});
       } catch (e) {
         print('Error: $e');
       }
