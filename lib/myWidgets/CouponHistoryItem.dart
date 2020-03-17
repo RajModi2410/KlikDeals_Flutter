@@ -12,7 +12,7 @@ class CouponHistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String date;
-    date = dateFormatter("", "", data.approvedDate);
+    date = "";//dateFormatter("", "", data.approvedDate);
     return couponList(context, date);
   }
 

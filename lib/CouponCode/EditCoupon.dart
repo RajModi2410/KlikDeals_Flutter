@@ -49,7 +49,9 @@ class _EditCoupon extends State<EditCoupon>
 
   _EditCoupon(this.mapData) {
     data = Data.fromJson(mapData);
-    _dateStart = new DateFormat("yyyy/MM/dd").parse(data.startDate);
+    _dateStart = data.startDate != null
+        ? DateFormat("yyyy/MM/dd").parse(data.startDate)
+        : (DateTime.now());
     print("We are getting $_dateStart and ${data.startDate}");
     _startDateValue = new DateFormat('yyyy/MM/dd').format(DateTime.now());
     _endDateValue = new DateFormat('yyyy/MM/dd')
