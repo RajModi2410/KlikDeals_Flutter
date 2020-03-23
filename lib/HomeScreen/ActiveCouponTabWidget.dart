@@ -104,7 +104,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                     CenterLoadingIndicator(
                       message: "Fetching active deals....",
                     );
-
+                    getCouponList();
                     return _couponList(currentState.couponList.response);
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
@@ -121,6 +121,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                       retry: () {
                         retryCall();
                       },
+                      isFromInternetConnection: currentState.isFromInternetConnection,
                     );
                   } else {
                     return EmptyListWidget(

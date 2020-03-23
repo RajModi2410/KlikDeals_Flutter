@@ -136,6 +136,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     retry: () {
                       retryCall();
                     },
+                    isFromInternetConnection: currentState.isFromInternetConnection,
                   );
                 } else {
                   return Container();

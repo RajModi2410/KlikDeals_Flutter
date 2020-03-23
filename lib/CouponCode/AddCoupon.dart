@@ -127,6 +127,7 @@ class _CouponAdd extends State<AddCoupon>
                         retry: () {
                           retryCall();
                         },
+                        isFromInternetConnection: currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();

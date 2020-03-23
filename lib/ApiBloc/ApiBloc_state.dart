@@ -33,7 +33,18 @@ class ApiReloadState extends ApiBlocState {
   List<Object> get props => [];
 }
 
+// True = Socket timeout && False = error code == 429
 class NoInternetState extends ApiBlocState{
+
+  final bool isFromInternetConnection;
+  @override
+  List<Object> get props => [];
+
+  NoInternetState(this.isFromInternetConnection);
+
+
+}
+class RetryErrorState extends ApiBlocState{
 
   @override
   List<Object> get props => [];

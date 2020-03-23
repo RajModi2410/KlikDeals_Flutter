@@ -63,5 +63,6 @@
     "error_message_coupon_code": "Please enter coupon code",
     "error_general": "error",
     "error_connection_timeout": "Please check your connection and try again!",
+    "error_server_timeout": "The server is not responding. please try again...",
     "error_token_valid": "Token is not valid."
 }

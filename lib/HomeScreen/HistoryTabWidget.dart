@@ -119,6 +119,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
                       retry: () {
                         retryCall();
                       },
+                      isFromInternetConnection: currentState.isFromInternetConnection,
                     );
                   } else {
                     return EmptyListWidget(

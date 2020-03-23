@@ -128,6 +128,7 @@ class _EditCoupon extends State<EditCoupon>
                         retry: () {
                           retryCall();
                         },
+                        isFromInternetConnection: currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();

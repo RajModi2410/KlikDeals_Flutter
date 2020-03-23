@@ -171,6 +171,7 @@ class _ProfilePage extends State<Profile>
                         retry: () {
                           retryCall();
                         },
+                        isFromInternetConnection: currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();

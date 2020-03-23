@@ -4,8 +4,9 @@ import 'package:vendor/commons/Dimence.dart';
 
 class NoNetworkWidget extends StatelessWidget {
   final VoidCallback retry;
+  final bool isFromInternetConnection;
 
-  const NoNetworkWidget({Key key, this.retry}) : super(key: key);
+  const NoNetworkWidget({Key key, this.retry,this.isFromInternetConnection}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class NoNetworkWidget extends StatelessWidget {
                         left: MediaQuery.of(context).size.width * 0.05,
                         right: MediaQuery.of(context).size.width * 0.05),
                     child: Text(
-                      AppLocalizations.of(context).translate("error_connection_timeout"),
+                      AppLocalizations.of(context).translate(isFromInternetConnection?"error_connection_timeout":"error_server_timeout"),
                       style: TextStyle(
                           fontSize: Dimence.fontSize14,
                           fontWeight: FontWeight.normal),
