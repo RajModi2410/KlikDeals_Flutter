@@ -97,7 +97,7 @@ class _MyDetailsList extends State<HomeMainTab>
             child: new ListView(
               children: <Widget>[
                 new DrawerHeader(
-                  child: new Image.asset('assets/images/logo.png'),
+                  child: new Image.asset('assets/images/main_logo.png'),
                 ),
                 new Container(
                   height: double.maxFinite,

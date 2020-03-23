@@ -671,7 +671,7 @@ Widget _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
       imageUrl: oldBanner,
       fit: BoxFit.scaleDown,
       errorWidget: (context, url, error) => Image.asset(
-        'assets/images/logo.png',
+        'assets/images/main_logo.png',
         fit: BoxFit.scaleDown,
         color: Colors.white.withOpacity(0.2),
         colorBlendMode: BlendMode.dstATop,
@@ -679,7 +679,7 @@ Widget _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
     );
   } else {
     return Image.asset(
-      'assets/images/logo.png',
+      'assets/images/main_logo.png',
       fit: BoxFit.scaleDown,
       color: Colors.white.withOpacity(0.2),
       colorBlendMode: BlendMode.dstATop,
@@ -699,14 +699,14 @@ Widget _logoImage(bool isDirty, String oldLogo, File imageLogo) {
         imageUrl: oldLogo,
         fit: BoxFit.scaleDown,
         errorWidget: (context, url, error) => Image.asset(
-              'assets/images/logo.png',
+              'assets/images/main_logo.png',
               fit: BoxFit.scaleDown,
               color: Colors.white.withOpacity(0.2),
               colorBlendMode: BlendMode.dstATop,
             ));
   } else {
     return Image.asset(
-      'assets/images/logo.png',
+      'assets/images/main_logo.png',
       fit: BoxFit.scaleDown,
       color: Colors.white.withOpacity(0.2),
       colorBlendMode: BlendMode.dstATop,

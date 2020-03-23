@@ -491,7 +491,7 @@ _couponImage(bool isDirty, File imageBanner, String couponImage) {
     );
   } else {
     return new DecorationImage(
-      image: new AssetImage('assets/images/logo.png'),
+      image: new AssetImage('assets/images/main_logo.png'),
       colorFilter: new ColorFilter.mode(
           Colors.white.withOpacity(0.2), BlendMode.dstATop),
       fit: BoxFit.scaleDown,
