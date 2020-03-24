@@ -65,10 +65,10 @@ class _MyDetailsList extends State<HomeMainTab>
           controller: _controller,
           labelStyle:
               TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w500),
-          labelColor: Theme.of(context).primaryColor,
-          unselectedLabelColor: Colors.white,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.black,
           indicatorSize: TabBarIndicatorSize.tab,
-          indicator: BoxDecoration(color: Colors.white),
+          indicator: BoxDecoration(color:Theme.of(context).primaryColor),
           onTap: (index) {
             if (index == 0) {
               setState(() {
@@ -92,7 +92,7 @@ class _MyDetailsList extends State<HomeMainTab>
       ),
       drawer: Theme(
         data: Theme.of(context).copyWith(
-            canvasColor: Colors.white),
+            canvasColor: Colors.grey[70]),
         child: new Drawer(
             child: new ListView(
               children: <Widget>[

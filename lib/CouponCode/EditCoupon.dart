@@ -128,7 +128,8 @@ class _EditCoupon extends State<EditCoupon>
                         retry: () {
                           retryCall();
                         },
-                        isFromInternetConnection: currentState.isFromInternetConnection,
+                        isFromInternetConnection:
+                            currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();
@@ -230,6 +231,13 @@ class _EditCoupon extends State<EditCoupon>
                         fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
                   Spacer(),
+                 /* Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(50),
+                              topLeft: Radius.circular(30))),
+                      child: Text("Change")),*/
                   IconButton(
                     icon: new Icon(Icons.attach_file),
                     iconSize: 20,

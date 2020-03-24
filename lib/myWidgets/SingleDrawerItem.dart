@@ -20,35 +20,38 @@ class SingleDrawerItem1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: Container(
-        color: currentIndex == selectedIndex ? Theme.of(context).primaryColor: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Container(
-            // color: this.selectedIndex == this.currentIndex ? Theme.of(context).primaryColor: Colors.white,
-            child: SizedBox(
-              height: 56,
-              child: new Row(children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      // child: Image.asset('assets/images/home_menu.png')
-                      child: getImage()),
-                                      ),
-                                      // InkWell(
-                                      // child: new Text('HOME'),
-                                      // child:
-                                      new Text(item.title,
-                                      style: TextStyle(
-                                        color: currentIndex != selectedIndex ? Theme.of(context).primaryColor: Colors.white,
-                                      ),),
-                                    ]),
+      child: Padding(
+        padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
+        child: Container(
+          color: currentIndex == selectedIndex ? Theme.of(context).primaryColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Container(
+              // color: this.selectedIndex == this.currentIndex ? Theme.of(context).primaryColor: Colors.white,
+              child: SizedBox(
+                height: 56,
+                child: new Row(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        // child: Image.asset('assets/images/home_menu.png')
+                        child: getImage()),
+                                        ),
+                                        // InkWell(
+                                        // child: new Text('HOME'),
+                                        // child:
+                                        new Text(item.title,
+                                        style: TextStyle(
+                                          color: currentIndex != selectedIndex ? Theme.of(context).primaryColor: Colors.white,
+                                        ),),
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+      ),
                             onTap: () {
                               // Navigator.pop(context);
                               // _goToHome();
