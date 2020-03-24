@@ -136,6 +136,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     retry: () {
                       retryCall();
                     },
+                    isFromInternetConnection: currentState.isFromInternetConnection,
                   );
                 } else {
                   return Container();
@@ -175,7 +176,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       padding: EdgeInsets.fromLTRB(20, 120, 20, 120),
       child: Center(
         child: new Image(
-          image: new AssetImage('assets/images/logo.png'),
+          image: new AssetImage('assets/images/main_logo.png'),
           height: 50,
           width: MediaQuery.of(context).size.width,
         ),

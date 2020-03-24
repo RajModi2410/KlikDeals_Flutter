@@ -79,7 +79,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return LoginResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+      } else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else{
         Dio.Response response = e.response;
         return parseLoginResponse(response);
       }
@@ -101,7 +103,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return CouponListResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+      }  else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else{
         Dio.Response response = e.response;
         return checkForTokenError(parseCouponResponse(response));
       }
@@ -150,7 +154,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return AddCouponResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+      } else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else {
         Dio.Response response = e.response;
         return checkForTokenError(parseAddCouponResponse(response));
       }
@@ -186,7 +192,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return EditCouponResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+      }  else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else {
         Dio.Response response = e.response;
         return checkForTokenError(parseEditCouponResponse(response));
       }
@@ -234,7 +242,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         throw NoInternetException("");
         // return UpdateProfileResponse.error();
-      } else if (e.response != null) {
+      }  else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else{
         Dio.Response response = e.response;
         return checkForTokenError(parseUpdateProfileResponse(response));
       }
@@ -254,7 +264,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return DeleteCouponResponse.error();
         throw NoInternetException("");
-       } else if (e.response != null) {
+       }  else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else {
         Dio.Response response = e.response;
         return checkForTokenError(parseDeleteCouponResponse(response));
       }
@@ -274,7 +286,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return GetProfileResponse.error();
         throw NoInternetException("");
-      } else if (e.response != null) {
+      }  else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      }else {
         Dio.Response response = e.response;
         return checkForTokenError(parseGetProfileResponse(response));
       }

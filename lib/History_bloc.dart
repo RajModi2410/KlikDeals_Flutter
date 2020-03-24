@@ -47,15 +47,19 @@ class HistoryBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       final response = await playerRepository.coupon(event.toMap());
       if (response.status ) {
           if (currentState is CouponHistoryListFetchedState && event.currentPage != 1){
+
             response.response.data = currentState.couponList.response.data + response.response.data;
           }
         yield CouponHistoryListFetchedState(response);
       } else {
         yield CouponHistoryErrorState(response);
       }
-    } on NoInternetException catch (_) {
-      print("No Intenet exception");
-      yield NoInternetState();
+    }  on NoInternetException catch (_) {
+      print("No Internet exception");
+      yield NoInternetState(true);
+    } on RetryErrorException catch(_){
+      print("Retry error exception");
+      yield NoInternetState(false);
     } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);

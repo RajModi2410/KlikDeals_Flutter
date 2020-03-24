@@ -29,3 +29,7 @@ class InvalidInputException extends AppException {
 class NoInternetException extends AppException {
   NoInternetException([String message]) : super(message, "Invalid Input: ");
 }
+
+class RetryErrorException extends AppException {
+  RetryErrorException([String message]) : super(message, "Invalid Input: ");
+}

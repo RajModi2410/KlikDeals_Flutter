@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 flex: 1,
                 child: AspectRatio(
                   aspectRatio: 1.0,
-                  child: new Image.asset('assets/images/logo.png'),
+                  child: new Image.asset('assets/images/main_logo.png'),
                 ),
               ),
             ],

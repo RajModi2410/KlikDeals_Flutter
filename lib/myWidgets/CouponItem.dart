@@ -1,16 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
-import 'package:vendor/ApiBloc/ApiBloc_state.dart';
-import 'package:vendor/ApiBloc/index.dart';
 import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
-import 'package:vendor/CouponCode/EditCoupon.dart';
-import 'package:vendor/HomeScreen/HomeState.dart';
-import 'package:vendor/commons/CenterLoadingIndicator.dart';
-
-import 'RoundWidget.dart';
 
 class CouponItem extends StatelessWidget {
   final Data data;
@@ -160,14 +151,14 @@ class CouponItem extends StatelessWidget {
         height: 100,
         width: 100,
         errorWidget: (context, url, error) => Image.asset(
-          'assets/images/logo.png',
-          fit: BoxFit.cover,
+          'assets/images/main_logo.png',
+          fit: BoxFit.contain,
         ),
       );
     } else {
       return Image.asset(
-        'assets/images/logo.png',
-        fit: BoxFit.cover,
+        'assets/images/main_logo.png',
+        fit: BoxFit.fitWidth,
       );
     }
   }

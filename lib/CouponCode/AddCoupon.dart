@@ -127,6 +127,7 @@ class _CouponAdd extends State<AddCoupon>
                         retry: () {
                           retryCall();
                         },
+                        isFromInternetConnection: currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();
@@ -531,7 +532,7 @@ _couponImage(bool isDirty, File imageBanner) {
     return new DecorationImage(
       colorFilter: new ColorFilter.mode(
           Colors.white.withOpacity(0.2), BlendMode.dstATop),
-      image: new AssetImage('assets/images/logo.png'),
+      image: new AssetImage('assets/images/main_logo.png'),
       fit: BoxFit.scaleDown,
     );
   }
