@@ -142,7 +142,7 @@ class _EditCoupon extends State<EditCoupon>
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
+                image: AssetImage('assets/images/splash_bg.webp'),
                 fit: BoxFit.cover)),
       ),
       new Padding(

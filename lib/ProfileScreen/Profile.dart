@@ -185,7 +185,7 @@ class _ProfilePage extends State<Profile>
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
+                image: AssetImage('assets/images/splash_bg.webp'),
                 fit: BoxFit.cover)),
       ),
       new SingleChildScrollView(

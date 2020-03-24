@@ -150,7 +150,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg.png'),
+                image: AssetImage('assets/images/splash_bg.webp'),
                 fit: BoxFit.cover)),
       ),
       new Form(

@@ -145,7 +145,7 @@ class _CouponAdd extends State<AddCoupon>
             image: DecorationImage(
                 // colorFilter: ColorFilter.mode(
                 //     Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                image: AssetImage('assets/images/splash_bg.png'),
+                image: AssetImage('assets/images/splash_bg.webp'),
                 fit: BoxFit.cover)),
       ),
       new Padding(
