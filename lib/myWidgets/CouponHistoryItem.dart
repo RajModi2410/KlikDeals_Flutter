@@ -116,13 +116,13 @@ class CouponHistoryItem extends StatelessWidget {
         width: 100,
         errorWidget: (context, url, error) => Image.asset(
           'assets/images/main_logo.png',
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
         ),
       );
     } else {
       return Image.asset(
         'assets/images/main_logo.png',
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
       );
     }
   }

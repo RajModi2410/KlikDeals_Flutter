@@ -158,7 +158,7 @@ class CouponItem extends StatelessWidget {
     } else {
       return Image.asset(
         'assets/images/main_logo.png',
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.contain,
       );
     }
   }
