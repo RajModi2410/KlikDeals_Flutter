@@ -160,7 +160,7 @@ class _CouponAdd extends State<AddCoupon>
                 _uploadImage(context),
                 _description(),
                 _addCouponButton(),
-                _showPreviewButton(),
+                // _showPreviewButton(),
               ],
             ),
           ),
