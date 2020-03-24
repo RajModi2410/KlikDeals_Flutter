@@ -65,10 +65,10 @@ class _MyDetailsList extends State<HomeMainTab>
           controller: _controller,
           labelStyle:
               TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w500),
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.black,
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.white,
           indicatorSize: TabBarIndicatorSize.tab,
-          indicator: BoxDecoration(color:Theme.of(context).primaryColor),
+          indicator: BoxDecoration(color: Colors.white),
           onTap: (index) {
             if (index == 0) {
               setState(() {
