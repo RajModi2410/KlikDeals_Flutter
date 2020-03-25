@@ -2,21 +2,27 @@ import 'package:vendor/commons/ApiError.dart';
 import 'package:vendor/commons/ApiResponse.dart';
 import 'package:vendor/commons/KeyConstant.dart';
 
-class GetProfileResponse   extends ApiResponse{
+class GetProfileResponse extends ApiResponse {
   bool status;
   String message;
   Response response;
   ErrorMessage errorMessage;
 
   GetProfileResponse(
-      {this.status, this.message, this.response, this.errorMessage}): super.error(false);
+      {this.status, this.message, this.response, this.errorMessage})
+      : super.error(false);
 
-  GetProfileResponse.fromJson(Map<String, dynamic> json, bool isError) : super.error(isError){
+  GetProfileResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
+    if (!isError) {
+      response = json['response'] != null
+          ? new Response.fromJson(json['response'])
+          : null;
+    } else {
+      response = null;
+    }
     if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
@@ -39,16 +45,14 @@ class GetProfileResponse   extends ApiResponse{
     return data;
   }
 
-   GetProfileResponse.error(): super.network() {
+  GetProfileResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
 
-
   @override
   bool isTokenError() {
-    
     return errorMessage.isTokenError();
   }
 }
@@ -69,17 +73,17 @@ class Response {
 
   Response(
       {this.name,
-        this.email,
-        this.address,
-        this.phoneNumber,
-        this.website,
-        this.about,
-        this.logo,
-        this.banner,
-        this.latitude,
-        this.longitude,
-        this.countryId,
-        this.stateId});
+      this.email,
+      this.address,
+      this.phoneNumber,
+      this.website,
+      this.about,
+      this.logo,
+      this.banner,
+      this.latitude,
+      this.longitude,
+      this.countryId,
+      this.stateId});
 
   Response.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -114,7 +118,7 @@ class Response {
   }
 }
 
-class ErrorMessage extends ApiError{
+class ErrorMessage extends ApiError {
   List<String> error;
 
   ErrorMessage({this.error});
@@ -129,13 +133,21 @@ class ErrorMessage extends ApiError{
     return data;
   }
 
-
-   ErrorMessage.error(String error) {
+  ErrorMessage.error(String error) {
     this.error = [error];
   }
 
   @override
   bool isTokenError() {
     return super.checkTokenError(error);
+  }
+
+@override
+  String getCommonError() {
+     String returnError = "";
+    if (error != null && error.length > 0) {
+      returnError = error.first;
+    }
+    return returnError;
   }
 }

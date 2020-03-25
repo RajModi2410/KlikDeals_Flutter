@@ -11,6 +11,7 @@ import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/ProfileScreen/Profile_bloc.dart';
 import 'package:vendor/SelectAddress/SelectAddress.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/myWidgets/ErrorDialog.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 import 'package:vendor/myWidgets/RoundWidget.dart';
 import 'package:vendor/myWidgets/SuccessDialog.dart';
@@ -107,13 +108,28 @@ class _ProfilePage extends State<Profile>
           BlocListener<ProfileBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is GetProfileApiErrorState) {
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)
-                          .translate("common_error")),
-                      backgroundColor: Theme.of(context).primaryColor,
+                  var error = state.getProfileResponse.errorMessage.getCommonError();
+                  // Scaffold.of(context).showSnackBar(
+                  //   SnackBar(
+                  //     content: Text(error != null ? error : AppLocalizations.of(context)
+                  //         .translate("common_error")),
+                  //     backgroundColor: Theme.of(context).primaryColor,
+                  //   ),
+                  // );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ErrorDialog(
+                      mainMessage: error != null ? error : AppLocalizations.of(context)
+                          .translate("common_error"),
+                      okButtonText:
+                          AppLocalizations.of(context).translate("label_ok"),
                     ),
-                  );
+                  ).then((isConfirm) {
+                    print("we got isConfirm $isConfirm");
+                    if (isConfirm) {
+                      Navigator.of(context).pop();
+                    }
+                  });
                 } else if (state is GetProfileApiFetchedState) {
                   data = state.getProfileResponse.response;
                   setState(() {
