@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +12,7 @@ import 'package:vendor/CouponCode/CouponPreview.dart';
 import 'package:vendor/HomeScreen/HomeState.dart';
 import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/commons/KeyConstant.dart';
 import 'package:vendor/myWidgets/ErrorDialog.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 
@@ -127,7 +129,8 @@ class _CouponAdd extends State<AddCoupon>
                         retry: () {
                           retryCall();
                         },
-                        isFromInternetConnection: currentState.isFromInternetConnection,
+                        isFromInternetConnection:
+                            currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();
@@ -223,6 +226,9 @@ class _CouponAdd extends State<AddCoupon>
             FocusScope.of(context).requestFocus(FocusNode());
           },
           child: TextFormField(
+              inputFormatters: [
+                WhitelistingTextInputFormatter(KeyConstant.editReg())
+              ],
               keyboardType: TextInputType.multiline,
               onSaved: (value) => _descValue = value.trim(),
               controller: _descriptionController,
@@ -367,6 +373,9 @@ class _CouponAdd extends State<AddCoupon>
 
   TextFormField _couponCode() {
     return TextFormField(
+        inputFormatters: [
+          WhitelistingTextInputFormatter(KeyConstant.editReg())
+        ],
         controller: _couponCodeController,
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {

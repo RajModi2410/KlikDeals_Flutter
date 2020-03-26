@@ -1,5 +1,3 @@
-
-
 class KeyConstant {
   static const String ERROR_GENERAL = "error";
   static const String ERROR_LAT = "map_lat";
@@ -25,4 +23,8 @@ class KeyConstant {
 
   static const String NO_INTERNET =
       "We are unable to complete your request. Please check your internet connection and Try again later!";
+
+  static RegExp editReg() {
+    return RegExp("[a-zA-Z0-9 _-]");
+  }
 }
