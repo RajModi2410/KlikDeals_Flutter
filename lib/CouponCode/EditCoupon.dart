@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
 import 'package:vendor/AppLocalizations.dart';
 import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/commons/KeyConstant.dart';
 import 'package:vendor/myWidgets/ErrorDialog.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 
@@ -191,6 +193,7 @@ class _EditCoupon extends State<EditCoupon>
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
       child: TextFormField(
+        inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.editReg())],
           onSaved: (value) => _descValue = value.trim(),
           controller: _descriptionController,
           validator: (value) {
@@ -334,6 +337,7 @@ class _EditCoupon extends State<EditCoupon>
 
   TextFormField _couponCode() {
     return TextFormField(
+      inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.editReg())],
         controller: _couponCodeController,
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
