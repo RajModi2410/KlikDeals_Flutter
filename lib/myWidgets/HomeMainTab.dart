@@ -62,14 +62,16 @@ class _MyDetailsList extends State<HomeMainTab>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if(firstSelected) {
-          _logOut(false);
-        }else{
-          setState(() {
-            firstSelected = true;
-            var _tabIndex = _controller.index - 1;
-            _controller.animateTo(_tabIndex);
-          });
+        if(Platform.isAndroid) {
+          if (firstSelected) {
+            _logOut(false);
+          } else {
+            setState(() {
+              firstSelected = true;
+              var _tabIndex = _controller.index - 1;
+              _controller.animateTo(_tabIndex);
+            });
+          }
         }
         return false;
       },
