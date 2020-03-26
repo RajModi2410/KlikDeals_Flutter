@@ -57,6 +57,7 @@
     "error_message_email": "Please enter valid email.",
     "error_message_email_valid": "Please enter email address.",
     "error_message_logout": "Are you sure want to Logout?",
+    "error_message_exit": "Are you sure want to exit?",
     "error_message_coupon": "Please enter coupon description",
     "error_message_expiry_date": "Please select expiry date",
     "error_message_start_date": "Please select start date first",

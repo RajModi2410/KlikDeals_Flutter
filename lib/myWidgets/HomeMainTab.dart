@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
@@ -7,6 +10,7 @@ import 'package:vendor/AppLocalizations.dart';
 import 'package:vendor/CouponCode/AddCoupon.dart';
 import 'package:vendor/HomeScreen/ActiveCouponTabWidget.dart';
 import 'package:vendor/HomeScreen/HistoryTabWidget.dart';
+import 'package:vendor/LoginScreen/LoginFormV1.dart';
 import 'package:vendor/LoginScreen/LoginPage.dart';
 import 'package:vendor/ProfileScreen/Profile.dart';
 import 'package:vendor/commons/AuthUtils.dart';
@@ -36,6 +40,7 @@ class _MyDetailsList extends State<HomeMainTab>
     DrawerItem("assets/images/logout.png", "LOGOUT")
   ];
   int _selectedIndex = 0;
+  int _indexValue = 0;
 
   @override
   void initState() {
@@ -55,90 +60,103 @@ class _MyDetailsList extends State<HomeMainTab>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context).translate("title_app_name"),
-          style: Theme.of(context).textTheme.title,
+    return WillPopScope(
+      onWillPop: () async {
+        if(firstSelected) {
+          _logOut(false);
+        }else{
+          setState(() {
+            firstSelected = true;
+            var _tabIndex = _controller.index - 1;
+            _controller.animateTo(_tabIndex);
+          });
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context).translate("title_app_name"),
+            style: Theme.of(context).textTheme.title,
+          ),
+          bottom: TabBar(
+            controller: _controller,
+            labelStyle: TextStyle(
+                fontFamily: "Montserrat", fontWeight: FontWeight.w500),
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicator: BoxDecoration(color: Colors.white),
+            onTap: (index) {
+              if (index == 0) {
+                setState(() {
+                  firstSelected = true;
+                });
+              } else {
+                setState(() {
+                  firstSelected = false;
+                });
+              }
+            },
+            tabs: <Widget>[
+              Tab(
+                  text: AppLocalizations.of(context)
+                      .translate("title_active_coupon")),
+              Tab(
+                  text: AppLocalizations.of(context)
+                      .translate("title_history_tab"))
+            ],
+          ),
         ),
-        bottom: TabBar(
+        drawer: Theme(
+          data: Theme.of(context).copyWith(canvasColor: Colors.grey[70]),
+          child: new Drawer(
+              child: new ListView(
+            children: <Widget>[
+              new DrawerHeader(
+                child: new Image.asset('assets/images/main_logo.png'),
+              ),
+              new Container(
+                height: double.maxFinite,
+                child: ListView.builder(
+                    itemCount: sideMenu.length,
+                    itemBuilder: (context, index) {
+                      return SingleDrawerItem1(
+                          item: sideMenu[index],
+                          currentIndex: index,
+                          selectedIndex: _selectedIndex,
+                          onClicked: (currentIndex) {
+                            // setState(() {
+                            //   _selectedIndex = currentIndex;
+                            // });
+                            switch (currentIndex) {
+                              case 0:
+                                _goToHome();
+                                break;
+                              case 1:
+                                _goToProfile();
+                                break;
+                              case 2:
+                                _goToAddCoupon();
+                                break;
+                              case 3:
+                                _logOut(true);
+                                break;
+                              default:
+                            }
+                          });
+                    }),
+              ),
+            ],
+          )),
+        ),
+        body: TabBarView(
           controller: _controller,
-          labelStyle:
-              TextStyle(fontFamily: "Montserrat", fontWeight: FontWeight.w500),
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.white,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicator: BoxDecoration(color: Colors.white),
-          onTap: (index) {
-            if (index == 0) {
-              setState(() {
-                firstSelected = true;
-              });
-            } else {
-              setState(() {
-                firstSelected = false;
-              });
-            }
-          },
-          tabs: <Widget>[
-            Tab(
-                text: AppLocalizations.of(context)
-                    .translate("title_active_coupon")),
-            Tab(
-                text:
-                    AppLocalizations.of(context).translate("title_history_tab"))
+          children: <Widget>[
+            ActiveCouponTabWidget(false),
+            HistoryTabWidget(true),
           ],
         ),
-      ),
-      drawer: Theme(
-        data: Theme.of(context).copyWith(
-            canvasColor: Colors.grey[70]),
-        child: new Drawer(
-            child: new ListView(
-              children: <Widget>[
-                new DrawerHeader(
-                  child: new Image.asset('assets/images/main_logo.png'),
-                ),
-                new Container(
-                  height: double.maxFinite,
-                  child: ListView.builder(
-                      itemCount: sideMenu.length,
-                      itemBuilder: (context, index) {
-                        return SingleDrawerItem1(
-                            item: sideMenu[index],
-                            currentIndex: index,
-                            selectedIndex: _selectedIndex,
-                            onClicked: (currentIndex) {
-                              // setState(() {
-                              //   _selectedIndex = currentIndex;
-                              // });
-                              switch (currentIndex) {
-                                case 0:
-                                  _goToHome();
-                                  break;
-                                case 1:
-                                  _goToProfile();
-                                  break;
-                                case 2:
-                                  _goToAddCoupon();
-                                  break;
-                                case 3:
-                                  _logOut();
-                                  break;
-                                default:
-                              }
-                            });
-                      }),
-                ),
-              ],
-            )),
-      ),
-      body: TabBarView(
-        controller: _controller,
-        children: <Widget>[
-          ActiveCouponTabWidget(false),
-          HistoryTabWidget(true),
-        ],
       ),
     );
   }
@@ -166,21 +184,21 @@ class _MyDetailsList extends State<HomeMainTab>
         context.widget.hashCode.toString());
     Navigator.pop(context);
     var shouldReload =
-    await Navigator.of(context).pushNamed(AddCoupon.routeName);
+        await Navigator.of(context).pushNamed(AddCoupon.routeName);
     if (shouldReload is bool && shouldReload) {
       BlocProvider.of<ApiBlocBloc>(context).add(ReloadEvent(true));
     }
 //    });
   }
 
-  Future<bool> _logOut() {
+  Future<bool> _logOut(bool isForLogout) {
     return showDialog(
         context: context,
         child: AlertDialog(
             title: new Text(
                 AppLocalizations.of(context).translate("label_warning")),
-            content: new Text(
-                AppLocalizations.of(context).translate("error_message_logout")),
+            content: new Text(AppLocalizations.of(context).translate(
+                isForLogout ? "error_message_logout" : "error_message_exit")),
             actions: <Widget>[
               FlatButton(
                 child: Text(
@@ -194,7 +212,12 @@ class _MyDetailsList extends State<HomeMainTab>
                     AppLocalizations.of(context).translate("label_yes_i'm")),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  clearDataAndRedirectLoginScreen(context);
+                  if (isForLogout) {
+                    clearDataAndRedirectLoginScreen(context);
+                  }else{
+                    SystemNavigator.pop();
+//                    exit(0);
+                  }
                 },
               )
             ]));
