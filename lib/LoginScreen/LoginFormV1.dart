@@ -68,8 +68,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
   @override
   void initState() {
     emailInputController =
-        new TextEditingController(text: "testing8@webdesksolution.com");
-    pwdInputController = new TextEditingController(text: "12345678");
+        new TextEditingController();
+    pwdInputController = new TextEditingController();
     emailInputController.addListener(_printEmailValue);
     pwdInputController.addListener(_printPasswordValue);
     _errorMessage = "";
