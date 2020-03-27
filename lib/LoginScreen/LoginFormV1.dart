@@ -42,10 +42,13 @@ String emailValidator(String value) {
 }
 
 String passwordValidator(String value) {
-  int length = 5;
-  if (value.length < length) {
-    return 'Password must be longer than $length characters.';
-  } else {
+  int minLength = 8;
+  int maxLength = 15;
+  if (value.length < minLength) {
+    return 'Password must be longer than $minLength characters.';
+  } else if(value.length> maxLength) {
+    return 'Password must be smaller than $maxLength characters.';
+  }else{
     return null;
   }
 }
@@ -214,7 +217,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                           fillColor: Color(0xB3FFFFFF),
                           filled: true,
                           hintStyle:
-                              TextStyle(color: Theme.of(context).primaryColor),
+                              TextStyle(color: Theme.of(context).hintColor),
                           focusedBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30.0)),
@@ -259,7 +262,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                       color: Theme.of(context).primaryColor),
                   fillColor: Color(0xB3FFFFFF),
                   filled: true,
-                  hintStyle: TextStyle(color: Theme.of(context).primaryColor),
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       borderSide: BorderSide(color: Colors.grey)),

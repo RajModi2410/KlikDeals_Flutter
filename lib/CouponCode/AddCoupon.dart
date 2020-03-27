@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/AppLocalizations.dart';
@@ -226,16 +227,15 @@ class _CouponAdd extends State<AddCoupon>
             FocusScope.of(context).requestFocus(FocusNode());
           },
           child: TextFormField(
-              inputFormatters: [
-                WhitelistingTextInputFormatter(KeyConstant.editReg())
-              ],
+             /* inputFormatters: [
+                WhitelistingTextInputFormatter(KeyConstant.descriptionReg())
+              ],*/
               onSaved: (value) => _descValue = value.trim(),
               controller: _descriptionController,
               validator: (value) {
                 if (value.trim().isEmpty || value == null) {
                   return AppLocalizations.of(context)
                       .translate("error_message_coupon");
-                  ;
               }
                 return null;
               },

@@ -267,7 +267,7 @@ class _ProfilePage extends State<Profile>
               onSaved: (value) => _desc = value.trim(),
               controller: _descValue,
               validator: (value) {
-                if (value.isEmpty || value == null) {
+                if (value.trim().isEmpty || value == null) {
                   return AppLocalizations.of(context)
                       .translate("error_add_text");
                 }
@@ -287,7 +287,7 @@ class _ProfilePage extends State<Profile>
       child: TextFormField(
         onSaved: (value) => _website = value.trim(),
         validator: (value) {
-          if (value.isEmpty || value == null) {
+          if (value.trim().isEmpty || value == null) {
             return AppLocalizations.of(context).translate("error_add_text");
           }
           return null;
@@ -329,7 +329,7 @@ class _ProfilePage extends State<Profile>
           child: TextFormField(
             onSaved: (value) => _number = value.trim(),
             validator: (value) {
-              if (value.isEmpty || value == null) {
+              if (value.trim().isEmpty || value == null) {
                 return AppLocalizations.of(context).translate("error_add_text");
               } else if (value.length != 10) {
                 return AppLocalizations.of(context)
@@ -591,7 +591,7 @@ class _ProfilePage extends State<Profile>
   }
 
   String emailValidator(String value) {
-    if (value != null || value.isNotEmpty) {
+    if (value != null || value.trim().isNotEmpty) {
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
       RegExp exp = new RegExp(pattern);

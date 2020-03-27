@@ -183,6 +183,8 @@ class UpdateProfileEvent extends ApiBlocEvent {
     return map;
   }
 
+  //if(website!=null && website.trim().isNotEmpty )
+
   List<Object> get props => [
         this.name,
         this.address,
