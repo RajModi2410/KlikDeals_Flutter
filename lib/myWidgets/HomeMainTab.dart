@@ -41,6 +41,7 @@ class _MyDetailsList extends State<HomeMainTab>
   ];
   int _selectedIndex = 0;
   int _indexValue = 0;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -87,7 +88,19 @@ class _MyDetailsList extends State<HomeMainTab>
         return false;
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
+          leading: InkWell(
+            onTap: () => _scaffoldKey.currentState.openDrawer(),
+            child: Image.asset(
+              "assets/images/hamburger_menu.png",
+              height: 24,
+              width: 24,
+              cacheHeight: 48,
+              cacheWidth: 54,
+              // icon: Icon(Icons.accessible),
+            ),
+          ),
           title: Text(
             AppLocalizations.of(context).translate("title_app_name"),
             style: Theme.of(context).textTheme.title,
