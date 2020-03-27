@@ -50,6 +50,17 @@ class _MyDetailsList extends State<HomeMainTab>
       length: 2,
       vsync: this,
     );
+    _controller.addListener((){
+      if (_controller.index == 0) {
+        setState(() {
+          firstSelected = true;
+        });
+      } else {
+        setState(() {
+          firstSelected = false;
+        });
+      }
+    });
   }
 
   @override
@@ -62,7 +73,7 @@ class _MyDetailsList extends State<HomeMainTab>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if(Platform.isAndroid) {
+        if (Platform.isAndroid) {
           if (firstSelected) {
             _logOut(false);
           } else {
@@ -113,41 +124,54 @@ class _MyDetailsList extends State<HomeMainTab>
         drawer: Theme(
           data: Theme.of(context).copyWith(canvasColor: Colors.grey[70]),
           child: new Drawer(
-              child: new ListView(
+              child: Stack(
             children: <Widget>[
-              new DrawerHeader(
-                child: new Image.asset('assets/images/main_logo.png'),
+              Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/splash_bg.webp'),
+                        fit: BoxFit.cover)),
               ),
-              new Container(
-                height: double.maxFinite,
-                child: ListView.builder(
-                    itemCount: sideMenu.length,
-                    itemBuilder: (context, index) {
-                      return SingleDrawerItem1(
-                          item: sideMenu[index],
-                          currentIndex: index,
-                          selectedIndex: _selectedIndex,
-                          onClicked: (currentIndex) {
-                            // setState(() {
-                            //   _selectedIndex = currentIndex;
-                            // });
-                            switch (currentIndex) {
-                              case 0:
-                                _goToHome();
-                                break;
-                              case 1:
-                                _goToProfile();
-                                break;
-                              case 2:
-                                _goToAddCoupon();
-                                break;
-                              case 3:
-                                _logOut(true);
-                                break;
-                              default:
-                            }
-                          });
-                    }),
+              new ListView(
+                children: <Widget>[
+                  new DrawerHeader(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: new Image.asset('assets/images/main_logo.png'),
+                    ),
+                  ),
+                  new Container(
+                    height: double.maxFinite,
+                    child: ListView.builder(
+                        itemCount: sideMenu.length,
+                        itemBuilder: (context, index) {
+                          return SingleDrawerItem1(
+                              item: sideMenu[index],
+                              currentIndex: index,
+                              selectedIndex: _selectedIndex,
+                              onClicked: (currentIndex) {
+                                // setState(() {
+                                //   _selectedIndex = currentIndex;
+                                // });
+                                switch (currentIndex) {
+                                  case 0:
+                                    _goToHome();
+                                    break;
+                                  case 1:
+                                    _goToProfile();
+                                    break;
+                                  case 2:
+                                    _goToAddCoupon();
+                                    break;
+                                  case 3:
+                                    _logOut(true);
+                                    break;
+                                  default:
+                                }
+                              });
+                        }),
+                  ),
+                ],
               ),
             ],
           )),
@@ -197,26 +221,28 @@ class _MyDetailsList extends State<HomeMainTab>
     return showDialog(
         context: context,
         child: AlertDialog(
-            title: new Text(
-                AppLocalizations.of(context).translate("label_warning")),
+          //AppLocalizations.of(context).translate("label_warning")
             content: new Text(AppLocalizations.of(context).translate(
                 isForLogout ? "error_message_logout" : "error_message_exit")),
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                    AppLocalizations.of(context).translate("label_no_thanks")),
+                    AppLocalizations.of(context).translate("label_no_thanks"),
+                    style: TextStyle(color: Theme.of(context).primaryColor)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               FlatButton(
                 child: Text(
-                    AppLocalizations.of(context).translate("label_yes_i'm")),
+                  AppLocalizations.of(context).translate("label_yes_i'm"),
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop();
                   if (isForLogout) {
                     clearDataAndRedirectLoginScreen(context);
-                  }else{
+                  } else {
                     SystemNavigator.pop();
 //                    exit(0);
                   }

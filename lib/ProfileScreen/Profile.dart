@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:string_validator/string_validator.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
@@ -147,15 +148,6 @@ class _ProfilePage extends State<Profile>
                     );
                   }
                 } else if (state is UpdateProfileSuccessState) {
-                  // Scaffold.of(context).showSnackBar(
-                  //   SnackBar(
-                  //     content: Text(
-                  //       "Profile Updated successfully",
-                  //       style: TextStyle(color: Theme.of(context).primaryColor),
-                  //     ),
-                  //     backgroundColor: Colors.white,
-                  //   ),
-                  // );
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => SuccessDialog(
@@ -340,6 +332,9 @@ class _ProfilePage extends State<Profile>
               if (value.isEmpty || value == null) {
                 return AppLocalizations.of(context).translate("error_add_text");
               } else if (value.length != 10) {
+                return AppLocalizations.of(context)
+                    .translate("error_message_phone_number");
+              }else if (!isNumeric(value.trim())) {
                 return AppLocalizations.of(context)
                     .translate("error_message_phone_number");
               }
@@ -582,7 +577,7 @@ class _ProfilePage extends State<Profile>
     return InputDecoration(
       fillColor: Color(0xB3FFFFFF),
       filled: true,
-      hintStyle: TextStyle(color: Theme.of(context).primaryColor),
+      hintStyle: TextStyle(color: Theme.of(context).hintColor),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(30.0)),
           borderSide: BorderSide(color: Colors.grey)),

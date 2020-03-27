@@ -134,7 +134,10 @@ class _HistoryTabState extends State<HistoryTabWidget> {
   }
 
   Widget _couponList(Response data) {
-    return _gridView(data);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: _gridView(data),
+    );
   }
 
   Widget _gridView(Response data) {

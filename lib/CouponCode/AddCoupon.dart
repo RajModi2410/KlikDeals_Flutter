@@ -229,15 +229,14 @@ class _CouponAdd extends State<AddCoupon>
               inputFormatters: [
                 WhitelistingTextInputFormatter(KeyConstant.editReg())
               ],
-              keyboardType: TextInputType.multiline,
               onSaved: (value) => _descValue = value.trim(),
               controller: _descriptionController,
               validator: (value) {
-                if (value.isEmpty || value == null) {
+                if (value.trim().isEmpty || value == null) {
                   return AppLocalizations.of(context)
                       .translate("error_message_coupon");
                   ;
-                }
+              }
                 return null;
               },
               style: TextStyle(color: Theme.of(context).primaryColor),
@@ -379,7 +378,7 @@ class _CouponAdd extends State<AddCoupon>
         controller: _couponCodeController,
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
-          if (value.isEmpty) {
+          if (value.trim().isEmpty) {
             return AppLocalizations.of(context)
                 .translate("error_message_coupon_code");
           }

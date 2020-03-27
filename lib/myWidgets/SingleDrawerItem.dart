@@ -25,7 +25,7 @@ class SingleDrawerItem1 extends StatelessWidget {
         child: Container(
           color: currentIndex == selectedIndex ? Theme.of(context).primaryColor: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 32.0),
             child: Container(
               // color: this.selectedIndex == this.currentIndex ? Theme.of(context).primaryColor: Colors.white,
               child: SizedBox(
@@ -44,7 +44,7 @@ class SingleDrawerItem1 extends StatelessWidget {
                                         // child:
                                         new Text(item.title,
                                         style: TextStyle(
-                                          color: currentIndex != selectedIndex ? Theme.of(context).primaryColor: Colors.white,
+                                          color: currentIndex != selectedIndex ? Colors.black: Colors.white,
                                         ),),
                                       ]),
                                     ),

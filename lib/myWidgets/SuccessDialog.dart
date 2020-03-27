@@ -50,7 +50,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                     child: Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: Icon(Icons.thumb_up,
-                            color: Colors.white, size: 42.0)
+                            color: Colors.white, size: 64.0)
                         // Image.asset(
                         //   "assets/images/warning_icon.png",
                         // ),

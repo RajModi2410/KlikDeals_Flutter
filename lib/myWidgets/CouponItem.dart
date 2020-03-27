@@ -150,15 +150,21 @@ class CouponItem extends StatelessWidget {
         fit: BoxFit.cover,
         height: 100,
         width: 100,
-        errorWidget: (context, url, error) => Image.asset(
-          'assets/images/main_logo.png',
-          fit: BoxFit.contain,
+        errorWidget: (context, url, error) => Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Image.asset(
+            'assets/images/main_logo.png',
+            fit: BoxFit.contain,
+          ),
         ),
       );
     } else {
-      return Image.asset(
-        'assets/images/main_logo.png',
-        fit: BoxFit.contain,
+      return Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Image.asset(
+          'assets/images/main_logo.png',
+          fit: BoxFit.contain,
+        ),
       );
     }
   }

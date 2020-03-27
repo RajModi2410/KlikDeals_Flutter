@@ -114,15 +114,21 @@ class CouponHistoryItem extends StatelessWidget {
         fit: BoxFit.cover,
         height: 100,
         width: 100,
-        errorWidget: (context, url, error) => Image.asset(
-          'assets/images/main_logo.png',
-          fit: BoxFit.contain,
+        errorWidget: (context, url, error) => Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Image.asset(
+            'assets/images/main_logo.png',
+            fit: BoxFit.contain,
+          ),
         ),
       );
     } else {
-      return Image.asset(
-        'assets/images/main_logo.png',
-        fit: BoxFit.contain,
+      return Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Image.asset(
+          'assets/images/main_logo.png',
+          fit: BoxFit.contain,
+        ),
       );
     }
   }
@@ -161,7 +167,7 @@ class CouponHistoryItem extends StatelessWidget {
 String dateFormatter(String startDate, String endDate, String grabDate) {
   if (grabDate != null) {
     DateTime grabFormat = new DateFormat('yyyy-MM-dd HH:mm:ss').parse(grabDate);
-    String grabDateFormat = new DateFormat('dd-MM-yyyy').format(grabFormat);
+    String grabDateFormat = new DateFormat('dd-MMM-yyyy').format(grabFormat);
     return "Redeem at: $grabDateFormat";
   } else {
     return null;
