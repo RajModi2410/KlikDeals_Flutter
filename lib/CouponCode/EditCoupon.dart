@@ -193,7 +193,7 @@ class _EditCoupon extends State<EditCoupon>
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
       child: TextFormField(
-        inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.editReg())],
+//        inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.editReg())],
           onSaved: (value) => _descValue = value.trim(),
           controller: _descriptionController,
           validator: (value) {
