@@ -51,7 +51,7 @@ class _MyDetailsList extends State<HomeMainTab>
       length: 2,
       vsync: this,
     );
-    _controller.addListener((){
+    _controller.addListener(() {
       if (_controller.index == 0) {
         setState(() {
           firstSelected = true;
@@ -148,6 +148,10 @@ class _MyDetailsList extends State<HomeMainTab>
               new ListView(
                 children: <Widget>[
                   new DrawerHeader(
+                    
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(32.0),
                       child: new Image.asset('assets/images/main_logo.png'),
@@ -234,7 +238,7 @@ class _MyDetailsList extends State<HomeMainTab>
     return showDialog(
         context: context,
         child: AlertDialog(
-          //AppLocalizations.of(context).translate("label_warning")
+            //AppLocalizations.of(context).translate("label_warning")
             content: new Text(AppLocalizations.of(context).translate(
                 isForLogout ? "error_message_logout" : "error_message_exit")),
             actions: <Widget>[

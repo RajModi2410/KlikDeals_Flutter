@@ -83,6 +83,7 @@ void main() {
             hintColor: Colors.grey,
             errorColor: Color(0xffAF201A),
             buttonColor: Color(0xffAF201A),
+            dividerColor: Colors.transparent,
             textTheme: TextTheme(
                 //Theme for Toolbar Text. It is global style. If need to update for single page
                 //than please change in that page only.
