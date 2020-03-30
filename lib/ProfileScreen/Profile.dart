@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:string_validator/string_validator.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
@@ -12,6 +13,7 @@ import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/ProfileScreen/Profile_bloc.dart';
 import 'package:vendor/SelectAddress/SelectAddress.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
+import 'package:vendor/commons/KeyConstant.dart';
 import 'package:vendor/myWidgets/ErrorDialog.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 import 'package:vendor/myWidgets/RoundWidget.dart';
@@ -327,6 +329,7 @@ class _ProfilePage extends State<Profile>
             this._dismissKeyboard(context);
           },
           child: TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.numberReg())],
             onSaved: (value) => _number = value.trim(),
             validator: (value) {
               if (value.trim().isEmpty || value == null) {

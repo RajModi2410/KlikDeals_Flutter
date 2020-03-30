@@ -46,9 +46,9 @@ String passwordValidator(String value) {
   int maxLength = 15;
   if (value.length < minLength) {
     return 'Password must be longer than $minLength characters.';
-  } else if(value.length> maxLength) {
+  } else if (value.length > maxLength) {
     return 'Password must be smaller than $maxLength characters.';
-  }else{
+  } else {
     return null;
   }
 }
@@ -70,8 +70,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   @override
   void initState() {
-    emailInputController =
-        new TextEditingController();
+    emailInputController = new TextEditingController();
     pwdInputController = new TextEditingController();
     emailInputController.addListener(_printEmailValue);
     pwdInputController.addListener(_printPasswordValue);
@@ -139,7 +138,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     retry: () {
                       retryCall();
                     },
-                    isFromInternetConnection: currentState.isFromInternetConnection,
+                    isFromInternetConnection:
+                        currentState.isFromInternetConnection,
                   );
                 } else {
                   return Container();
@@ -200,7 +200,9 @@ class _LoginFormV1State extends State<LoginFormV1> {
                     return Padding(
                       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                       child: TextFormField(
-                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.none),
                         onChanged: (value) => loginBloc.emailChanged(
                             ErrorGen(isError: false, value: value)),
                         keyboardType: TextInputType.emailAddress,
@@ -250,7 +252,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
               padding:
                   const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
               child: TextFormField(
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,),
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
                 autofocus: false,
@@ -258,6 +261,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 textAlign: TextAlign.left,
                 controller: pwdInputController,
                 decoration: InputDecoration(
+
                   prefixIcon: Icon(Icons.lock_outline,
                       color: Theme.of(context).primaryColor),
                   fillColor: Color(0xB3FFFFFF),
@@ -266,12 +270,14 @@ class _LoginFormV1State extends State<LoginFormV1> {
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       borderSide: BorderSide(color: Colors.grey)),
+
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(30.0)),
                   labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-                  hintText: AppLocalizations.of(context).translate("label_password"),
+                  hintText:
+                      AppLocalizations.of(context).translate("label_password"),
                 ),
               ),
             ),
@@ -303,7 +309,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 children: <Widget>[
                   new Padding(
                     padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                    child: Text(AppLocalizations.of(context).translate("label_login"),
+                    child: Text(
+                        AppLocalizations.of(context).translate("label_login"),
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
@@ -347,8 +354,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
       try {
         lastEvent = LoginEvent(_email, _password);
         auth.add(lastEvent);
-        setState(() {
-        });
+        setState(() {});
       } catch (e) {
         print('Error: $e');
       }

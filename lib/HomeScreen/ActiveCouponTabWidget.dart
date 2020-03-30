@@ -267,19 +267,17 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title:
-              new Text(AppLocalizations.of(context).translate("label_warning")),
           content: new Text(
               AppLocalizations.of(context).translate("message_confirm_delete")),
           actions: <Widget>[
             FlatButton(
-              child: const Text('CANCEL'),
+              child: Text('CANCEL',style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: const Text('ACCEPT'),
+              child: Text('ACCEPT' ,style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
                 removeCouponApi(id);

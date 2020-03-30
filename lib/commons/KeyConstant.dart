@@ -27,6 +27,10 @@ class KeyConstant {
   static RegExp editReg() {
     return RegExp("[a-zA-Z0-9 _-]");
   }
+
+  static RegExp numberReg() {
+    return RegExp("[0-9]");
+  }
    /* static RegExp descriptionReg() {
      return RegExp(r'^[a-zA-Z0-9_\-=@%,\.;]+$');
    }*/
