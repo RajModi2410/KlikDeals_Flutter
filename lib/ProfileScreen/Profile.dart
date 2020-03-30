@@ -111,7 +111,8 @@ class _ProfilePage extends State<Profile>
           BlocListener<ProfileBloc, ApiBlocState>(
               listener: (context, state) {
                 if (state is GetProfileApiErrorState) {
-                  var error = state.getProfileResponse.errorMessage.getCommonError();
+                  var error =
+                      state.getProfileResponse.errorMessage.getCommonError();
                   // Scaffold.of(context).showSnackBar(
                   //   SnackBar(
                   //     content: Text(error != null ? error : AppLocalizations.of(context)
@@ -122,8 +123,10 @@ class _ProfilePage extends State<Profile>
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => ErrorDialog(
-                      mainMessage: error != null ? error : AppLocalizations.of(context)
-                          .translate("common_error"),
+                      mainMessage: error != null
+                          ? error
+                          : AppLocalizations.of(context)
+                              .translate("common_error"),
                       okButtonText:
                           AppLocalizations.of(context).translate("label_ok"),
                     ),
@@ -140,11 +143,28 @@ class _ProfilePage extends State<Profile>
                   });
                 } else if (state is UpdateProfileApiErrorState) {
                   var error = state.error;
+                  var  unl = state.updateProfileResponse.errorMessage.ultimateError;
                   if (error != null) {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(AppLocalizations.of(context)
-                            .translate("error_update_profile $error")),
+                            .translate("error_update_profile")+" "+ error),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  }else if(unl != null){
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate("error_update_profile")+" "+ unl),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  }else{
+                     Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)
+                            .translate("error_update_profile")),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
@@ -181,7 +201,8 @@ class _ProfilePage extends State<Profile>
                         retry: () {
                           retryCall();
                         },
-                        isFromInternetConnection: currentState.isFromInternetConnection,
+                        isFromInternetConnection:
+                            currentState.isFromInternetConnection,
                       );
                     } else {
                       return Container();
@@ -291,6 +312,9 @@ class _ProfilePage extends State<Profile>
         validator: (value) {
           if (value.trim().isEmpty || value == null) {
             return AppLocalizations.of(context).translate("error_add_text");
+          } 
+          else if (!isURL(value, {"require_protocol": true, "require_protocols": true})) {
+            return AppLocalizations.of(context).translate("error_message_website");
           }
           return null;
         },
@@ -329,7 +353,9 @@ class _ProfilePage extends State<Profile>
             this._dismissKeyboard(context);
           },
           child: TextFormField(
-            inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.numberReg())],
+            inputFormatters: [
+              WhitelistingTextInputFormatter(KeyConstant.numberReg())
+            ],
             onSaved: (value) => _number = value.trim(),
             validator: (value) {
               if (value.trim().isEmpty || value == null) {
@@ -337,7 +363,7 @@ class _ProfilePage extends State<Profile>
               } else if (value.length != 10) {
                 return AppLocalizations.of(context)
                     .translate("error_message_phone_number");
-              }else if (!isNumeric(value.trim())) {
+              } else if (!isNumeric(value.trim())) {
                 return AppLocalizations.of(context)
                     .translate("error_message_phone_number");
               }
@@ -727,4 +753,138 @@ Widget _logoImage(bool isDirty, String oldLogo, File imageLogo) {
       colorBlendMode: BlendMode.dstATop,
     );
   }
+}
+
+bool isURL(String str, [Map options]) {
+  if (str == null ||
+      str.isEmpty ||
+      str.length > 2083 ||
+      str.indexOf('mailto:') == 0) {
+    return false;
+  }
+
+  Map default_url_options = {
+    'protocols': ['http', 'https', 'ftp'],
+    'require_tld': true,
+    'require_protocol': false,
+    'allow_underscores': false
+  };
+
+  options = merge(options, default_url_options);
+
+  print("we got options: $options");
+  var protocol,
+      user,
+      pass,
+      auth,
+      host,
+      hostname,
+      port,
+      port_str,
+      path,
+      query,
+      hash,
+      split;
+
+  // check protocol
+  split = str.split('://');
+  if (split.length > 1) {
+    protocol = shift(split);
+    if (options['protocols'].indexOf(protocol) == -1) {
+      return false;
+    }
+  } else if (options['require_protocols'] == true) {
+    return false;
+  }
+  str = split.join('://');
+
+  // check hash
+  split = str.split('#');
+  str = shift(split);
+  hash = split.join('#');
+  if (hash != null && hash != "" && RegExp(r'\s').hasMatch(hash)) {
+    return false;
+  }
+
+  // check query params
+  split = str.split('?');
+  str = shift(split);
+  query = split.join('?');
+  if (query != null && query != "" && RegExp(r'\s').hasMatch(query)) {
+    return false;
+  }
+
+  // check path
+  split = str.split('/');
+  str = shift(split);
+  path = split.join('/');
+  if (path != null && path != "" && RegExp(r'\s').hasMatch(path)) {
+    return false;
+  }
+
+  // check auth type urls
+  split = str.split('@');
+  if (split.length > 1) {
+    auth = shift(split);
+    if (auth.indexOf(':') >= 0) {
+      auth = auth.split(':');
+      user = shift(auth);
+      if (!RegExp(r'^\S+$').hasMatch(user)) {
+        return false;
+      }
+      pass = auth.join(':');
+      if (!RegExp(r'^\S*$').hasMatch(pass)) {
+        return false;
+      }
+    }
+  }
+
+  // check hostname
+  hostname = split.join('@');
+  split = hostname.split(':');
+  host = shift(split);
+  if (split.length > 0) {
+    port_str = split.join(':');
+    try {
+      port = int.parse(port_str, radix: 10);
+    } catch (e) {
+      return false;
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(port_str) || port <= 0 || port > 65535) {
+      return false;
+    }
+  }
+
+  if (!isIP(host) && !isFQDN(host, options) && host != 'localhost') {
+    return false;
+  }
+
+  if (options['host_whitelist'] == true &&
+      options['host_whitelist'].indexOf(host) == -1) {
+    return false;
+  }
+
+  if (options['host_blacklist'] == true &&
+      options['host_blacklist'].indexOf(host) != -1) {
+    return false;
+  }
+
+  return true;
+}
+
+shift(List l) {
+  if (l.isNotEmpty) {
+    var first = l.first;
+    l.removeAt(0);
+    return first;
+  }
+  return null;
+}
+
+Map merge(Map obj, defaults) {
+  if (obj == null) {
+    obj = new Map();
+  }
+  defaults.forEach((key, val) => obj.putIfAbsent(key, () => val));
+  return obj;
 }

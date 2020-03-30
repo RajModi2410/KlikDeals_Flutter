@@ -54,10 +54,10 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
     } on NoInternetException catch (_) {
       print("No Internet exception");
       yield NoInternetState(true);
-    } on RetryErrorException catch(_){
+    } on RetryErrorException catch (_) {
       print("Retry error exception");
       yield NoInternetState(false);
-    }catch (e, s) {
+    } catch (e, s) {
       print("error $e");
       print("stacktrace $s");
       yield ApiErrorState();
@@ -77,8 +77,12 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       error = errors.banner.first;
     } else if (errors.logo != null && errors.logo.length > 0) {
       error = errors.logo.first;
+    } else if (errors.website != null && errors.website.length > 0) {
+      error = errors.website.first;
     } else if (errors.error != null && errors.error.length > 0) {
       error = errors.error.first;
+    }else{
+      error = errors.getMeError();
     }
     return error;
   }
@@ -93,13 +97,13 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       } else {
         yield GetProfileApiErrorState(response);
       }
-    }on NoInternetException catch (_) {
+    } on NoInternetException catch (_) {
       print("No Internet exception");
       yield NoInternetState(true);
-    } on RetryErrorException catch(_){
+    } on RetryErrorException catch (_) {
       print("Retry error exception");
       yield NoInternetState(false);
-    }catch (e, s) {
+    } catch (e, s) {
       print("We got error 1:: ${e.toString()}");
       print(s);
 //      e.printStackTrace();

@@ -52,6 +52,7 @@
     "common_error": "Something went to wrong. Please try again",
     "error_update_profile": "Unable to complete profile update due to",
     "error_add_text": "Please enter some text",
+    "error_message_website": "Please enter valid Website",
     "error_message_phone_number": "Please enter valid mobile number",
     "error_message_address": "Please enter Address",
     "error_message_email": "Please enter valid email.",

@@ -13,7 +13,7 @@ abstract class ApiError {
     return isToken;
   }
 
-  String getCommonError(){
+  String getCommonError() {
     return null;
   }
 }

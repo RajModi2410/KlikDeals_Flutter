@@ -53,7 +53,6 @@ class UpdateProfileResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    
     return errorMessage.isTokenError();
   }
 }
@@ -81,8 +80,10 @@ class ErrorMessage extends ApiError {
   List<String> banner;
   List<String> logo;
   List<String> error;
+  List<String> website;
+  String ultimateError;
 
-  ErrorMessage({this.mapLat, this.mapLog, this.phoneNumber});
+  ErrorMessage({this.mapLat, this.mapLog, this.phoneNumber, this.website});
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
     var keys = json.keys;
@@ -121,6 +122,20 @@ class ErrorMessage extends ApiError {
     } else {
       error = [];
     }
+    if (keys.contains('website')) {
+      website = json['website'].cast<String>();
+    } else {
+      website = [];
+    }
+    keys.forEach((singleKey) {
+      var empt = json[singleKey];
+      var keyed;
+      if (empt != null) {
+        var keyed = json[singleKey].cast<String>().first;
+        ultimateError = keyed != null ? keyed : ultimateError;
+      }
+    });
+    print("ultimateError : " + ultimateError);
   }
 
   Map<String, dynamic> toJson() {
@@ -137,7 +152,10 @@ class ErrorMessage extends ApiError {
 
   @override
   bool isTokenError() {
-    
     return super.checkTokenError(error);
+  }
+
+  String getMeError() {
+    return ultimateError;
   }
 }
