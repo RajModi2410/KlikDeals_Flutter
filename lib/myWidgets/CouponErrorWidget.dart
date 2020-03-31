@@ -14,10 +14,10 @@ class CouponErrorWidget extends StatelessWidget {
       children: <Widget>[
         Container(
           child: Center(child: Padding(
-            padding: const EdgeInsets.only(left:8.0,right: 8.0),
+            padding: const EdgeInsets.only(left:16.0,right: 16.0),
             child: Text("$errorMessage", style: TextStyle(
               color: Theme.of(context).primaryColor
-            ),),
+            ),textAlign: TextAlign.center,),
           )),
         ),
       ],
