@@ -181,7 +181,8 @@ class _ProfilePage extends State<Profile>
                   ).then((isConfirm) {
                     print("we got isConfirm $isConfirm");
                     if (isConfirm) {
-                      Navigator.of(context).pop();
+                      _dismissKeyboard(context);
+//                      Navigator.of(context).pop();
                     }
                   });
                 }
