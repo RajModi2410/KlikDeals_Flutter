@@ -13,7 +13,7 @@ class LoginBloc extends Object with LoginValidator implements BaseLoginBloc{
   Stream<String> get email => _emailController.stream.transform(emailValidator);
   Stream<String> get password => _passwordController.stream.transform(passwordValidator);
 
-  Stream<bool> get submitCheck => Observable.combineLatest2(email, password, (e,p)=> true);
+  Stream<bool> get submitCheck => Rx.combineLatest2(email, password, (e,p)=> true);
 
 Function(ErrorGen) get emailChanged => _emailController.sink.add;
 

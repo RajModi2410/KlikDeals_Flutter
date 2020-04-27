@@ -60,13 +60,13 @@ void main() {
   runApp(MultiBlocProvider(
       providers: [
         BlocProvider<ApiBlocBloc>(
-            builder: (context) => ApiBlocBloc(apiBlocRepo)),
+            create: (context) => ApiBlocBloc(apiBlocRepo)),
         BlocProvider<HistoryBloc>(
-            builder: (context) => HistoryBloc(apiBlocRepo)),
+            create: (context) => HistoryBloc(apiBlocRepo)),
         BlocProvider<ProfileBloc>(
-            builder: (context) => ProfileBloc(apiBlocRepo)),
-        BlocProvider<CouponBloc>(builder: (context) => CouponBloc(apiBlocRepo)),
-        BlocProvider<AuthBloc>(builder: (context) => AuthBloc())
+            create: (context) => ProfileBloc(apiBlocRepo)),
+        BlocProvider<CouponBloc>(create: (context) => CouponBloc(apiBlocRepo)),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc())
       ],
       child: MaterialApp(
         //        theme: myTheme,
