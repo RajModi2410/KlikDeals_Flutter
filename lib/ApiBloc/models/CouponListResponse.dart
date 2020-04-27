@@ -141,6 +141,7 @@ class Data {
   String statusName;
   bool isFromHistory = false;
   String status;
+  String isRepeat;
 
   Data(
       {this.id,
@@ -156,7 +157,8 @@ class Data {
       this.approvedLatLong,
       this.statusName,
       this.isFromHistory,
-      this.status});
+      this.status,
+      this.isRepeat});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -171,6 +173,7 @@ class Data {
     approvedDate = json['approved_date'];
     approvedLatLong = json['approved_lat_long'];
     statusName = json['status_name'];
+    isRepeat = json['is_repeat'];
   }
 
   Map<String, dynamic> toJson() {
@@ -187,6 +190,7 @@ class Data {
     data['approved_date'] = this.approvedDate;
     data['approved_lat_long'] = this.approvedLatLong;
     data['status_name'] = this.statusName;
+    data['is_repeat'] = this.isRepeat;
     return data;
   }
 }

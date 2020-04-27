@@ -44,6 +44,8 @@ class _CouponAdd extends State<AddCoupon>
       _couponCodeController,
       _descriptionController;
 
+  var isSelected=false;
+
   _CouponAdd() {
     _startDateValue = new DateFormat('yyyy/MM/dd').format(DateTime.now());
     _endDateValue = new DateFormat('yyyy/MM/dd')
@@ -164,6 +166,7 @@ class _CouponAdd extends State<AddCoupon>
                 // _expiryDate(context),
                 _uploadImage(context),
                 _description(),
+                _shouldRepeatCheckbox(context),
                 _addCouponButton(),
                 // _showPreviewButton(),
               ],
@@ -172,6 +175,53 @@ class _CouponAdd extends State<AddCoupon>
         ),
       ),
     ]);
+  }
+
+  Widget _shouldRepeatCheckbox(BuildContext context) {
+    double _height = 50;
+    return Padding(
+      padding: const EdgeInsets.only(top:16.0),
+      child: InkWell(
+        onTap: () {},
+        child: SizedBox(
+//          height: _height,
+          child: Row(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Checkbox(
+                      value: isSelected,
+                      checkColor: Colors.white,
+                      activeColor: Theme.of(context).primaryColor,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isSelected = value;
+                          print("Should repeat coupon ? :: $isSelected");
+                        });
+                      })
+                ],
+              ),
+              Flexible(fit: FlexFit.tight, flex: 7, child: getFooter(context)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getFooter(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: Text(
+        "Should repeat",
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        style: TextStyle(
+            fontSize: 16.0,
+            color:Theme.of(context).primaryColor),
+      ),
+    );
   }
 
   Padding _addCouponButton() {
@@ -500,9 +550,10 @@ class _CouponAdd extends State<AddCoupon>
       print(_endDateValue);
       print(_descValue);
       print(_imageBanner);
+      print(isSelected);
       try {
         lastEvent = AddCouponEvent(_couponCodeValue, _startDateValue,
-            _endDateValue, _descValue, _imageBanner);
+            _endDateValue, _descValue, _imageBanner,isSelected);
         auth.add(lastEvent);
         setState(() {});
       } catch (e) {

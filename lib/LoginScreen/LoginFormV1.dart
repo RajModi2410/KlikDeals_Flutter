@@ -29,17 +29,17 @@ class LoginFormV1 extends StatefulWidget {
   State<LoginFormV1> createState() => _LoginFormV1State(this.callback);
 }
 
-String emailValidator(String value) {
-  Pattern pattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]'
-      r'{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp exp = new RegExp(pattern);
-  if (!exp.hasMatch(value)) {
-    return 'Please enter valid email.';
-  } else {
-    return null;
+  String emailValidator(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]'
+        r'{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp exp = new RegExp(pattern);
+    if (!exp.hasMatch(value)) {
+      return 'Please enter valid email.';
+    } else {
+      return null;
+    }
   }
-}
 
 String passwordValidator(String value) {
   int minLength = 8;

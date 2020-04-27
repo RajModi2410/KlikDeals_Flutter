@@ -131,6 +131,7 @@ class ApiBlocRepository {
         "start_date": map.startDateValue,
         "end_date": map.endDateValue,
         "description": map.descValue,
+        "is_repeat":map.isSelected ? "1" : "0",
         "coupon_image":
             await MultipartFile.fromFile(image.path, filename: fileName)
       });
@@ -140,6 +141,7 @@ class ApiBlocRepository {
         "start_date": map.startDateValue,
         "end_date": map.endDateValue,
         "description": map.descValue,
+        "is_repeat":map.isSelected ? "1" : "0",
       });
     }
 
@@ -164,7 +166,7 @@ class ApiBlocRepository {
   }
 
   Future<EditCouponResponse> editCoupon(EditCouponEvent map, File image) async {
-    print(baseUrl + "editcoupon:" + map.toString());
+    print(baseUrl + "editcoupon:" + map.toMap().toString());
     String fileName;
     if (image != null) {
       fileName = basename(image.path);
@@ -175,6 +177,7 @@ class ApiBlocRepository {
       "start_date": map.startDateValue,
       "end_date": map.endDateValue,
       "description": map.descValue,
+      "is_repeat":map.isSelected ? "1" : "0",
       "id": map.id,
       if (image != null)
         "coupon_image":

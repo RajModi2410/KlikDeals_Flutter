@@ -45,6 +45,7 @@ class CouponListEvent extends ApiBlocEvent {
   final int perPage;
   final String action;
   final int currentPage;
+
   CouponListEvent(
     this.perPage,
     this.action,
@@ -90,9 +91,10 @@ class AddCouponEvent extends ApiBlocEvent {
   final String endDateValue;
   final String descValue;
   final File image;
+  final bool isSelected;
 
   AddCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
-      this.descValue, this.image);
+      this.descValue, this.image, this.isSelected);
 
   Map toMap() {
     var map = new Map<String, dynamic>();
@@ -100,6 +102,7 @@ class AddCouponEvent extends ApiBlocEvent {
     map["start_date"] = startDateValue;
     map["end_date"] = endDateValue;
     map["description"] = descValue;
+    map["is_repeat"] = isSelected ? "1" : "0";
 
     return map;
   }
@@ -120,9 +123,10 @@ class EditCouponEvent extends ApiBlocEvent {
   final String descValue;
   final String id;
   final File image;
+  final bool isSelected;
 
   EditCouponEvent(this.couponCodeValue, this.startDateValue, this.endDateValue,
-      this.descValue, this.id, this.image);
+      this.descValue, this.id, this.image, this.isSelected);
 
   Map toMap() {
     var map = new Map<String, dynamic>();
@@ -131,6 +135,7 @@ class EditCouponEvent extends ApiBlocEvent {
     map["end_date"] = endDateValue;
     map["description"] = descValue;
     map["id"] = id;
+    map["is_repeat"] = isSelected ? "1" : "0";
 
     return map;
   }

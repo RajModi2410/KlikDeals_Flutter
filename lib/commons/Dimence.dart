@@ -1,4 +1,5 @@
 class Dimence {
+
   static double fontSize10 = 10;
   static double fontSize11 = 11;
   static double fontSize12 = 12;
