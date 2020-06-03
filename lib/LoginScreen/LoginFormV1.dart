@@ -119,8 +119,8 @@ class _LoginFormV1State extends State<LoginFormV1> {
               }
             } else if (state is LoginApiFetchedState) {
               token = state.loginResponse.token.toString();
-              lastEvent = TokenGenerateEvent(token);
-              auth.add(lastEvent);
+                lastEvent = TokenGenerateEvent(token);
+                auth.add(lastEvent);
               _onSetOnShredPref(token);
               _goToHomePage();
             }

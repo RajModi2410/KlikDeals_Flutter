@@ -48,7 +48,6 @@ class LoginResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    
     return errorMessage.isTokenError();
   }
 }
