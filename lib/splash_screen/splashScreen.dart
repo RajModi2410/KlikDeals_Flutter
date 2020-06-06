@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    new FirebaseNotifications().setUpFirebase();
+    // new FirebaseNotifications().setUpFirebase();
     startTime();
     fetchSessionAndNavigate();
   }
