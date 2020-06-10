@@ -23,6 +23,7 @@ import 'ProfileStates.dart';
 
 class Profile extends StatefulWidget {
   static const String routeName = "/profile";
+
   Profile({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -143,25 +144,30 @@ class _ProfilePage extends State<Profile>
                   });
                 } else if (state is UpdateProfileApiErrorState) {
                   var error = state.error;
-                  var  unl = state.updateProfileResponse.errorMessage.ultimateError;
+                  var unl =
+                      state.updateProfileResponse.errorMessage.ultimateError;
                   if (error != null) {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(AppLocalizations.of(context)
-                            .translate("error_update_profile")+" "+ error),
+                                .translate("error_update_profile") +
+                            " " +
+                            error),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
-                  }else if(unl != null){
+                  } else if (unl != null) {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(AppLocalizations.of(context)
-                            .translate("error_update_profile")+" "+ unl),
+                                .translate("error_update_profile") +
+                            " " +
+                            unl),
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                     );
-                  }else{
-                     Scaffold.of(context).showSnackBar(
+                  } else {
+                    Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text(AppLocalizations.of(context)
                             .translate("error_update_profile")),
@@ -311,11 +317,19 @@ class _ProfilePage extends State<Profile>
       child: TextFormField(
         onSaved: (value) => _website = value.trim(),
         validator: (value) {
-          if (value.trim().isEmpty || value == null) {
+          /*if (value.trim().isEmpty || value == null) {
             return AppLocalizations.of(context).translate("error_add_text");
           } 
           else if (!isURL(value, {"require_protocol": true, "require_protocols": true})) {
             return AppLocalizations.of(context).translate("error_message_website");
+          }*/
+
+          if (value != null && value.trim().isNotEmpty) {
+            if (!isURL(
+                value, {"require_protocol": true, "require_protocols": true})) {
+              return AppLocalizations.of(context)
+                  .translate("error_message_website");
+            }
           }
           return null;
         },

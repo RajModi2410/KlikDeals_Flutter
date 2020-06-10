@@ -277,6 +277,7 @@ class _CouponAdd extends State<AddCoupon>
             FocusScope.of(context).requestFocus(FocusNode());
           },
           child: TextFormField(
+            maxLength: 250,
              /* inputFormatters: [
                 WhitelistingTextInputFormatter(KeyConstant.descriptionReg())
               ],*/
@@ -422,6 +423,7 @@ class _CouponAdd extends State<AddCoupon>
 
   TextFormField _couponCode() {
     return TextFormField(
+      maxLength: 40,
         inputFormatters: [
           WhitelistingTextInputFormatter(KeyConstant.editReg())
         ],

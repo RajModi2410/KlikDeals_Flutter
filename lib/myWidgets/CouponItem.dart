@@ -9,13 +9,19 @@ class CouponItem extends StatelessWidget {
   // final GestureTapCallback onDeleteClick;
   final Function(int) onDeleteClick;
   final Function(Data) onEditClick;
-
-  CouponItem({@required this.data, this.isForHistory, this.onDeleteClick, this.onEditClick});
+  double recommendedHeight = 0;
+  
+  CouponItem(
+      {@required this.data,
+      this.isForHistory,
+      this.onDeleteClick,
+      this.onEditClick});
 
   @override
   Widget build(BuildContext context) {
     String date;
-    date = "";//dateFormatter(data.startDate, data.endDate, isForHistory, "");
+    date = ""; //dateFormatter(data.startDate, data.endDate, isForHistory, "");
+    // recommendedHeight = MediaQuery.of(context).size.height  * 0.3;
     return couponList(context, date);
   }
 
@@ -31,13 +37,15 @@ class CouponItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8), topRight: Radius.circular(8)),
               child: AspectRatio(
-                aspectRatio: 18.0 / 12.0,
+                aspectRatio: 1.76,
                 child: getImage(),
               ),
             ),
+            // ConstrainedBox(
+            //   constraints: buildBoxConstraints(context),
+            //   child: getImage(),
+            // ),
             getFooter(context, date),
           ],
         ),
@@ -45,9 +53,21 @@ class CouponItem extends StatelessWidget {
     );
   }
 
+BoxConstraints buildBoxConstraints(BuildContext context) {
+    print("we got total height: ${MediaQuery.of(context).size.height}");
+    return BoxConstraints(
+      //replace this Container with your Card
+      minWidth: MediaQuery.of(context).size.width * 1,
+      minHeight: recommendedHeight,
+      /*maxHeight: MediaQuery
+          .of(context)
+          .size
+          .height * 0.20,*/
+      maxHeight: recommendedHeight,
+    );
+  }
   Padding getFooter(BuildContext context, String date) {
     return new Padding(
-      // padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 2.0),
       padding: EdgeInsets.all(0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,8 +80,7 @@ class CouponItem extends StatelessWidget {
                   flex: 7,
                   child: Text(
                     data.couponCode,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    // overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Color(0xff434A5E),
@@ -77,11 +96,10 @@ class CouponItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8.0,right:8.0),
+            padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
             child: Text(
               data.description,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+              // overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 12.0,
                 color: Color(0xff434A5E),
@@ -97,17 +115,17 @@ class CouponItem extends StatelessWidget {
 
   Padding showDate(String date) {
     return Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-          child: Text(
-            date,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 12.0,
-            ),
-          ),
-        );
+      padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+      child: Text(
+        date,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        style: TextStyle(
+          color: Colors.black54,
+          fontSize: 12.0,
+        ),
+      ),
+    );
   }
 
   Row getActions(BuildContext context) {

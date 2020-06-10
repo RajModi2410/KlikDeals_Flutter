@@ -148,8 +148,8 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     return CustomScrollView(controller: _scrollController, slivers: <Widget>[
       new SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 1, //8.0 / 10.0,
-            crossAxisCount: 2,
+            // childAspectRatio: 0.9, //8.0 / 10.0,
+            crossAxisCount: 1,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0),
         delegate: SliverChildBuilderDelegate(
