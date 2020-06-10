@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
@@ -13,7 +14,6 @@ import 'package:vendor/myWidgets/CouponErrorWidget.dart';
 import 'package:vendor/myWidgets/CouponHistoryItem.dart';
 import 'package:vendor/myWidgets/EmptyListWidget.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'HomeState.dart';
 
@@ -90,7 +90,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
         },
         child: Stack(
           children: <Widget>[
-            BackgroundWidget(),
+            BackgroundWidget(fromSplash: false,),
             BlocBuilder<HistoryBloc, ApiBlocState>(
                 bloc: auth,
                 builder: (

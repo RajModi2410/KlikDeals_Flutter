@@ -79,7 +79,7 @@ class CouponItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 8.0,right:8.0),
             child: Text(
-              data.description + " ld v dm kdm kd kms vk vjs vknas kjask skm k kmas ckas kms vkm m sk sk vks vks vks vms vksvks vks vkms vks vkms vks vks vkms vks vml",
+              data.description,
               overflow: TextOverflow.ellipsis,
               maxLines: 3,
               style: TextStyle(

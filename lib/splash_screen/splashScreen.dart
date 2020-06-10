@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/LoginScreen/LoginPage.dart';
 import 'package:vendor/commons/AuthUtils.dart';
-import 'package:vendor/commons/FirebaseNotifications.dart';
 import 'package:vendor/myWidgets/BackgroundWidget.dart';
 import 'package:vendor/myWidgets/HomeMainTab.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -53,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
     auth = BlocProvider.of<ApiBlocBloc>(context);
     return Stack(
       children: <Widget>[
-        BackgroundWidget(),
+        BackgroundWidget(fromSplash: true,),
         logoBuilder(),
       ],
     );
@@ -70,7 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 flex: 1,
                 child: AspectRatio(
                   aspectRatio: 1.0,
-                  child: new Image.asset('assets/images/main_logo.png'),
+                  child: new Image.asset(
+                      'assets/images/only_white_borders.png'),
                 ),
               ),
             ],

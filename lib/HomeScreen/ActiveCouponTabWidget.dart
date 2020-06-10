@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/ApiBloc/ApiBloc_bloc.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
@@ -8,12 +9,10 @@ import 'package:vendor/CouponCode/EditCoupon.dart';
 import 'package:vendor/HomeScreen/HomeState.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
 import 'package:vendor/myWidgets/BackgroundWidget.dart';
-import 'package:vendor/myWidgets/BottomLoader.dart';
 import 'package:vendor/myWidgets/CouponErrorWidget.dart';
-import 'package:vendor/myWidgets/CouponItem.dart';
+import 'package:vendor/myWidgets/DetailsScreenCell.dart';
 import 'package:vendor/myWidgets/EmptyListWidget.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../AppLocalizations.dart';
 
@@ -44,6 +43,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   final _scrollThreshold = 200.0;
   bool hasReachedEnd = false;
   bool inProcess = false;
+
 //Pagination Stuff End
 
   _ActiveCouponPage(this.isForHistory);
@@ -78,7 +78,9 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
         },
         child: Stack(
           children: <Widget>[
-            BackgroundWidget(),
+            BackgroundWidget(
+              fromSplash: false,
+            ),
             BlocBuilder<ApiBlocBloc, ApiBlocState>(
                 bloc: apiBloc,
                 builder: (
@@ -105,8 +107,6 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                       message: "Fetching active deals....",
                     );
                     return _couponList(currentState.couponList.response);
-
-
                   } else if (currentState is ApiEmptyState) {
                     print("Home Page :: We got empty data.....");
 
@@ -115,14 +115,16 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                             .translate("error_no_coupon_active"));
                   } else if (currentState is CouponDeleteFetchedState) {
                     getCouponList();
-                    return CenterLoadingIndicator(message: "Refreshing active deals....",
+                    return CenterLoadingIndicator(
+                      message: "Refreshing active deals....",
                     );
                   } else if (currentState is NoInternetState) {
                     return NoNetworkWidget(
                       retry: () {
                         retryCall();
                       },
-                      isFromInternetConnection: currentState.isFromInternetConnection,
+                      isFromInternetConnection:
+                      currentState.isFromInternetConnection,
                     );
                   } else {
                     return EmptyListWidget(
@@ -139,42 +141,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
 
   Widget _couponList(Response data) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: _gridView(data),
-    );
-  }
-
-  Widget _gridView(Response data) {
-    return CustomScrollView(controller: _scrollController, slivers: <Widget>[
-      new SliverGrid(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: 0.9, //8.0 / 10.0,
-            crossAxisCount: 2,
-            mainAxisSpacing: 4.0,
-            crossAxisSpacing: 4.0),
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            var listData = data.data[index];
-            listData.isFromHistory = isForHistory;
-            // return GridTile(child: null)
-            return CouponItem(
-              data: listData,
-              isForHistory: false,
-              onDeleteClick: (id) {
-                _showPopup(id);
-              },
-              onEditClick: (data) {
-                _goToEditScreen(data.toJson());
-              },
-            );
-          },
-          childCount: getTotalCount(data),
-        ),
-      ),
-      new SliverToBoxAdapter(
-        child: hasReachedEnd ? Container() : BottomLoader(),
-      )
-    ]);
+        padding: const EdgeInsets.all(8.0), child: activeCouponList(data));
   }
 
   void _goToEditScreen(Map<String, dynamic> data) async {
@@ -271,13 +238,19 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
               AppLocalizations.of(context).translate("message_confirm_delete")),
           actions: <Widget>[
             FlatButton(
-              child: Text('CANCEL',style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('CANCEL',
+                  style: TextStyle(color: Theme
+                      .of(context)
+                      .primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text('ACCEPT' ,style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text('ACCEPT',
+                  style: TextStyle(color: Theme
+                      .of(context)
+                      .primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
                 removeCouponApi(id);
@@ -292,5 +265,28 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   void removeCouponApi(int couponId) {
     lastEvent = CouponDeleteEvent(couponId.toString());
     apiBloc.add(lastEvent);
+  }
+
+  Widget activeCouponList(Response data) {
+    return
+      ListView.builder(
+          itemCount: getTotalCount(data),
+          scrollDirection: Axis.vertical,
+          controller: _scrollController,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+              child: DetailScreenCell(
+                data: data.data[index],
+                isForHistory: false,
+                onDeleteClick: (id) {
+                  _showPopup(id);
+                },
+                onEditClick: (data) {
+                  _goToEditScreen(data.toJson());
+                },
+              ),
+            );
+          });
   }
 }
