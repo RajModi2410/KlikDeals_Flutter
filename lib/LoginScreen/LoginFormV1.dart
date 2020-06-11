@@ -44,7 +44,10 @@ class LoginFormV1 extends StatefulWidget {
 String passwordValidator(String value) {
   int minLength = 8;
   int maxLength = 15;
-  if (value.length < minLength) {
+  if (value.isEmpty){
+    return 'Password is empty.';
+  }
+  else if(value.length < minLength) {
     return 'Password must be longer than $minLength characters.';
   } else if (value.length > maxLength) {
     return 'Password must be smaller than $maxLength characters.';
