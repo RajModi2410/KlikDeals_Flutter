@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BackgroundWidget extends StatelessWidget {
-  const BackgroundWidget({
-    Key key,
-  }) : super(key: key);
+  bool fromSplash = false;
+
+  BackgroundWidget({this.fromSplash, Key key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: fromSplash ? Color(0xffE81432) : Colors.white,
       foregroundDecoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/splash_bg.webp'),
