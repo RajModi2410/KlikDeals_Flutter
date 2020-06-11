@@ -214,7 +214,7 @@ class _CouponAdd extends State<AddCoupon>
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Text(
-        "Should repeat",
+        "Repeat",
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: TextStyle(
