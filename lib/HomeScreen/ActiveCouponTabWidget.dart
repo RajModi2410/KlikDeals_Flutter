@@ -9,6 +9,7 @@ import 'package:vendor/CouponCode/EditCoupon.dart';
 import 'package:vendor/HomeScreen/HomeState.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
 import 'package:vendor/myWidgets/BackgroundWidget.dart';
+import 'package:vendor/myWidgets/BottomLoader.dart';
 import 'package:vendor/myWidgets/CouponErrorWidget.dart';
 import 'package:vendor/myWidgets/DetailsScreenCell.dart';
 import 'package:vendor/myWidgets/EmptyListWidget.dart';
@@ -22,11 +23,19 @@ SharedPreferences sharedPreferences;
 class ActiveCouponTabWidget extends StatefulWidget {
   static const String routeName = "/active_coupon";
   final bool isForHistory;
+  _ActiveCouponPage _activeCouponPage;
 
   ActiveCouponTabWidget(this.isForHistory);
 
   @override
-  State<StatefulWidget> createState() => new _ActiveCouponPage(isForHistory);
+  State<StatefulWidget> createState() {
+    _activeCouponPage = new _ActiveCouponPage(isForHistory);
+    return _activeCouponPage;
+  }
+
+  void resetToZero() {
+    _activeCouponPage.resetToZero();
+  }
 }
 
 class _ActiveCouponPage extends State<ActiveCouponTabWidget>
@@ -37,14 +46,14 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   bool isForHistory;
   ApiBlocEvent lastEvent;
 
-//Pagination Stuff Start
+  //Pagination Stuff Start
   int currentPage = 1;
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
   bool hasReachedEnd = false;
   bool inProcess = false;
 
-//Pagination Stuff End
+  //Pagination Stuff End
 
   _ActiveCouponPage(this.isForHistory);
 
@@ -124,7 +133,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                         retryCall();
                       },
                       isFromInternetConnection:
-                      currentState.isFromInternetConnection,
+                          currentState.isFromInternetConnection,
                     );
                   } else {
                     return EmptyListWidget(
@@ -157,7 +166,7 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
     hasReachedEnd = responseData.currentPage == responseData.lastPage;
     print(
         "CategoriesListScreen We need Data ::: $hasReachedEnd :: ${responseData.currentPage} :: ${responseData.lastPage}");
-    var totalLength = responseData.data.length;
+    var totalLength = responseData.data.length + (hasReachedEnd ? 0 : 1);
     print("We are returning totalLength : $totalLength");
     return totalLength;
   }
@@ -239,18 +248,14 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
           actions: <Widget>[
             FlatButton(
               child: Text('CANCEL',
-                  style: TextStyle(color: Theme
-                      .of(context)
-                      .primaryColor)),
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
               child: Text('ACCEPT',
-                  style: TextStyle(color: Theme
-                      .of(context)
-                      .primaryColor)),
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
               onPressed: () {
                 Navigator.of(context).pop();
                 removeCouponApi(id);
@@ -268,12 +273,14 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
   }
 
   Widget activeCouponList(Response data) {
-    return
-      ListView.builder(
-          itemCount: getTotalCount(data),
-          scrollDirection: Axis.vertical,
-          controller: _scrollController,
-          itemBuilder: (context, index) {
+    return ListView.builder(
+        itemCount: getTotalCount(data),
+        scrollDirection: Axis.vertical,
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          if (!hasReachedEnd && index >= getTotalCount(data)-1) {
+            return BottomLoader();
+          } else {
             return Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
               child: DetailScreenCell(
@@ -287,6 +294,11 @@ class _ActiveCouponPage extends State<ActiveCouponTabWidget>
                 },
               ),
             );
-          });
+          }
+        });
+  }
+
+  void resetToZero() {
+    currentPage = 1;
   }
 }

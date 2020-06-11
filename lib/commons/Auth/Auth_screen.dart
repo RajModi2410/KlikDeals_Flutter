@@ -53,31 +53,32 @@ class AuthScreenState extends State<AuthScreen> {
             ) {
               print("currentState We got state : " + currentState.toString());
               if (currentState is TokenValidState) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                // return Center(
+                //   child: CircularProgressIndicator(),
+                // );
               }
               if (currentState is TokenExpiredState) {
-                return Container(
-                  child: Text("Good"),
-                );
+                // return Container(
+                //   child: Text("Good"),
+                // );
               }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Flutter files: done'),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 32.0),
-                      child: RaisedButton(
-                        color: Colors.red,
-                        child: Text('throw error'),
-                        onPressed: () => this._load(true),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              // return Center(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       Text('Flutter files: done'),
+              //       Padding(
+              //         padding: const EdgeInsets.only(top: 32.0),
+              //         child: RaisedButton(
+              //           color: Colors.red,
+              //           child: Text('throw error'),
+              //           onPressed: () => this._load(true),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // );
+              return Container();
             }));
   }
 

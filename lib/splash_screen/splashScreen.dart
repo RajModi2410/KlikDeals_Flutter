@@ -63,6 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Container(
+          color: Colors.transparent,
           child: Column(
             children: <Widget>[
               Expanded(

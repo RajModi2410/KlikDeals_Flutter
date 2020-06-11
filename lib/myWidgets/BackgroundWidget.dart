@@ -12,7 +12,7 @@ class BackgroundWidget extends StatelessWidget {
       color: fromSplash ? Color(0xffE81432) : Colors.white,
       foregroundDecoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/images/splash_bg.webp'),
+              image: AssetImage('assets/images/category_background.png'),
               fit: BoxFit.cover)),
     );
   }

@@ -42,7 +42,8 @@ class _MyDetailsList extends State<HomeMainTab>
   int _selectedIndex = 0;
   int _indexValue = 0;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  ApiBlocBloc apiBloc;
+ActiveCouponTabWidget _activeCouponTabWidget;
   @override
   void initState() {
     super.initState();
@@ -62,16 +63,20 @@ class _MyDetailsList extends State<HomeMainTab>
         });
       }
     });
+  
+  _activeCouponTabWidget = ActiveCouponTabWidget(false);
   }
 
   @override
   void dispose() {
     _controller?.dispose();
+    _activeCouponTabWidget = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    apiBloc = BlocProvider.of<ApiBlocBloc>(context);
     return WillPopScope(
       onWillPop: () async {
         if (Platform.isAndroid) {
@@ -148,7 +153,6 @@ class _MyDetailsList extends State<HomeMainTab>
               new ListView(
                 children: <Widget>[
                   new DrawerHeader(
-                    
                     decoration: BoxDecoration(
                       color: Colors.transparent,
                     ),
@@ -196,7 +200,7 @@ class _MyDetailsList extends State<HomeMainTab>
         body: TabBarView(
           controller: _controller,
           children: <Widget>[
-            ActiveCouponTabWidget(false),
+            _activeCouponTabWidget,
             HistoryTabWidget(true),
           ],
         ),
@@ -229,7 +233,8 @@ class _MyDetailsList extends State<HomeMainTab>
     var shouldReload =
         await Navigator.of(context).pushNamed(AddCoupon.routeName);
     if (shouldReload is bool && shouldReload) {
-      BlocProvider.of<ApiBlocBloc>(context).add(ReloadEvent(true));
+      _activeCouponTabWidget.resetToZero();
+      apiBloc.add(ReloadEvent(true));
     }
 //    });
   }
