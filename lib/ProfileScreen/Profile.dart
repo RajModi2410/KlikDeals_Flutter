@@ -9,6 +9,8 @@ import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
 import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/ChangePassword/ChangePassword.dart';
+import 'package:vendor/ChangePassword/ChangePasswordForm.dart';
 import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/ProfileScreen/Profile_bloc.dart';
 import 'package:vendor/SelectAddress/SelectAddress.dart';
@@ -721,14 +723,24 @@ class _ProfilePage extends State<Profile>
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
+                              child:GestureDetector(
+                                onTap: () => _goToChangePassword(context),
                               child: Text("Change your password",style: Theme.of(context).textTheme.subtitle1.copyWith(
                                 decoration: TextDecoration.underline
                               )),
+                            )
                             ),
                           ],
                         );
                       }
 }
+
+ void _goToChangePassword(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChangePassword()),
+    );
+  }
 
 Widget _bannerImage(bool isDirty, String oldBanner, File imageBanner) {
   print("We got null banner file :: $isDirty :: $oldBanner :: $imageBanner");

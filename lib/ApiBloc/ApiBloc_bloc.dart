@@ -46,7 +46,7 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapReloadResponseEvents();
     } else if (event is ResetPasswordEvent){
       yield* event.getProcessAsync(playerRepository);
-    }
+    } 
   }
 
   Stream<ApiBlocState> _mapLoginEventResponseEvents(LoginEvent event) async* {

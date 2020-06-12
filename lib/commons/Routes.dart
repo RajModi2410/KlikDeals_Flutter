@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vendor/ChangePassword/ChangePassword.dart';
 import 'package:vendor/CouponCode/AddCoupon.dart';
 import 'package:vendor/CouponCode/EditCoupon.dart';
 import 'package:vendor/HomeScreen/ActiveCouponTabWidget.dart';
@@ -28,6 +29,8 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) => EditCoupon(map: args),
         );
+    case ChangePassword.routeName:
+        return MaterialPageRoute(builder: (context) => new ChangePassword());
       default:
         // If there is no such named route in the switch statement, e.g. /third
         print("default we got route : " + settings.name);

@@ -1,55 +1,78 @@
-import 'package:vendor/commons/ApiError.dart';
+import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
 import 'package:vendor/commons/ApiResponse.dart';
+import 'package:vendor/commons/ApiError.dart';
 import 'package:vendor/commons/KeyConstant.dart';
 
-class ResetPasswordResponse extends ApiResponse {
-  bool status;
+
+class ChangePasswordResponse extends ApiResponse {
   String message;
+  bool status;
+  Response response;
   ErrorMessage errorMessage;
 
-  ResetPasswordResponse({this.status, this.message, this.errorMessage})
-      : super(ApiStatus.COMPLETED);
+  ChangePasswordResponse(
+      {this.message, this.status, this.response, this.errorMessage}) : super(ApiStatus.COMPLETED);
 
-  ResetPasswordResponse.fromJson(Map<String, dynamic> json, bool isError)
-      : super.error(isError) {
+
+  ChangePasswordResponse.fromJson(Map<String, dynamic> json, bool isError) : super.error(isError){
     status = json['status'];
     message = json['message'];
-    
-    if (isError) {
+    response = json['response'];
+      if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
           : null;
     } else {
       errorMessage = null;
     }
+
   }
 
-  ResetPasswordResponse.fake(bool isError)
+   ChangePasswordResponse.fake(bool isError)
       : super.error(isError) {
     status = false;
-    message = "The email address is wrong";
+    message = "Fail to reset password";
     if (isError) {
-      errorMessage = ErrorMessage.error("Unable to reset the password");
+      errorMessage = ErrorMessage.error("The specified old password does not match with your current password.");
     } else {
       errorMessage = null;
     }
   }
 
-  ResetPasswordResponse.error() : super.network() {
+ ChangePasswordResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
   }
 
-  Map<String, dynamic> toJson() {
+  // ChangePasswordResponse.fromJson(Map<String, dynamic> json)  {
+  //   message = json['message'];
+  //   status = json['status'];
+  //   if (json['response'] != null) {
+  //     response = new List<Null>();
+  //     json['response'].forEach((v) {
+  //       response.add(new Null.fromJson(v));
+  //     });
+  //   }
+  //   if (json['error_message'] != null) {
+  //     errorMessage = new List<Null>();
+  //     json['error_message'].forEach((v) {
+  //       errorMessage.add(new Null.fromJson(v));
+  //     });
+  //   }
+  // }
+ Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
+    data['response'] = this.response;
     if (this.errorMessage != null) {
       data['error_message'] = this.errorMessage.toJson();
     }
     return data;
   }
+
+ 
 
   @override
   bool isTokenError() {

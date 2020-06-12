@@ -36,6 +36,8 @@ class ProfileBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapUpdateProfileEventResponseEvents(event);
     } else if (event is GetProfileEvent) {
       yield* _mapGetProfileEventResponseEvents(event);
+    } else if (event is ChangePasswordEvent){
+      yield* event.getProcessAsync(playerRepository);
     }
   }
 

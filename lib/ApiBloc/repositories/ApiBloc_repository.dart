@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/models/AddCouponResponse.dart';
+import 'package:vendor/ApiBloc/models/ChangePasswordResponse.dart';
 import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
 import 'package:vendor/ApiBloc/models/DeleteCouponResponse.dart';
 import 'package:vendor/ApiBloc/models/EditCouponResponse.dart';
@@ -91,26 +92,50 @@ class ApiBlocRepository {
 
   Future<ResetPasswordResponse> resetPassword(Map map) async {
     return ResetPasswordResponse.fake(true);
-    // try {
-    //   print(baseUrl + "resetPassword" + map.toString());
-    //   Dio.FormData formData = new Dio.FormData.fromMap(map);
-    //   Dio.Response response =
-    //       await dio.post(baseUrl + "resetPassword", data: formData);
-    //   return parseResetPasswordResponse(response);
-    // } on Dio.DioError catch (e) {
-    //   print(e.type);
-    //   if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
-    //       e.type == Dio.DioErrorType.DEFAULT ||
-    //       e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
-    //     // return LoginResponse.error();
-    //     throw NoInternetException("");
-    //   } else if (e.response.statusCode == 429) {
-    //     RetryErrorException("");
-    //   } else {
-    //     Dio.Response response = e.response;
-    //     return parseResetPasswordResponse(response);
-    //   }
-    // }
+    try {
+      print(baseUrl + "forgot_password" + map.toString());
+      Dio.FormData formData = new Dio.FormData.fromMap(map);
+      Dio.Response response =
+          await dio.post(baseUrl + "forgot_password", data: formData);
+      return parseResetPasswordResponse(response);
+    } on Dio.DioError catch (e) {
+      print(e.type);
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
+        // return LoginResponse.error();
+        throw NoInternetException("");
+      } else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      } else {
+        Dio.Response response = e.response;
+        return parseResetPasswordResponse(response);
+      }
+    }
+  }
+
+   Future<ChangePasswordResponse> changePassword(Map map) async {
+    return ChangePasswordResponse.fake(true);
+    try {
+      print(baseUrl + "forgot_password" + map.toString());
+      Dio.FormData formData = new Dio.FormData.fromMap(map);
+      Dio.Response response =
+          await dio.post(baseUrl + "forgot_password", data: formData);
+      return parseChangePasswordResponse(response);
+    } on Dio.DioError catch (e) {
+      print(e.type);
+      if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+          e.type == Dio.DioErrorType.DEFAULT ||
+          e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
+        // return LoginResponse.error();
+        throw NoInternetException("");
+      } else if (e.response.statusCode == 429) {
+        RetryErrorException("");
+      } else {
+        Dio.Response response = e.response;
+        return parseChangePasswordResponse(response);
+      }
+    }
   }
 
   Future<CouponListResponse> coupon(Map map) async {
@@ -339,6 +364,13 @@ class ApiBlocRepository {
     print("LoginResponse :: ${response.data}");
     final responseString = (response.data);
     return ResetPasswordResponse.fromJson(
+        responseString, response.statusCode != successCode);
+  }
+
+   ChangePasswordResponse parseChangePasswordResponse(Dio.Response response) {
+    print("ChangePassword :: ${response.data}");
+    final responseString = (response.data);
+    return ChangePasswordResponse.fromJson(
         responseString, response.statusCode != successCode);
   }
 

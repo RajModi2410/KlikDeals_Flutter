@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:vendor/ChangePassword/ChangePasswordState.dart';
 import 'package:vendor/LoginScreen/LoginStates.dart';
 import 'package:vendor/commons/AppExceptions.dart';
 
@@ -242,6 +243,45 @@ class ResetPasswordEvent extends ApiBlocEvent {
   Map toMap() {
     var map = new Map<String, dynamic>();
     map["email"] = emailAddress;
+    return map;
+  }
+}
+class ChangePasswordEvent extends ApiBlocEvent {
+  final String oldPassword;
+  final String newPassword;
+
+  ChangePasswordEvent(this.oldPassword, this.newPassword);
+
+  @override
+  List<Object> get props => [oldPassword,newPassword];
+
+  Stream<ApiBlocState> getProcessAsync(
+      ApiBlocRepository playerRepository) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.changePassword(toMap());
+      if (response.status) {
+        yield ChangePasswordSuccessState(response);
+      } else {
+        yield ChangePasswordErrorState(response);
+      }
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
+      yield NoInternetState(true);
+    } on RetryErrorException catch (_) {
+      print("Retry error exception");
+      yield NoInternetState(false);
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
+      yield ApiErrorState();
+    }
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["old_password"] = oldPassword;
+    map["new_password"] = newPassword;
     return map;
   }
 }
