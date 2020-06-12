@@ -11,6 +11,7 @@ import 'package:vendor/ApiBloc/models/DeleteCouponResponse.dart';
 import 'package:vendor/ApiBloc/models/EditCouponResponse.dart';
 import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
 import 'package:vendor/ApiBloc/models/LoginResponse.dart';
+import 'package:vendor/ApiBloc/models/ResetPasswordResponse.dart';
 import 'package:vendor/ApiBloc/models/SearchResponse.dart';
 import 'package:vendor/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:vendor/commons/ApiResponse.dart';
@@ -81,11 +82,35 @@ class ApiBlocRepository {
         throw NoInternetException("");
       } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else{
+      } else {
         Dio.Response response = e.response;
         return parseLoginResponse(response);
       }
     }
+  }
+
+  Future<ResetPasswordResponse> resetPassword(Map map) async {
+    return ResetPasswordResponse.fake(true);
+    // try {
+    //   print(baseUrl + "resetPassword" + map.toString());
+    //   Dio.FormData formData = new Dio.FormData.fromMap(map);
+    //   Dio.Response response =
+    //       await dio.post(baseUrl + "resetPassword", data: formData);
+    //   return parseResetPasswordResponse(response);
+    // } on Dio.DioError catch (e) {
+    //   print(e.type);
+    //   if (e.type == Dio.DioErrorType.RECEIVE_TIMEOUT ||
+    //       e.type == Dio.DioErrorType.DEFAULT ||
+    //       e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
+    //     // return LoginResponse.error();
+    //     throw NoInternetException("");
+    //   } else if (e.response.statusCode == 429) {
+    //     RetryErrorException("");
+    //   } else {
+    //     Dio.Response response = e.response;
+    //     return parseResetPasswordResponse(response);
+    //   }
+    // }
   }
 
   Future<CouponListResponse> coupon(Map map) async {
@@ -103,9 +128,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return CouponListResponse.error();
         throw NoInternetException("");
-      }  else if (e.response.statusCode == 429) {
+      } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else{
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseCouponResponse(response));
       }
@@ -131,7 +156,7 @@ class ApiBlocRepository {
         "start_date": map.startDateValue,
         "end_date": map.endDateValue,
         "description": map.descValue,
-        "is_repeat":map.isSelected ? "1" : "0",
+        "is_repeat": map.isSelected ? "1" : "0",
         "coupon_image":
             await MultipartFile.fromFile(image.path, filename: fileName)
       });
@@ -141,7 +166,7 @@ class ApiBlocRepository {
         "start_date": map.startDateValue,
         "end_date": map.endDateValue,
         "description": map.descValue,
-        "is_repeat":map.isSelected ? "1" : "0",
+        "is_repeat": map.isSelected ? "1" : "0",
       });
     }
 
@@ -158,7 +183,7 @@ class ApiBlocRepository {
         throw NoInternetException("");
       } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else {
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseAddCouponResponse(response));
       }
@@ -177,7 +202,7 @@ class ApiBlocRepository {
       "start_date": map.startDateValue,
       "end_date": map.endDateValue,
       "description": map.descValue,
-      "is_repeat":map.isSelected ? "1" : "0",
+      "is_repeat": map.isSelected ? "1" : "0",
       "id": map.id,
       if (image != null)
         "coupon_image":
@@ -195,9 +220,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return EditCouponResponse.error();
         throw NoInternetException("");
-      }  else if (e.response.statusCode == 429) {
+      } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else {
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseEditCouponResponse(response));
       }
@@ -245,9 +270,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         throw NoInternetException("");
         // return UpdateProfileResponse.error();
-      }  else if (e.response.statusCode == 429) {
+      } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else{
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseUpdateProfileResponse(response));
       }
@@ -267,9 +292,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return DeleteCouponResponse.error();
         throw NoInternetException("");
-       }  else if (e.response.statusCode == 429) {
+      } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else {
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseDeleteCouponResponse(response));
       }
@@ -289,9 +314,9 @@ class ApiBlocRepository {
           e.type == Dio.DioErrorType.CONNECT_TIMEOUT) {
         // return GetProfileResponse.error();
         throw NoInternetException("");
-      }  else if (e.response.statusCode == 429) {
+      } else if (e.response.statusCode == 429) {
         RetryErrorException("");
-      }else {
+      } else {
         Dio.Response response = e.response;
         return checkForTokenError(parseGetProfileResponse(response));
       }
@@ -308,6 +333,13 @@ class ApiBlocRepository {
     } else {
       throw Exception('failed to load players');
     }
+  }
+
+  ResetPasswordResponse parseResetPasswordResponse(Dio.Response response) {
+    print("LoginResponse :: ${response.data}");
+    final responseString = (response.data);
+    return ResetPasswordResponse.fromJson(
+        responseString, response.statusCode != successCode);
   }
 
   LoginResponse parseLoginResponse(Dio.Response response) {

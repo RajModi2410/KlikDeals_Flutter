@@ -250,469 +250,484 @@ class _ProfilePage extends State<Profile>
                     website(),
                     desc(),
                     saveButton(),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    ]);
-  }
-
-  Padding saveButton() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: new FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Theme.of(context).primaryColor,
-        onPressed: () {
-          validateRequiredFields();
-        },
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Text(AppLocalizations.of(context).translate("label_save"),
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding desc() {
-    return Padding(
-        padding: const EdgeInsets.only(top: 24.0),
-        child: GestureDetector(
-          onTap: () {
-            this._dismissKeyboard(context);
-          },
-          child: TextFormField(
-              onSaved: (value) => _desc = value.trim(),
-              controller: _descValue,
-              validator: (value) {
-                if (value.trim().isEmpty || value == null) {
-                  return AppLocalizations.of(context)
-                      .translate("error_add_text");
-                }
-                return null;
-              },
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              cursorColor: Theme.of(context).primaryColor,
-              maxLines: 6,
-              decoration: _inputType(
-                  AppLocalizations.of(context).translate("title_vendor"))),
-        ));
-  }
-
-  Padding website() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: TextFormField(
-        onSaved: (value) => _website = value.trim(),
-        validator: (value) {
-          /*if (value.trim().isEmpty || value == null) {
-            return AppLocalizations.of(context).translate("error_add_text");
-          } 
-          else if (!isURL(value, {"require_protocol": true, "require_protocols": true})) {
-            return AppLocalizations.of(context).translate("error_message_website");
-          }*/
-
-          if (value != null && value.trim().isNotEmpty) {
-            if (!isURL(
-                value, {"require_protocol": true, "require_protocols": true})) {
-              return AppLocalizations.of(context)
-                  .translate("error_message_website");
-            }
-          }
-          return null;
-        },
-        style: TextStyle(color: Theme.of(context).primaryColor),
-        controller: _websiteValue,
-        decoration:
-            _inputType(AppLocalizations.of(context).translate("title_website")),
-      ),
-    );
-  }
-
-  Padding emailAddress() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: TextFormField(
-        onSaved: (value) => _email = value.trim(),
-        validator: emailValidator,
-        keyboardType: TextInputType.emailAddress,
-        controller: _emailAddressValue,
-        decoration:
-            _inputType(AppLocalizations.of(context).translate("title_email")),
-        style: TextStyle(color: Theme.of(context).primaryColor),
-      ),
-    );
-  }
-
-  _dismissKeyboard(BuildContext context) {
-    FocusScope.of(context).requestFocus(new FocusNode());
-  }
-
-  Padding phoneNumber() {
-    return Padding(
-        padding: const EdgeInsets.only(top: 24.0),
-        child: GestureDetector(
-          onTap: () {
-            this._dismissKeyboard(context);
-          },
-          child: TextFormField(
-            inputFormatters: [
-              WhitelistingTextInputFormatter(KeyConstant.numberReg())
-            ],
-            onSaved: (value) => _number = value.trim(),
-            validator: (value) {
-              if (value.trim().isEmpty || value == null) {
-                return AppLocalizations.of(context).translate("error_add_text");
-              } else if (value.length != 10) {
-                return AppLocalizations.of(context)
-                    .translate("error_message_phone_number");
-              } else if (!isNumeric(value.trim())) {
-                return AppLocalizations.of(context)
-                    .translate("error_message_phone_number");
-              }
-              return null;
-            },
-            keyboardType: TextInputType.number,
-            style: TextStyle(color: Theme.of(context).primaryColor),
-            controller: _phoneNumber,
-            decoration: _inputType(
-                AppLocalizations.of(context).translate("title_phone_number")),
-          ),
-        ));
-  }
-
-  Padding selectBanner() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(width: 1, color: Colors.grey)),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(AppLocalizations.of(context).translate("label_banner"),
-                      style: TextStyle(
-                          fontSize: 16, color: Theme.of(context).primaryColor)),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                      child: Text(
-                          AppLocalizations.of(context)
-                              .translate("title_browse"),
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        forLogo = false;
-                        imagePickerBanner.showDialog(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _imageBanner == null
-                    ? new Container(
-                        height: 160.0,
-                        width: 360.0,
-                        child: _bannerImage(isDirty,
-                            data != null ? data.banner : null, _imageBanner),
-                      )
-                    : new Container(
-                        height: 160.0,
-                        width: 360.0,
-                        child: _bannerImage(isDirty,
-                            data != null ? data.banner : null, _imageBanner),
-                      ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding selectLogo() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(width: 1, color: Colors.grey)),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                        AppLocalizations.of(context).translate("title_logo"),
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).primaryColor)),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.red)),
-                      child: Text(
-                          AppLocalizations.of(context)
-                              .translate("title_browse"),
-                          style: TextStyle(fontSize: 12, color: Colors.white)),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () {
-                        forLogo = true;
-                        imagePicker.showDialog(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: _image == null
-                    ? new Container(
-                        height: 160.0,
-                        width: 360.0,
-                        child: _logoImage(
-                            isDirty, data != null ? data.logo : null, _image),
-//                              image: new NetworkImage(_image.path),
-                      )
-                    : new Container(
-                        height: 160.0,
-                        width: 360.0,
-                        child: _logoImage(
-                            isDirty, data != null ? data.logo : null, _image),
-//                            image: new NetworkImage(_image.path),
-                        decoration: new BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 0.5),
-                        ),
-                      ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding _selectAddressButton(BuildContext context, String profileData) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: new FlatButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Theme.of(context).primaryColor,
-        onPressed: () {
-          _goToLocationScreen(context, _lat, _long, _addressString);
-        },
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              child: Text(
-                  AppLocalizations.of(context).translate("title_address"),
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding _address() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
-      child: GestureDetector(
-        onTap: () {
-          print("We are here TAP FOR HIDE KEYBOARD");
-          this._dismissKeyboard(context);
-        },
-        child: TextFormField(
-          onSaved: (value) => _addr = value.trim(),
-          validator: (value) {
-            if (value.trim() == null || value.trim().isEmpty) {
-              return AppLocalizations.of(context)
-                  .translate("error_message_address");
-            }
-            return null;
-          },
-          style: TextStyle(color: Theme.of(context).primaryColor),
-          controller: _addressValue,
-          decoration: _inputType(
-              AppLocalizations.of(context).translate("title _address_field")),
-        ),
-      ),
-    );
-  }
-
-  Padding _profileName() {
-    return Padding(
-        padding: const EdgeInsets.only(top: 24.0),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: TextFormField(
-              controller: _nameValue,
-              onSaved: (value) => _name = value.trim(),
-              validator: (value) {
-                if (value.trim() == null || value.trim().isEmpty) {
-                  return "Please enter name";
-                }
-                return null;
-              },
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              decoration: _inputType(
-                "Name",
-              )),
-        ));
-  }
-
-  @override
-  userImage(File _image) {
-    if (_image != null) {
-      setState(() {
-        isDirty = true;
-        if (forLogo == true) {
-          this._image = _image;
-        } else {
-          this._imageBanner = _image;
-        }
-      });
-    }
-  }
-
-  InputDecoration _inputType(String hintText) {
-    return InputDecoration(
-      fillColor: Color(0xB3FFFFFF),
-      filled: true,
-      hintStyle: TextStyle(color: Theme.of(context).hintColor),
-      focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-          borderSide: BorderSide(color: Colors.grey)),
-      border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(30.0)),
-      labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-      contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-      hintText: hintText,
-    );
-  }
-
-  String emailValidator(String value) {
-    if (value != null || value.trim().isNotEmpty) {
-      Pattern pattern =
-          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-      RegExp exp = new RegExp(pattern);
-      if (!exp.hasMatch(value.trim())) {
-        return AppLocalizations.of(context).translate("error_message_email");
-      } else {
-        return null;
-      }
-    } else {
-      return AppLocalizations.of(context)
-          .translate("error_message_email_valid");
-    }
-  }
-
-  void validateRequiredFields() {
-    if (validateAndSave()) {
-      print(":::::::::::::::We get coupon data :::::::::::");
-      print("_name $_name");
-      print("_addr $_addr");
-      print("_number $_number");
-      print("_email $_email");
-      print("_website $_website");
-      print("_desc $_desc");
-      print("_lat $_lat");
-      print("_long $_long");
-      print("_imageBanner $_imageBanner");
-      print("_imageLogo $_image");
-      try {
-        lastEvent = UpdateProfileEvent(_name, _addr, _lat, _long, _number,
-            _email, _website, _desc, _image, _imageBanner);
-        auth.add(lastEvent);
-      } catch (e) {
-        print('Error: $e');
-      }
-    }
-  }
-
-  void callGetVendorProfile(ProfileBloc auth) {
-    lastEvent = GetProfileEvent();
-    auth.add(lastEvent);
-  }
-
-  retryCall() {
-    if (lastEvent != null) {
-      auth.add(lastEvent);
-    }
-  }
-
-  bool validateAndSave() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  void _goToLocationScreen(BuildContext context, String latitude,
-      String longitude, String address) async {
-    print(
-        "1 latitude :: $latitude longitude :: $longitude address :: $address");
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => SelectAddress(
-              addressString: address, lat: latitude, long: longitude)),
-    );
-    if (result != null) {
-      var data = result.split("*");
-      _lat = data[0].toString();
-      _long = data[1].toString();
-      _addressString = data[2].toString();
-      _addressValue = TextEditingController(text: data[2].toString());
-      print(
-          "We got selected latLong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
-    }
-  }
+                    showResetLink()
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ]);
+                      }
+                    
+                      Padding saveButton() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: new FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              validateRequiredFields();
+                            },
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new Padding(
+                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  child: Text(AppLocalizations.of(context).translate("label_save"),
+                                      style: TextStyle(
+                                          color: Colors.white, fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    
+                      Padding desc() {
+                        return Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                this._dismissKeyboard(context);
+                              },
+                              child: TextFormField(
+                                  onSaved: (value) => _desc = value.trim(),
+                                  controller: _descValue,
+                                  validator: (value) {
+                                    if (value.trim().isEmpty || value == null) {
+                                      return AppLocalizations.of(context)
+                                          .translate("error_add_text");
+                                    }
+                                    return null;
+                                  },
+                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  cursorColor: Theme.of(context).primaryColor,
+                                  maxLines: 6,
+                                  decoration: _inputType(
+                                      AppLocalizations.of(context).translate("title_vendor"))),
+                            ));
+                      }
+                    
+                      Padding website() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: TextFormField(
+                            onSaved: (value) => _website = value.trim(),
+                            validator: (value) {
+                              /*if (value.trim().isEmpty || value == null) {
+                                return AppLocalizations.of(context).translate("error_add_text");
+                              } 
+                              else if (!isURL(value, {"require_protocol": true, "require_protocols": true})) {
+                                return AppLocalizations.of(context).translate("error_message_website");
+                              }*/
+                    
+                              if (value != null && value.trim().isNotEmpty) {
+                                if (!isURL(
+                                    value, {"require_protocol": true, "require_protocols": true})) {
+                                  return AppLocalizations.of(context)
+                                      .translate("error_message_website");
+                                }
+                              }
+                              return null;
+                            },
+                            style: TextStyle(color: Theme.of(context).primaryColor),
+                            controller: _websiteValue,
+                            decoration:
+                                _inputType(AppLocalizations.of(context).translate("title_website")),
+                          ),
+                        );
+                      }
+                    
+                      Padding emailAddress() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: TextFormField(
+                            onSaved: (value) => _email = value.trim(),
+                            validator: emailValidator,
+                            keyboardType: TextInputType.emailAddress,
+                            controller: _emailAddressValue,
+                            decoration:
+                                _inputType(AppLocalizations.of(context).translate("title_email")),
+                            style: TextStyle(color: Theme.of(context).primaryColor),
+                          ),
+                        );
+                      }
+                    
+                      _dismissKeyboard(BuildContext context) {
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      }
+                    
+                      Padding phoneNumber() {
+                        return Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                this._dismissKeyboard(context);
+                              },
+                              child: TextFormField(
+                                inputFormatters: [
+                                  WhitelistingTextInputFormatter(KeyConstant.numberReg())
+                                ],
+                                onSaved: (value) => _number = value.trim(),
+                                validator: (value) {
+                                  if (value.trim().isEmpty || value == null) {
+                                    return AppLocalizations.of(context).translate("error_add_text");
+                                  } else if (value.length != 10) {
+                                    return AppLocalizations.of(context)
+                                        .translate("error_message_phone_number");
+                                  } else if (!isNumeric(value.trim())) {
+                                    return AppLocalizations.of(context)
+                                        .translate("error_message_phone_number");
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                style: TextStyle(color: Theme.of(context).primaryColor),
+                                controller: _phoneNumber,
+                                decoration: _inputType(
+                                    AppLocalizations.of(context).translate("title_phone_number")),
+                              ),
+                            ));
+                      }
+                    
+                      Padding selectBanner() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(width: 1, color: Colors.grey)),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Text(AppLocalizations.of(context).translate("label_banner"),
+                                          style: TextStyle(
+                                              fontSize: 16, color: Theme.of(context).primaryColor)),
+                                      Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RaisedButton(
+                                          shape: new RoundedRectangleBorder(
+                                              borderRadius: new BorderRadius.circular(18.0),
+                                              side: BorderSide(color: Colors.red)),
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate("title_browse"),
+                                              style: TextStyle(fontSize: 14, color: Colors.white)),
+                                          color: Theme.of(context).primaryColor,
+                                          onPressed: () {
+                                            forLogo = false;
+                                            imagePickerBanner.showDialog(context);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _imageBanner == null
+                                        ? new Container(
+                                            height: 160.0,
+                                            width: 360.0,
+                                            child: _bannerImage(isDirty,
+                                                data != null ? data.banner : null, _imageBanner),
+                                          )
+                                        : new Container(
+                                            height: 160.0,
+                                            width: 360.0,
+                                            child: _bannerImage(isDirty,
+                                                data != null ? data.banner : null, _imageBanner),
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    
+                      Padding selectLogo() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Card(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(width: 1, color: Colors.grey)),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 0, bottom: 16, left: 16, right: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            AppLocalizations.of(context).translate("title_logo"),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Theme.of(context).primaryColor)),
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RaisedButton(
+                                          shape: new RoundedRectangleBorder(
+                                              borderRadius: new BorderRadius.circular(18.0),
+                                              side: BorderSide(color: Colors.red)),
+                                          child: Text(
+                                              AppLocalizations.of(context)
+                                                  .translate("title_browse"),
+                                              style: TextStyle(fontSize: 12, color: Colors.white)),
+                                          color: Theme.of(context).primaryColor,
+                                          onPressed: () {
+                                            forLogo = true;
+                                            imagePicker.showDialog(context);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _image == null
+                                        ? new Container(
+                                            height: 160.0,
+                                            width: 360.0,
+                                            child: _logoImage(
+                                                isDirty, data != null ? data.logo : null, _image),
+                    //                              image: new NetworkImage(_image.path),
+                                          )
+                                        : new Container(
+                                            height: 160.0,
+                                            width: 360.0,
+                                            child: _logoImage(
+                                                isDirty, data != null ? data.logo : null, _image),
+                    //                            image: new NetworkImage(_image.path),
+                                            decoration: new BoxDecoration(
+                                              border: Border.all(color: Colors.white, width: 0.5),
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    
+                      Padding _selectAddressButton(BuildContext context, String profileData) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: new FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              _goToLocationScreen(context, _lat, _long, _addressString);
+                            },
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                new Padding(
+                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  child: Text(
+                                      AppLocalizations.of(context).translate("title_address"),
+                                      style: TextStyle(
+                                          color: Colors.white, fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    
+                      Padding _address() {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              print("We are here TAP FOR HIDE KEYBOARD");
+                              this._dismissKeyboard(context);
+                            },
+                            child: TextFormField(
+                              onSaved: (value) => _addr = value.trim(),
+                              validator: (value) {
+                                if (value.trim() == null || value.trim().isEmpty) {
+                                  return AppLocalizations.of(context)
+                                      .translate("error_message_address");
+                                }
+                                return null;
+                              },
+                              style: TextStyle(color: Theme.of(context).primaryColor),
+                              controller: _addressValue,
+                              decoration: _inputType(
+                                  AppLocalizations.of(context).translate("title _address_field")),
+                            ),
+                          ),
+                        );
+                      }
+                    
+                      Padding _profileName() {
+                        return Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                              },
+                              child: TextFormField(
+                                  controller: _nameValue,
+                                  onSaved: (value) => _name = value.trim(),
+                                  validator: (value) {
+                                    if (value.trim() == null || value.trim().isEmpty) {
+                                      return "Please enter name";
+                                    }
+                                    return null;
+                                  },
+                                  style: TextStyle(color: Theme.of(context).primaryColor),
+                                  decoration: _inputType(
+                                    "Name",
+                                  )),
+                            ));
+                      }
+                    
+                      @override
+                      userImage(File _image) {
+                        if (_image != null) {
+                          setState(() {
+                            isDirty = true;
+                            if (forLogo == true) {
+                              this._image = _image;
+                            } else {
+                              this._imageBanner = _image;
+                            }
+                          });
+                        }
+                      }
+                    
+                      InputDecoration _inputType(String hintText) {
+                        return InputDecoration(
+                          fillColor: Color(0xB3FFFFFF),
+                          filled: true,
+                          hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(30.0)),
+                          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
+                          contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
+                          hintText: hintText,
+                        );
+                      }
+                    
+                      String emailValidator(String value) {
+                        if (value != null || value.trim().isNotEmpty) {
+                          Pattern pattern =
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                          RegExp exp = new RegExp(pattern);
+                          if (!exp.hasMatch(value.trim())) {
+                            return AppLocalizations.of(context).translate("error_message_email");
+                          } else {
+                            return null;
+                          }
+                        } else {
+                          return AppLocalizations.of(context)
+                              .translate("error_message_email_valid");
+                        }
+                      }
+                    
+                      void validateRequiredFields() {
+                        if (validateAndSave()) {
+                          print(":::::::::::::::We get coupon data :::::::::::");
+                          print("_name $_name");
+                          print("_addr $_addr");
+                          print("_number $_number");
+                          print("_email $_email");
+                          print("_website $_website");
+                          print("_desc $_desc");
+                          print("_lat $_lat");
+                          print("_long $_long");
+                          print("_imageBanner $_imageBanner");
+                          print("_imageLogo $_image");
+                          try {
+                            lastEvent = UpdateProfileEvent(_name, _addr, _lat, _long, _number,
+                                _email, _website, _desc, _image, _imageBanner);
+                            auth.add(lastEvent);
+                          } catch (e) {
+                            print('Error: $e');
+                          }
+                        }
+                      }
+                    
+                      void callGetVendorProfile(ProfileBloc auth) {
+                        lastEvent = GetProfileEvent();
+                        auth.add(lastEvent);
+                      }
+                    
+                      retryCall() {
+                        if (lastEvent != null) {
+                          auth.add(lastEvent);
+                        }
+                      }
+                    
+                      bool validateAndSave() {
+                        final form = _formKey.currentState;
+                        if (form.validate()) {
+                          form.save();
+                          return true;
+                        }
+                        return false;
+                      }
+                    
+                      void _goToLocationScreen(BuildContext context, String latitude,
+                          String longitude, String address) async {
+                        print(
+                            "1 latitude :: $latitude longitude :: $longitude address :: $address");
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelectAddress(
+                                  addressString: address, lat: latitude, long: longitude)),
+                        );
+                        if (result != null) {
+                          var data = result.split("*");
+                          _lat = data[0].toString();
+                          _long = data[1].toString();
+                          _addressString = data[2].toString();
+                          _addressValue = TextEditingController(text: data[2].toString());
+                          print(
+                              "We got selected latLong ::: ${data[0].toString()} - ${data[1].toString()} - ${data[2].toString()}");
+                        }
+                      }
+                    
+                      showResetLink() {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
+                              child: Text("Change your password",style: Theme.of(context).textTheme.subtitle1.copyWith(
+                                decoration: TextDecoration.underline
+                              )),
+                            ),
+                          ],
+                        );
+                      }
 }
 
 Widget _bannerImage(bool isDirty, String oldBanner, File imageBanner) {

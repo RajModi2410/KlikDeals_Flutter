@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:vendor/ApiBloc/ApiBloc_state.dart';
+import 'package:vendor/ApiBloc/repositories/ApiBloc_repository.dart';
+import 'package:vendor/LoginScreen/LoginStates.dart';
+import 'package:vendor/commons/AppExceptions.dart';
 
 @immutable
 abstract class ApiBlocEvent extends Equatable {}
@@ -202,4 +206,42 @@ class UpdateProfileEvent extends ApiBlocEvent {
         this.logo,
         this.banner
       ];
+}
+
+class ResetPasswordEvent extends ApiBlocEvent {
+  final String emailAddress;
+
+  ResetPasswordEvent(this.emailAddress);
+
+  @override
+  List<Object> get props => [emailAddress];
+
+  Stream<ApiBlocState> getProcessAsync(
+      ApiBlocRepository playerRepository) async* {
+    yield ApiFetchingState();
+    try {
+      final response = await playerRepository.resetPassword(toMap());
+      if (response.status) {
+        yield PasswordSuccessState(response);
+      } else {
+        yield PasswordErrorState(response);
+      }
+    } on NoInternetException catch (_) {
+      print("No Internet exception");
+      yield NoInternetState(true);
+    } on RetryErrorException catch (_) {
+      print("Retry error exception");
+      yield NoInternetState(false);
+    } catch (e, s) {
+      print("error $e");
+      print("stacktrace $s");
+      yield ApiErrorState();
+    }
+  }
+
+  Map toMap() {
+    var map = new Map<String, dynamic>();
+    map["email"] = emailAddress;
+    return map;
+  }
 }

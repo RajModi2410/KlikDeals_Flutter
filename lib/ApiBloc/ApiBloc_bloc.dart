@@ -44,6 +44,8 @@ class ApiBlocBloc extends Bloc<ApiBlocEvent, ApiBlocState> {
       yield* _mapDeleteCouponEventResponseEvents(event);
     } else if (event is ReloadEvent) {
       yield* _mapReloadResponseEvents();
+    } else if (event is ResetPasswordEvent){
+      yield* event.getProcessAsync(playerRepository);
     }
   }
 
