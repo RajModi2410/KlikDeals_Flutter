@@ -129,7 +129,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               _onSetOnShredPref(token);
               _goToHomePage();
             }else if (state is PasswordErrorState){
-                showPasswordResetDialog(false, state.resetPasswordResponse.message);
+                showPasswordResetDialog(false, state.resetPasswordResponse.errorMessage.getCommonError());
                             }else if(state is PasswordSuccessState){
                 showPasswordResetDialog(true, state.resetPasswordResponse.message);
                             }

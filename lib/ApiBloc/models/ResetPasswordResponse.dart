@@ -14,7 +14,7 @@ class ResetPasswordResponse extends ApiResponse {
       : super.error(isError) {
     status = json['status'];
     message = json['message'];
-    
+
     if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
@@ -24,8 +24,7 @@ class ResetPasswordResponse extends ApiResponse {
     }
   }
 
-  ResetPasswordResponse.fake(bool isError)
-      : super.error(isError) {
+  ResetPasswordResponse.fake(bool isError) : super.error(isError) {
     status = false;
     message = "The email address is wrong";
     if (isError) {
@@ -91,7 +90,14 @@ class ErrorMessage extends ApiError {
 
   @override
   bool isTokenError() {
-    
     return super.checkTokenError(generalError);
+  }
+
+  String getCommonError() {
+    String returnError = "";
+    if (generalError != null && generalError.length > 0) {
+      returnError = generalError.first;
+    }
+    return returnError;
   }
 }

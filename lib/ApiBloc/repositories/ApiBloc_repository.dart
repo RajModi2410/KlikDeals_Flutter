@@ -91,7 +91,6 @@ class ApiBlocRepository {
   }
 
   Future<ResetPasswordResponse> resetPassword(Map map) async {
-    return ResetPasswordResponse.fake(true);
     try {
       print(baseUrl + "forgot_password" + map.toString());
       Dio.FormData formData = new Dio.FormData.fromMap(map);
@@ -115,12 +114,13 @@ class ApiBlocRepository {
   }
 
    Future<ChangePasswordResponse> changePassword(Map map) async {
-    return ChangePasswordResponse.fake(true);
     try {
-      print(baseUrl + "forgot_password" + map.toString());
+      print(baseUrl + "reset_password" + map.toString());
       Dio.FormData formData = new Dio.FormData.fromMap(map);
       Dio.Response response =
-          await dio.post(baseUrl + "forgot_password", data: formData);
+          await dio.post(baseUrl + "reset_password", 
+          data: formData,
+          options: Dio.Options(headers: getCommonHeaders()));
       return parseChangePasswordResponse(response);
     } on Dio.DioError catch (e) {
       print(e.type);

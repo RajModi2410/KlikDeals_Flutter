@@ -7,17 +7,15 @@ import 'package:vendor/commons/KeyConstant.dart';
 class ChangePasswordResponse extends ApiResponse {
   String message;
   bool status;
-  Response response;
   ErrorMessage errorMessage;
 
   ChangePasswordResponse(
-      {this.message, this.status, this.response, this.errorMessage}) : super(ApiStatus.COMPLETED);
+      {this.message, this.status, this.errorMessage}) : super(ApiStatus.COMPLETED);
 
 
   ChangePasswordResponse.fromJson(Map<String, dynamic> json, bool isError) : super.error(isError){
     status = json['status'];
     message = json['message'];
-    response = json['response'];
       if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
@@ -65,7 +63,6 @@ class ChangePasswordResponse extends ApiResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    data['response'] = this.response;
     if (this.errorMessage != null) {
       data['error_message'] = this.errorMessage.toJson();
     }

@@ -3,10 +3,10 @@ import 'package:flutter/painting.dart';
 import 'package:vendor/AppLocalizations.dart';
 import '../commons/Dimensions.dart';
 
-class PasswordResetDialog extends StatelessWidget{
+class PasswordResetDialog extends StatelessWidget {
   final bool isSuccess;
   final String titleToShow;
-final String messageToShow;
+  final String messageToShow;
 
   PasswordResetDialog(this.titleToShow, this.isSuccess, this.messageToShow);
 
@@ -38,7 +38,9 @@ final String messageToShow;
                   Padding(
                     padding: EdgeInsets.only(left: 16.0, right: 16.0),
                     child: Image.asset(
-                     isSuccess ? 'assets/images/alertDeal.png': 'assets/images/warning_icon.png' ,
+                      isSuccess
+                          ? 'assets/images/alertDeal.png'
+                          : 'assets/images/warning_icon.png',
                       color: Theme.of(context).primaryColor,
                       colorBlendMode: BlendMode.srcATop,
                       width: 500,
@@ -58,17 +60,25 @@ final String messageToShow;
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                    child: Text(
-                      messageToShow,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: Dimensions.fontSize16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              messageToShow,
+                              softWrap: true,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: Dimensions.fontSize14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
