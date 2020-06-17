@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-
-import '../commons/Dimence.dart';
+import 'package:vendor/commons/Dimensions.dart';
 
 class ErrorDialog extends StatefulWidget {
   final String mainMessage;
@@ -62,7 +61,7 @@ class _ErrorDialogState extends State<ErrorDialog> {
                     child: Text(
                       "Alert!",
                       style: TextStyle(
-                          fontSize: Dimence.fontSize16,
+                          fontSize: Dimensions.fontSize16,
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -75,7 +74,7 @@ class _ErrorDialogState extends State<ErrorDialog> {
                     child: Text(
                       message,
                       style: TextStyle(
-                          fontSize: Dimence.fontSize14,
+                          fontSize: Dimensions.fontSize14,
                           fontWeight: FontWeight.normal),
                       textAlign: TextAlign.center,
                     ),

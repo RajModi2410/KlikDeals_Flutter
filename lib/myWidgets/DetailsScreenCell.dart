@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
-import 'package:vendor/commons/Dimence.dart';
 import 'package:vendor/commons/Dimensions.dart';
 
 typedef onKlikDeal = void Function(Data, int);
@@ -119,37 +118,36 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
                       children: <Widget>[
                         Expanded(
                           flex: 1,
-                          child: GestureDetector(
-                              onTap: () {
-                                // _goToEditScreen(context, data.toJson(), auth);
-                                onEditClick(data);
-                              },
-                              child: Center(
-                                  child: Text("Edit",
-                                      style: buildTextStyle(context)))
-
-                              /*SizedBox(
-                                  height: 16,
-                                  width: 16,
-                                  child: Image.asset("assets/images/pencils.png"))*/
-                              ),
+                          child: Center(
+                              child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                            elevation: 2.0,
+                            color: Colors.white,
+                            textColor: Colors.black,
+                            onPressed: () => onEditClick(data),
+                            child: Text("Edit",
+                                style: TextStyle(
+                                  fontSize: Dimensions.fontSize14,
+                                )),
+                          )),
                         ),
                         Expanded(
-                          flex: 1,
-                          child: GestureDetector(
-                              onTap: () {
-                                // _showPopup(context, data.id, auth);
-                                onDeleteClick(data.id);
-                              },
-                              child: Center(
-                                  child: Text("Delete",
-                                      style: buildTextStyle(
-                                          context))) /*SizedBox(
-                                  height: 16,
-                                  width: 16,
-                                  child: Image.asset("assets/images/bins.png"))*/
+                            flex: 1,
+                            child: Center(
+                              child: RaisedButton(
+                                elevation: 2.0,
+                                 shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                                onPressed: () => onDeleteClick(data.id),
+                                color: Theme.of(context).primaryColor,
+                                textColor: Colors.white,
+                                child: Text("Delete",
+                                    style: TextStyle(
+                                      fontSize: Dimensions.fontSize14,
+                                    )),
                               ),
-                        ),
+                            )),
                       ],
                     ),
                   ),
@@ -165,7 +163,7 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
   TextStyle buildTextStyle(BuildContext context) {
     return TextStyle(
         color: Theme.of(context).primaryColor,
-        fontSize: Dimence.fontSize14,
+        fontSize: Dimensions.fontSize14,
         fontWeight: FontWeight.bold);
   }
 
@@ -184,7 +182,7 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
   }
 
   Widget getCouponImage(BuildContext context) {
-    print("we are getting getCouponImage: ${data.couponImage}");
+    // print("we are getting getCouponImage: ${data.couponImage}");
     if (data.couponImage == null) {
       return Image.asset(
         "assets/images/main_logo.png",

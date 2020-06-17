@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:vendor/AppLocalizations.dart';
+import 'package:vendor/commons/Dimensions.dart';
 
-import '../commons/Dimence.dart';
 
 class SuccessDialog extends StatefulWidget {
   final String mainMessage;
@@ -64,7 +64,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                     child: Text(
                       AppLocalizations.of(context).translate("label_success"),
                       style: TextStyle(
-                          fontSize: Dimence.fontSize16,
+                          fontSize: Dimensions.fontSize16,
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -77,7 +77,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                     child: Text(
                       message,
                       style: TextStyle(
-                          fontSize: Dimence.fontSize14,
+                          fontSize: Dimensions.fontSize14,
                           fontWeight: FontWeight.normal),
                       textAlign: TextAlign.center,
                     ),

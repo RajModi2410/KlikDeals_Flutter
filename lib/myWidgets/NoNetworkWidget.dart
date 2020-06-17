@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/AppLocalizations.dart';
-import 'package:vendor/commons/Dimence.dart';
+import 'package:vendor/commons/Dimensions.dart';
 
 class NoNetworkWidget extends StatelessWidget {
   final VoidCallback retry;
@@ -45,7 +45,7 @@ class NoNetworkWidget extends StatelessWidget {
                     child: Text(
                       "ALERT",
                       style: TextStyle(
-                          fontSize: Dimence.fontSize16,
+                          fontSize: Dimensions.fontSize16,
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
@@ -58,7 +58,7 @@ class NoNetworkWidget extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context).translate(isFromInternetConnection?"error_connection_timeout":"error_server_timeout"),
                       style: TextStyle(
-                          fontSize: Dimence.fontSize14,
+                          fontSize: Dimensions.fontSize14,
                           fontWeight: FontWeight.normal),
                       textAlign: TextAlign.center,
                     ),
