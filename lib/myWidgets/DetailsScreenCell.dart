@@ -96,6 +96,7 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: Dimensions.fontSize11,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
                     ),

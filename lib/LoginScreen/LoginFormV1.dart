@@ -190,7 +190,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
                       child: Center(
                         child: new Image(
                           image: new AssetImage('assets/images/main_logo.png'),
-                          height: 50,
+                          height: 100,
                           width: MediaQuery.of(context).size.width,
                         ),
                       ),
