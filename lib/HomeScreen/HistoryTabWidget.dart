@@ -11,8 +11,8 @@ import 'package:vendor/commons/KeyConstant.dart';
 import 'package:vendor/myWidgets/BackgroundWidget.dart';
 import 'package:vendor/myWidgets/BottomLoader.dart';
 import 'package:vendor/myWidgets/CouponErrorWidget.dart';
-import 'package:vendor/myWidgets/CouponHistoryItem.dart';
 import 'package:vendor/myWidgets/EmptyListWidget.dart';
+import 'package:vendor/myWidgets/HistoryScreenCell.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
 
 import 'HomeState.dart';
@@ -140,7 +140,7 @@ class _HistoryTabState extends State<HistoryTabWidget> {
     );
   }
 
-  Widget _gridView(Response data) {
+  /* Widget _gridView(Response data) {
     return CustomScrollView(controller: _scrollController, slivers: <Widget>[
       new SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -160,6 +160,25 @@ class _HistoryTabState extends State<HistoryTabWidget> {
         child: hasReachedEnd ? Container() : BottomLoader(),
       )
     ]);
+  }
+*/
+  Widget _gridView(Response data) {
+    return ListView.builder(
+        itemCount: getTotalCount(data),
+        scrollDirection: Axis.vertical,
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          if (!hasReachedEnd && index >= getTotalCount(data) - 1) {
+            return BottomLoader();
+          } else {
+            return Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+              child: HistoryScreenCell(
+                data: data.data[index],
+              ),
+            );
+          }
+        });
   }
 
   int getTotalCount(Response vendorList) {
