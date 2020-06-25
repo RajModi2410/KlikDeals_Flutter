@@ -67,10 +67,16 @@ class _HistoryScreenCellState extends State<HistoryScreenCell> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16.0))),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ConstrainedBox(
                 constraints: buildBoxConstraints(context),
-                child: getCouponImage(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AspectRatio(
+                      aspectRatio: 16 / 9, child: getCouponImage(context)),
+                ),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -197,12 +203,12 @@ class _HistoryScreenCellState extends State<HistoryScreenCell> {
     return BoxConstraints(
       //replace this Container with your Card
       minWidth: MediaQuery.of(context).size.width * 1,
-      minHeight: recommendedHeight,
+      minHeight: recommendedHeight / 3,
       /*maxHeight: MediaQuery
           .of(context)
           .size
           .height * 0.20,*/
-      maxHeight: recommendedHeight,
+//      maxHeight: recommendedHeight,
     );
   }
 
@@ -245,27 +251,25 @@ class _HistoryScreenCellState extends State<HistoryScreenCell> {
   }*/
 
   Widget getCouponImage(BuildContext context) {
+    BoxFit singles = BoxFit.contain;
     if (data != null && data.couponImage != null) {
       return CachedNetworkImage(
         imageUrl: data.couponImage,
-        fit: BoxFit.cover,
-        height: recommendedHeight,
+        fit: singles,
+//        height: recommendedHeight,
         errorWidget: (context, url, error) => Padding(
           padding: const EdgeInsets.all(32.0),
           child: Image.asset(
             'assets/images/main_logo.png',
-            fit: BoxFit.contain,
+            fit: singles,
           ),
         ),
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Image.asset(
-          'assets/images/main_logo.png',
-          fit: BoxFit.contain,
-          height: recommendedHeight,
-        ),
+      return Image.asset(
+        'assets/images/main_logo.png',
+        fit: singles,
+//          height: recommendedHeight,
       );
     }
   }

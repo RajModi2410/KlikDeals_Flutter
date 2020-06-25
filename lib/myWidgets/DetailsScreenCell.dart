@@ -66,10 +66,16 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(16.0))),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ConstrainedBox(
                 constraints: buildBoxConstraints(context),
-                child: getCouponImage(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AspectRatio(
+                      aspectRatio: 16 / 9, child: getCouponImage(context)),
+                ),
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
@@ -113,7 +119,7 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
                   ),
                   Padding(
                     padding:
-                        EdgeInsets.only(left: 2, right: 2, top: 2.0, bottom: 8),
+                    EdgeInsets.only(left: 2, right: 2, top: 2.0, bottom: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -121,25 +127,25 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
                           flex: 1,
                           child: Center(
                               child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            elevation: 2.0,
-                            color: Colors.white,
-                            textColor: Colors.black,
-                            onPressed: () => onEditClick(data),
-                            child: Text("Edit",
-                                style: TextStyle(
-                                  fontSize: Dimensions.fontSize14,
-                                )),
-                          )),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                elevation: 2.0,
+                                color: Colors.white,
+                                textColor: Colors.black,
+                                onPressed: () => onEditClick(data),
+                                child: Text("Edit",
+                                    style: TextStyle(
+                                      fontSize: Dimensions.fontSize14,
+                                    )),
+                              )),
                         ),
                         Expanded(
                             flex: 1,
                             child: Center(
                               child: RaisedButton(
                                 elevation: 2.0,
-                                 shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0)),
                                 onPressed: () => onDeleteClick(data.id),
                                 color: Theme.of(context).primaryColor,
                                 textColor: Colors.white,
@@ -173,30 +179,31 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
     return BoxConstraints(
       //replace this Container with your Card
       minWidth: MediaQuery.of(context).size.width * 1,
-      minHeight: recommendedHeight,
+      minHeight: recommendedHeight / 3,
       /*maxHeight: MediaQuery
           .of(context)
           .size
           .height * 0.20,*/
-      maxHeight: recommendedHeight,
+//      maxHeight: recommendedHeight,
     );
   }
 
   Widget getCouponImage(BuildContext context) {
     // print("we are getting getCouponImage: ${data.couponImage}");
+    BoxFit singles = BoxFit.contain;
     if (data.couponImage == null) {
       return Image.asset(
         "assets/images/main_logo.png",
-        fit: BoxFit.cover,
+        fit: singles,
         colorBlendMode: BlendMode.darken,
         color: Colors.black.withOpacity(0.2),
-        // width: MediaQuery.of(context).size.width * 0.9,
-        height: recommendedHeight,
+//         width: MediaQuery.of(context).size.width * 0.9,
+//        height: recommendedHeight,
       );
     } else {
       return CachedNetworkImage(
         height: recommendedHeight,
-        fit: BoxFit.cover,
+        fit: singles,
         imageUrl: data.couponImage,
         colorBlendMode: BlendMode.darken,
         color: Colors.black.withOpacity(0.2),
@@ -207,11 +214,11 @@ class _DetailScreenCellState extends State<DetailScreenCell> {
               padding: const EdgeInsets.all(32.0),
               child: Image.asset(
                 "assets/images/main_logo.png",
-                fit: BoxFit.cover,
+                fit: singles,
                 colorBlendMode: BlendMode.darken,
                 color: Colors.black.withOpacity(0.2),
                 // width: MediaQuery.of(context).size.width,
-                height: recommendedHeight,
+//                height: recommendedHeight,
               ),
             ),
           );
