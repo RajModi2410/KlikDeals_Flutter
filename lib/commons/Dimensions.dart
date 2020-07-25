@@ -17,7 +17,7 @@ class Dimensions {
     double heights = 8 + 18 + 2 + (fontSize14 * 3) + 2 + fontSize10 + 2 +
         fontSize16 + 24;
     double recommendedHeight = mediaWidth * (9 / 16);
-    return min(heights, recommendedHeight);
+    return max(heights, recommendedHeight);
   }
 
 }

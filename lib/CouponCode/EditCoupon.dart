@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
@@ -49,14 +51,14 @@ class _EditCoupon extends State<EditCoupon>
       _couponCodeController,
       _descriptionController;
 
-  var isSelected=false;
+  var isSelected = false;
 
   _EditCoupon(this.mapData) {
     data = Data.fromJson(mapData);
-    if(data.isRepeat == null || data.isRepeat == "0") {
+    if (data.isRepeat == null || data.isRepeat == "0") {
       isSelected = false;
-    }else{
-      isSelected= true;
+    } else {
+      isSelected = true;
     }
     _dateStart = data.startDate != null
         ? DateFormat("yyyy/MM/dd").parse(data.startDate)
@@ -180,7 +182,7 @@ class _EditCoupon extends State<EditCoupon>
   Widget _shouldRepeatCheckbox(BuildContext context) {
     double _height = 50;
     return Padding(
-      padding: const EdgeInsets.only(top:16.0),
+      padding: const EdgeInsets.only(top: 16.0),
       child: InkWell(
         onTap: () {},
         child: SizedBox(
@@ -217,9 +219,7 @@ class _EditCoupon extends State<EditCoupon>
         "Should repeat",
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
-        style: TextStyle(
-            fontSize: 16.0,
-            color:Theme.of(context).primaryColor),
+        style: TextStyle(fontSize: 16.0, color: Theme.of(context).primaryColor),
       ),
     );
   }
@@ -289,7 +289,7 @@ class _EditCoupon extends State<EditCoupon>
                         fontSize: 15.0, color: Theme.of(context).primaryColor),
                   ),
                   Spacer(),
-                 /* Container(
+                  /* Container(
                       decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.only(
@@ -392,7 +392,9 @@ class _EditCoupon extends State<EditCoupon>
 
   TextFormField _couponCode() {
     return TextFormField(
-      inputFormatters: [WhitelistingTextInputFormatter(KeyConstant.editReg())],
+        inputFormatters: [
+          WhitelistingTextInputFormatter(KeyConstant.editReg())
+        ],
         controller: _couponCodeController,
         onSaved: (value) => _couponCodeValue = value.trim(),
         validator: (value) {
@@ -517,8 +519,14 @@ class _EditCoupon extends State<EditCoupon>
       print(_imageBanner);
       print(isSelected);
       try {
-        lastEvent = EditCouponEvent(_couponCodeValue, _startDateValue,
-            _endDateValue, _descValue, data.id.toString(), _imageBanner,isSelected);
+        lastEvent = EditCouponEvent(
+            _couponCodeValue,
+            _startDateValue,
+            _endDateValue,
+            _descValue,
+            data.id.toString(),
+            _imageBanner,
+            isSelected);
         auth.add(lastEvent);
 
         setState(() {});
@@ -544,6 +552,79 @@ class _EditCoupon extends State<EditCoupon>
     if (lastEvent != null) {
       auth.add(lastEvent);
     }
+  }
+
+  @override
+  cameraPermissionDenied(bool permanent) async {
+    if (permanent) {
+      // openAppSettings();
+      new Timer(_duration, () {
+        _showPopup(true);
+      });
+    } else {
+      PermissionStatus gallery = await Permission.camera.request();
+      if (gallery.isGranted) {
+        imagePicker.showDialog(context);
+      } else {
+        new Timer(_duration, () {
+          _showPopup(true);
+        });
+      }
+    }
+  }
+
+  var _duration = new Duration(milliseconds: 250);
+
+  @override
+  galleryPermissionDenied(bool permanent) async {
+    print("galleryPermissionDenied called with $permanent");
+
+    if (permanent) {
+      // openAppSettings();
+      new Timer(_duration, () {
+        _showPopup(false);
+      });
+    } else {
+      PermissionStatus gallery = await Permission.photos.request();
+      if (gallery.isGranted) {
+        imagePicker.showDialog(context);
+      } else {
+        new Timer(_duration, () {
+          _showPopup(false);
+        });
+      }
+    }
+  }
+
+  void _showPopup(bool isForCamera) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(isForCamera
+              ? "Keyy is not able to access your camera for add the coupon. Please allow application for camera usage."
+              : "Keyy is not able to access your photo gallery for add the coupon. Please allow application for photo gallery usage."),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Later',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Allow',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
+              onPressed: () {
+                Navigator.of(context).pop();
+                imagePicker.showDialog(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }
 
