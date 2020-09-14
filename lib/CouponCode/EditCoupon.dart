@@ -551,12 +551,12 @@ _couponImage(bool isDirty, File imageBanner, String couponImage) {
   if (isDirty) {
     return new DecorationImage(
       image: new FileImage(imageBanner),
-      fit: BoxFit.scaleDown,
+      fit: BoxFit.cover,
     );
   } else if (couponImage != null) {
     return new DecorationImage(
       image: new NetworkImage(couponImage),
-      fit: BoxFit.scaleDown,
+      fit: BoxFit.cover,
     );
   } else {
     return new DecorationImage(

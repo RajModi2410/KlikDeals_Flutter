@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/CouponCode/CouponBloc.dart';
 import 'package:vendor/History_bloc.dart';
 import 'package:vendor/LoginScreen/LoginPage.dart';
@@ -16,13 +18,11 @@ import 'package:vendor/commons/AuthUtils.dart';
 import 'package:vendor/commons/Routes.dart';
 import 'package:vendor/commons/locator.dart';
 import 'package:vendor/splash_screen/splashScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiBloc/ApiBloc_bloc.dart';
 import 'ApiBloc/repositories/ApiBloc_repository.dart';
 import 'AppLocalizations.dart';
 import 'commons/NavigationService.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 // Must be top-level function
 _parseAndDecode(String response) {
@@ -138,8 +138,6 @@ void main() {
         //   '/HomeScreen': (BuildContext context) => new LoginPage(),
         // }
       )));
-
-
 }
 
 void clearThings() async {

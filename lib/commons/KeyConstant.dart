@@ -25,7 +25,7 @@ class KeyConstant {
       "We are unable to complete your request. Please check your internet connection and Try again later!";
 
   static RegExp editReg() {
-    return RegExp("[a-zA-Z0-9 _-]");
+    return RegExp("[a-zA-Z0-9 &#*\$\"_-]");
   }
 
   static RegExp numberReg() {
