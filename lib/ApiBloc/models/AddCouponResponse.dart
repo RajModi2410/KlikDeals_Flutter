@@ -43,42 +43,22 @@ class AddCouponResponse extends ApiResponse {
 
   @override
   bool isTokenError() {
-    
     return errorMessage.isTokenError();
   }
 }
 
 class ErrorMessage extends ApiError {
   List<String> couponCode;
-  List<String> startDate;
-  List<String> endDate;
   List<String> description;
   List<String> couponImage;
   List<String> error;
 
-  ErrorMessage(
-      {this.startDate,
-      this.endDate,
-      this.couponImage,
-      this.description,
-      this.couponCode});
+  ErrorMessage({this.couponImage, this.description, this.couponCode});
 
   ErrorMessage.fromJson(Map<String, dynamic> json) {
     var keys = json.keys;
     if (keys.contains("coupon_code")) {
       couponCode = json['coupon_code'].cast<String>();
-    } else {
-      couponCode = [];
-    }
-
-    if (keys.contains("start_date")) {
-      startDate = json['start_date'].cast<String>();
-    } else {
-      startDate = [];
-    }
-
-    if (keys.contains("end_date")) {
-      endDate = json['end_date'].cast<String>();
     } else {
       couponCode = [];
     }
@@ -104,8 +84,6 @@ class ErrorMessage extends ApiError {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['start_date'] = this.startDate;
-    data['end_date'] = this.endDate;
     data['description'] = this.description;
     data['coupon_image'] = this.couponImage;
     data['error'] = this.error;
@@ -123,14 +101,10 @@ class ErrorMessage extends ApiError {
 
   @override
   String getCommonError() {
-    String returnError = "";
+    String returnError = "Please check your content.";
     if (couponCode != null && couponCode.length > 0) {
       returnError = couponCode.first;
       print("We got the error in Coupon Code::$returnError");
-    } else if (startDate != null && startDate.length > 0) {
-      returnError = startDate.first;
-    } else if (endDate != null && endDate.length > 0) {
-      returnError = endDate.first;
     } else if (couponImage != null && couponImage.length > 0) {
       returnError = couponImage.first;
       print("We got the error in Coupon image::$returnError");

@@ -77,6 +77,7 @@ class _EditCoupon extends State<EditCoupon>
     // print("We are getting $_Startdate and ${data.startDate}");
     _controller = new AnimationController(
       vsync: this,
+      value: 1,
       duration: const Duration(milliseconds: 500),
     );
     _startDateController = TextEditingController(text: data.startDate);

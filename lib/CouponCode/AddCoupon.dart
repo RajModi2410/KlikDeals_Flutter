@@ -58,6 +58,7 @@ class _CouponAdd extends State<AddCoupon>
   void initState() {
     super.initState();
     _controller = new AnimationController(
+      value: 1,
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
@@ -100,7 +101,6 @@ class _CouponAdd extends State<AddCoupon>
                   String error =
                       state.addCouponResponse.errorMessage.getCommonError();
                   if (error != null) {
-                    //ErrorDialog
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => ErrorDialog(

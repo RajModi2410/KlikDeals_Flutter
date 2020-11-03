@@ -72,6 +72,7 @@ class _ProfilePage extends State<Profile>
     auth = BlocProvider.of<ProfileBloc>(context);
     _controller = new AnimationController(
       vsync: this,
+      value: 1,
       duration: const Duration(milliseconds: 500),
     );
     callGetVendorProfile(auth);

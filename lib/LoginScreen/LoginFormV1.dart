@@ -15,6 +15,7 @@ import 'package:vendor/commons/AuthUtils.dart';
 import 'package:vendor/commons/CenterLoadingIndicator.dart';
 import 'package:vendor/myWidgets/HomeMainTab.dart';
 import 'package:vendor/myWidgets/NoNetworkWidget.dart';
+import 'package:vendor/myWidgets/Webdesk.dart';
 
 import 'ErrorGen.dart';
 
@@ -137,8 +138,10 @@ class _LoginFormV1State extends State<LoginFormV1> {
           },
           child: BlocBuilder<ApiBlocBloc, ApiBlocState>(
               bloc: auth,
-              builder: (BuildContext context,
-                  ApiBlocState currentState,) {
+              builder: (
+                BuildContext context,
+                ApiBlocState currentState,
+              ) {
                 if (currentState is ApiFetchingState) {
                   return CenterLoadingIndicator();
                 } else if (currentState is NoInternetState) {
@@ -147,12 +150,12 @@ class _LoginFormV1State extends State<LoginFormV1> {
                       retryCall();
                     },
                     isFromInternetConnection:
-                    currentState.isFromInternetConnection,
+                        currentState.isFromInternetConnection,
                   );
                 } else {
                   return Container();
                 }
-              }))
+              })),
     ]);
   }
 
@@ -179,7 +182,11 @@ class _LoginFormV1State extends State<LoginFormV1> {
           alignment: Alignment.bottomCenter,
           child: Column(
             children: <Widget>[_showErrorMessage()],
-          ))
+          )),
+      // Align(
+      //   alignment: Alignment.bottomCenter,
+      //   child: WebdeskWidget(),
+      // )
     ]);
   }
 
@@ -187,15 +194,9 @@ class _LoginFormV1State extends State<LoginFormV1> {
     return Container(
       padding: EdgeInsets.fromLTRB(
           20,
-          MediaQuery
-              .of(context)
-              .size
-              .height * 0.15,
+          MediaQuery.of(context).size.height * 0.15,
           20,
-          MediaQuery
-              .of(context)
-              .size
-              .height * 0.1),
+          MediaQuery.of(context).size.height * 0.1),
       child: Center(
         child: new Image(
           image: new AssetImage('assets/images/main_logo.png'),
@@ -211,61 +212,51 @@ class _LoginFormV1State extends State<LoginFormV1> {
         children: <Widget>[
           Expanded(
               child: Column(
-                children: <Widget>[
-                  StreamBuilder<String>(
-                      stream: loginBloc.email,
-                      builder: (context, snapshot) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 24.0, right: 24.0),
-                          child: TextFormField(
-                            style: TextStyle(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                                decoration: TextDecoration.none),
-                            onChanged: (value) =>
-                                loginBloc.emailChanged(
-                                    ErrorGen(isError: false, value: value)),
-                            keyboardType: TextInputType.emailAddress,
-                            autofocus: false,
-                            // initialValue: "testing9@webdesksolution.com",
-                            validator: emailValidator,
-                            onSaved: (value) => _email = value.trim(),
-                            obscureText: false,
-                            textAlign: TextAlign.left,
-                            controller: emailInputController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.mail_outline,
-                                  color: Theme
-                                      .of(context)
-                                      .primaryColor),
-                              fillColor: Color(0xB3FFFFFF),
-                              filled: true,
-                              hintStyle:
-                              TextStyle(color: Theme
-                                  .of(context)
-                                  .hintColor),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius:
+            children: <Widget>[
+              StreamBuilder<String>(
+                  stream: loginBloc.email,
+                  builder: (context, snapshot) {
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                      child: TextFormField(
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            decoration: TextDecoration.none),
+                        onChanged: (value) => loginBloc.emailChanged(
+                            ErrorGen(isError: false, value: value)),
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: false,
+                        // initialValue: "testing9@webdesksolution.com",
+                        validator: emailValidator,
+                        onSaved: (value) => _email = value.trim(),
+                        obscureText: false,
+                        textAlign: TextAlign.left,
+                        controller: emailInputController,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.mail_outline,
+                              color: Theme.of(context).primaryColor),
+                          fillColor: Color(0xB3FFFFFF),
+                          filled: true,
+                          hintStyle:
+                              TextStyle(color: Theme.of(context).hintColor),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(30.0)),
-                                  borderSide: BorderSide(color: Colors.grey)),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(30.0)),
-                              labelStyle:
-                              TextStyle(color: Theme
-                                  .of(context)
-                                  .primaryColor),
-                              contentPadding:
+                              borderSide: BorderSide(color: Colors.grey)),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(30.0)),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
+                          contentPadding:
                               EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
-                              hintText: "Email",
-                            ),
-                          ),
-                        );
-                      }),
-                ],
-              )),
+                          hintText: "Email",
+                        ),
+                      ),
+                    );
+                  }),
+            ],
+          )),
         ],
       ),
     );
@@ -278,12 +269,10 @@ class _LoginFormV1State extends State<LoginFormV1> {
           new Expanded(
             child: Padding(
               padding:
-              const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
+                  const EdgeInsets.only(left: 24.0, right: 24.0, top: 24.0),
               child: TextFormField(
                 style: TextStyle(
-                  color: Theme
-                      .of(context)
-                      .primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
                 validator: passwordValidator,
                 onSaved: (value) => _password = value.trim(),
@@ -293,26 +282,20 @@ class _LoginFormV1State extends State<LoginFormV1> {
                 controller: pwdInputController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock_outline,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   fillColor: Color(0xB3FFFFFF),
                   filled: true,
-                  hintStyle: TextStyle(color: Theme
-                      .of(context)
-                      .hintColor),
+                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(30.0)),
                       borderSide: BorderSide(color: Colors.grey)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(30.0)),
-                  labelStyle: TextStyle(color: Theme
-                      .of(context)
-                      .primaryColor),
+                  labelStyle: TextStyle(color: Theme.of(context).primaryColor),
                   contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 10.0),
                   hintText:
-                  AppLocalizations.of(context).translate("label_password"),
+                      AppLocalizations.of(context).translate("label_password"),
                 ),
               ),
             ),
@@ -324,10 +307,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
 
   Widget _showLoginButton(ApiBlocBloc auth) {
     return new Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20.0),
       alignment: Alignment.center,
       child: new Row(
@@ -337,9 +317,7 @@ class _LoginFormV1State extends State<LoginFormV1> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0),
               ),
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 validateAndSubmit();
@@ -464,13 +442,9 @@ class _LoginFormV1State extends State<LoginFormV1> {
             onTap: () => showResetPasswordDialog(context),
             child: Text(
               'Forgot password?',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .subtitle
-                  .copyWith(
-                decoration: TextDecoration.underline,
-              ),
+              style: Theme.of(context).textTheme.subtitle.copyWith(
+                    decoration: TextDecoration.underline,
+                  ),
             ),
           ),
         )

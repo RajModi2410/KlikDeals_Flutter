@@ -1,43 +1,40 @@
-import 'package:vendor/ApiBloc/models/CouponListResponse.dart';
 import 'package:vendor/commons/ApiResponse.dart';
 import 'package:vendor/commons/ApiError.dart';
 import 'package:vendor/commons/KeyConstant.dart';
-
 
 class ChangePasswordResponse extends ApiResponse {
   String message;
   bool status;
   ErrorMessage errorMessage;
 
-  ChangePasswordResponse(
-      {this.message, this.status, this.errorMessage}) : super(ApiStatus.COMPLETED);
+  ChangePasswordResponse({this.message, this.status, this.errorMessage})
+      : super(ApiStatus.COMPLETED);
 
-
-  ChangePasswordResponse.fromJson(Map<String, dynamic> json, bool isError) : super.error(isError){
+  ChangePasswordResponse.fromJson(Map<String, dynamic> json, bool isError)
+      : super.error(isError) {
     status = json['status'];
     message = json['message'];
-      if (isError) {
+    if (isError) {
       errorMessage = json['error_message'] != null
           ? new ErrorMessage.fromJson(json['error_message'])
           : null;
     } else {
       errorMessage = null;
     }
-
   }
 
-   ChangePasswordResponse.fake(bool isError)
-      : super.error(isError) {
+  ChangePasswordResponse.fake(bool isError) : super.error(isError) {
     status = false;
     message = "Fail to reset password";
     if (isError) {
-      errorMessage = ErrorMessage.error("The specified old password does not match with your current password.");
+      errorMessage = ErrorMessage.error(
+          "The specified old password does not match with your current password.");
     } else {
       errorMessage = null;
     }
   }
 
- ChangePasswordResponse.error() : super.network() {
+  ChangePasswordResponse.error() : super.network() {
     status = false;
     message = (KeyConstant.ERROR_CONNECTION_TIMEOUT);
     errorMessage = ErrorMessage.error(KeyConstant.ERROR_CONNECTION_TIMEOUT);
@@ -59,7 +56,7 @@ class ChangePasswordResponse extends ApiResponse {
   //     });
   //   }
   // }
- Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
@@ -68,8 +65,6 @@ class ChangePasswordResponse extends ApiResponse {
     }
     return data;
   }
-
- 
 
   @override
   bool isTokenError() {
@@ -111,7 +106,6 @@ class ErrorMessage extends ApiError {
 
   @override
   bool isTokenError() {
-    
     return super.checkTokenError(generalError);
   }
 }
