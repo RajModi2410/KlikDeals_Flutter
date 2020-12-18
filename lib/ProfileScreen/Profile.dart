@@ -12,7 +12,6 @@ import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/ApiBloc/models/GetProfileResponse.dart';
 import 'package:vendor/AppLocalizations.dart';
 import 'package:vendor/ChangePassword/ChangePassword.dart';
-import 'package:vendor/ChangePassword/ChangePasswordForm.dart';
 import 'package:vendor/ImagePickerFiles/Image_picker_handler.dart';
 import 'package:vendor/ProfileScreen/Profile_bloc.dart';
 import 'package:vendor/SelectAddress/SelectAddress.dart';
@@ -325,14 +324,21 @@ class _ProfilePage extends State<Profile>
         validator: (value) {
           /*if (value.trim().isEmpty || value == null) {
                                 return AppLocalizations.of(context).translate("error_add_text");
-                              } 
+                              }
                               else if (!isURL(value, {"require_protocol": true, "require_protocols": true})) {
                                 return AppLocalizations.of(context).translate("error_message_website");
                               }*/
 
           if (value != null && value.trim().isNotEmpty) {
-            if (!isURL(
-                value, {"require_protocol": true, "require_protocols": true})) {
+            /* if(!urlValidator(value)){
+              return AppLocalizations.of(context)
+                  .translate("error_message_website");
+            }*/
+            if (!isURL(value, {
+              "require_protocol": false,
+              "require_protocols": false,
+              "require_tld": true
+            })) {
               return AppLocalizations.of(context)
                   .translate("error_message_website");
             }
@@ -670,8 +676,17 @@ class _ProfilePage extends State<Profile>
       print("_imageBanner $_imageBanner");
       print("_imageLogo $_image");
       try {
-        lastEvent = UpdateProfileEvent(_name, _addr, _lat, _long, _number,
-            _email, _website, _desc, _image, _imageBanner);
+        lastEvent = UpdateProfileEvent(
+            _name,
+            _addr,
+            _lat,
+            _long,
+            _number,
+            _email,
+            _website,
+            _desc,
+            _image,
+            _imageBanner);
         auth.add(lastEvent);
       } catch (e) {
         print('Error: $e');
@@ -872,6 +887,12 @@ Widget _logoImage(bool isDirty, String oldLogo, File imageLogo) {
       colorBlendMode: BlendMode.dstATop,
     );
   }
+}
+
+bool isValidURL(String URL) {
+  return Uri
+      .parse(URL)
+      .isAbsolute;
 }
 
 bool isURL(String str, [Map options]) {

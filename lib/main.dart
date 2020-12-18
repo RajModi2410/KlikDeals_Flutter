@@ -73,9 +73,8 @@ void main() {
         navigatorKey: locator<NavigationService>().navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          cupertinoOverrideTheme: CupertinoThemeData(
-            primaryColor: Color(0xffAF201A)
-          ),
+          cupertinoOverrideTheme:
+                CupertinoThemeData(primaryColor: Color(0xffAF201A)),
             cursorColor: Colors.black,
             textSelectionHandleColor: Colors.transparent,
             fontFamily: "Montserrat",

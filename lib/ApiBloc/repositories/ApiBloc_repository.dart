@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart' as Dio;
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/models/AddCouponResponse.dart';
 import 'package:vendor/ApiBloc/models/ChangePasswordResponse.dart';
@@ -17,7 +18,6 @@ import 'package:vendor/ApiBloc/models/SearchResponse.dart';
 import 'package:vendor/ApiBloc/models/UpdateProfileResponse.dart';
 import 'package:vendor/commons/ApiResponse.dart';
 import 'package:vendor/commons/AppExceptions.dart';
-import 'package:path/path.dart';
 
 import '../ApiBloc_provider.dart';
 
@@ -54,8 +54,9 @@ class ApiBlocRepository {
     this._apiBlocProvider.test(isError);
   }
 
-  String zometoUrl = "https://developers.zomato.com/api/v2.1/";
-  String baseUrl = "https://klikdeals.ca/api/v1/";
+  // String baseUrl = "https://klikdeals.ca/api/v1/";
+  String baseUrl = "https://wdszone.com/klikdeals/api/v1/";
+
 //  WDS ZONE :  https://wdszone.com/klikdeals/api/v1/
   String key = "753aa59220ffd0cd2804ea892deaa693";
   String token;

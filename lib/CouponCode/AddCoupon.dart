@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:string_validator/string_validator.dart';
 import 'package:vendor/ApiBloc/ApiBloc_event.dart';
 import 'package:vendor/ApiBloc/ApiBloc_state.dart';
 import 'package:vendor/AppLocalizations.dart';
